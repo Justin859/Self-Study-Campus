@@ -1,0 +1,85 @@
+.navbar {
+    background-color: #ffffff;
+}
+
+.navbar-brand img {
+    height: 37.75px;
+    width: 62.5px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.navbar-brand span {
+    color: rgb(235,148,79) !important;
+}
+.navbar-brand .campus-text {
+    color: rgb(28,78,200) !important;
+}
+
+.navbar-brand a:hover {
+    color: rgb(235,148,79) !important;
+}
+
+.navbar .navbar-nav a {
+    color: rgb(28,78,200) !important;
+    font-weight: bold;
+}
+
+.navbar .navbar-nav a:hover {
+    color: rgb(235,148,79) !important;
+    font-weight: bold;
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(235,148,79)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+#floatMenu li {
+    font-weight: bold;
+    padding-right: 125px;
+    background-color: rgb(28,78,200) !important;        
+    margin: 15px;
+}
+
+#floatMenu li a {
+    color: #ffffff !important;
+    
+}
+
+@media screen and (min-width: 768px) {
+    .main-background  {
+        background-size: center;
+        height: 900px !important;
+        width: auto;
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/vendor/assets/images/laptop-2557571_1920.jpg');    background-position: center top;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .main-background  {
+        background-size: center;
+        height: 312px !important;
+        width: auto;
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/vendor/assets/images/laptop-2557571_1920.jpg');    background-position: center top;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    .navbar-brand span {
+        font-size: 15px !important;
+    }
+}
+
+@media screen and (max-width: 736px) {
+    .main-background  {
+        background-size: center;
+        height: 312px !important;
+        width: auto;
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/vendor/assets/images/laptop-2557571_1920.jpg');    background-position: center top;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+}
