@@ -2,11 +2,9 @@
     background-color: #ffffff;
 }
 
-.navbar-brand img {
-    height: 37.75px;
-    width: 62.5px;
+.logo-text {
+    color: rgb(28,78,200);
 }
-
 .navbar-brand {
     font-weight: bold;
 }
@@ -39,7 +37,7 @@
 #floatMenu li {
     font-weight: bold;
     padding-right: 125px;
-    background-color: rgb(28,78,200) !important;        
+    background-color: rgb(28,78,200) !important;
     margin: 15px;
 }
 
@@ -53,9 +51,13 @@
         background-size: center;
         height: 900px !important;
         width: auto;
-        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/vendor/assets/images/laptop-2557571_1920.jpg');    background-position: center top;
+        background: url('/static/vendor/assets/images/laptop-2557571_1920.jpg');
         background-repeat: no-repeat;
         background-size: 100% 100%;
+    }
+
+    #cd-logo-title {
+        padding-top: 10px;
     }
 }
 
@@ -64,12 +66,16 @@
         background-size: center;
         height: 312px !important;
         width: auto;
-        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/vendor/assets/images/laptop-2557571_1920.jpg');    background-position: center top;
+        background: url('/static/vendor/assets/images/laptop-2557571_1920.jpg');
         background-repeat: no-repeat;
         background-size: 100% 100%;
     }
     .navbar-brand span {
         font-size: 15px !important;
+    }
+
+    #cd-logo-title {
+        text: center;
     }
 }
 
@@ -78,8 +84,34 @@
         background-size: center;
         height: 312px !important;
         width: auto;
-        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/vendor/assets/images/laptop-2557571_1920.jpg');    background-position: center top;
+        background: url('/static/vendor/assets/images/laptop-2557571_1920.jpg');
+        background-position: center top;
         background-repeat: no-repeat;
         background-size: 100% 100%;
     }
+
+    #cd-logo-title {
+        align-content: center;
+    }
 }
+
+.cd-main-content {
+    /* set a min-height and a z-index to be sure that the main element completely covers the lateral menu */
+    min-height: 100%;
+    z-index: 2;
+    transition-property: transform;
+    transition-duration: 0.4s;
+  }
+  .cd-main-content.lateral-menu-is-open {
+    transform: translateX(-260px);
+  }
+
+  #cd-logo {
+      margin-top: -20px;
+  }
+  #cd-logo-title {
+      font-weight: bold;
+      font-family: Albertus Medium;
+      font-size: 32px;
+      color: rgb(28,78,200);
+  }
