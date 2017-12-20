@@ -1,60 +1,12 @@
-.navbar {
-    background-color: #ffffff;
+body {
+    background-color: #FFFBFF;
 }
 
 .logo-text {
-    color: rgb(28,78,200);
-}
-.navbar-brand {
-    font-weight: bold;
-}
-
-.navbar-brand span {
-    color: rgb(235,148,79) !important;
-}
-.navbar-brand .campus-text {
-    color: rgb(28,78,200) !important;
-}
-
-.navbar-brand a:hover {
-    color: rgb(235,148,79) !important;
-}
-
-.navbar .navbar-nav a {
-    color: rgb(28,78,200) !important;
-    font-weight: bold;
-}
-
-.navbar .navbar-nav a:hover {
-    color: rgb(235,148,79) !important;
-    font-weight: bold;
-}
-
-.navbar-light .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(235,148,79)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-}
-
-#floatMenu li {
-    font-weight: bold;
-    padding-right: 125px;
-    background-color: rgb(28,78,200) !important;
-    margin: 15px;
-}
-
-#floatMenu li a {
-    color: #ffffff !important;
-    
+    color: rgba(28,78,200);
 }
 
 @media screen and (min-width: 768px) {
-    .main-background  {
-        background-size: center;
-        height: 900px !important;
-        width: auto;
-        background: url('/static/vendor/assets/images/laptop-2557571_1920.jpg');
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-    }
 
     #cd-logo-title {
         padding-top: 10px;
@@ -62,33 +14,13 @@
 }
 
 @media screen and (max-width: 320px) {
-    .main-background  {
-        background-size: center;
-        height: 312px !important;
-        width: auto;
-        background: url('/static/vendor/assets/images/laptop-2557571_1920.jpg');
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-    }
-    .navbar-brand span {
-        font-size: 15px !important;
-    }
 
     #cd-logo-title {
-        text: center;
+        text-align: center;
     }
 }
 
 @media screen and (max-width: 736px) {
-    .main-background  {
-        background-size: center;
-        height: 312px !important;
-        width: auto;
-        background: url('/static/vendor/assets/images/laptop-2557571_1920.jpg');
-        background-position: center top;
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-    }
 
     #cd-logo-title {
         align-content: center;
@@ -113,5 +45,87 @@
       font-weight: bold;
       font-family: Albertus Medium;
       font-size: 32px;
-      color: rgb(28,78,200);
+      color: rgba(28,78,200);
   }
+
+  figure {
+    position: relative;
+  }
+  figcaption {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    padding: 50px;
+  }
+
+  .reading-card {
+      background-color: rgba(10, 10, 10, 0.5);
+      color: #ffffff;
+      border-radius: 0 !important;
+      padding: 25px;
+  }
+  .reading-card h1 {
+    padding-bottom: 25px;
+  }
+
+  .register-form label{
+      color: rgba(28,78,200);
+      font-weight: bold;
+  }
+
+  .mobile-list, .mobile-logo {
+      padding: 15px;
+      text-align: center;
+  }
+
+  .first-content {
+      font-weight: bold;
+      font-size: 20px;
+  }
+
+.img-container {
+    position: relative;
+    color: white;
+}
+
+.centered {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.right {
+    position: absolute;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+}
+
+.regular-card {
+    height: 100%;
+}
+
+.regular-card h3 {
+    color: rgba(235,148,79);
+}
+
+.regular-card p {
+    font-weight: bold;
+}
+
+.site-footer {
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: rgba(28,78,200);
+}
+
+.regular-card {
+    box-shadow: 2px 1px 2px #888888;
+    border-radius: 2px;
+    border: none;
+}
