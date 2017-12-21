@@ -70,8 +70,8 @@ body {
     padding-bottom: 25px;
   }
 
-  .register-form label{
-      color: rgba(28,78,200);
+  .register-form label {
+      color: #1C4EC8;
       font-weight: bold;
   }
 
@@ -90,11 +90,22 @@ body {
     color: white;
 }
 
-.centered {
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+@media screen and (max-width: 768px) {
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    } 
+}
+
+@media screen and (min-width: 769px) {
+    .centered {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    } 
 }
 
 .right {
@@ -128,4 +139,10 @@ body {
     box-shadow: 2px 1px 2px #888888;
     border-radius: 2px;
     border: none;
+}
+
+.alert-danger {
+    position: absolute;
+    z-index: 9;
+    top: 90px;
 }
