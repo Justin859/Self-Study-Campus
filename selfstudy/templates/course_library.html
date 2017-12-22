@@ -1,12 +1,56 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load features %}
 
 {% block styles %}
+<link rel="stylesheet" href="{% static 'vendor/add_ons/multi-level-accordion-menu/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/add_ons/multi-level-accordion-menu/css/reset.css' %}">
+
 {% endblock %}
 
 {% block content %}
+<br />
+<div class="row">
+    <div class="col-12 col-md-8">
+
+        <div class="card regular-card regular-card-course">
+            <div class="card-block">
+                <h2 class="display-4">{{selected_course.title}} <small class="text-muted">{{selected_course.category}}</small></h2>
+                <hr />
+                {{selected_course.description | markdown_to_html}}
+                <br /><br />
+                <div class="card-footer">
+                    <p>Course Price: &#36; {{selected_course.price}}</p>
+                    <button class="btn btn-primary float-right">Add to Cart</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <ul class="cd-accordion-menu">
+
+        {% for category in categories %}
+        <li class="has-children">
+                <input type="checkbox" name ="group-{{forloop.counter}}" id="group-{{forloop.counter}}">
+                <label for="group-{{forloop.counter}}">{{category.title}}</label>
+         
+                  <ul class="course-list">
+                    {% for course in courses %}
+                    {% if course.category == category.title %}
+                        <li><a href="/course-library/{{course.id}}/detail/">{{course.title}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                  </ul>
+            </li>
+        {% endfor %}
+
+        </ul> <!-- cd-accordion-menu -->
+    </div>
+</div>
 
 {% endblock %}
 
 {% block scripts%}
+<script src="{% static 'vendor/add_ons/multi-level-accordion-menu/js/main.js' %}"></script>
 {% endblock %}

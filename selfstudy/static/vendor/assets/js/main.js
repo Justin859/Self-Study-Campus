@@ -6,6 +6,7 @@ $('#cd-menu-trigger, main').click(function() {
     } else {
         $('#cd-menu-trigger').css('background-color', 'rgb(28,78,200)');
     }
-})
+})       
+
 
 });

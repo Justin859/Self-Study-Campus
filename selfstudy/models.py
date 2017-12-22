@@ -17,7 +17,7 @@ class CourseCategories(models.Model):
 
 list_categories = []
 for category in CourseCategories.objects.all():
-    list_categories.append((category, category))
+    list_categories.append((category.title, category.title))
 COURSE_CATEGORIES = tuple(list_categories)
 
 class Courses(models.Model):

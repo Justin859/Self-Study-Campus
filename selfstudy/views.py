@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django import forms
 
 from .forms import *
-from .models import Greeting
+from .models import *
 
 
 # Create your views here.
@@ -75,9 +75,14 @@ def user_logout(request):
 
     return HttpResponseRedirect('/')
 
-def course_library(request):
+def course_library(request, course_id):
 
-    return render(request, 'course_library.html', {})
+    selected_course = Courses.objects.get(id=course_id)
+
+    categories = CourseCategories.objects.all()
+    courses = Courses.objects.all().order_by('id')
+
+    return render(request, 'course_library.html', {'categories': categories, 'courses': courses, 'selected_course': selected_course})
 
 def db(request):
 
