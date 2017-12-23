@@ -4,3 +4,5 @@ from .models import *
 
 admin.site.register(Courses)
 admin.site.register(CourseCategories)
+admin.site.register(UserCart)
+admin.site.register(CartItems)

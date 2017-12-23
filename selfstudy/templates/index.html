@@ -22,7 +22,7 @@
     <img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" class="img-fluid">
     <div class="centered card reading-card">
         <div class="card-block">
-            <h3>Welcome to Selfstudy Campus</h3>
+            <h3>Welcome to Self Study Campus</h3>
             <p>Learn new skills anywhere, anytime.</p>
             <p>We offer you, the ordinary person, learning opportunities at affordable prices through a learning platform that is easy and quick to master.</p>
             <p>Whether you are looking for something in your personal capacity or for your career, we have a course for you.</p>
@@ -95,16 +95,16 @@
     <div class="centered reading-card jumbotron hidden-sm-down">
         <div class="card-block">
             <p>Feel free to browse our course library</p>
-            <p><a href="#0" style="color: rgb(235,148,79)">View course library</a></p>
+            <p><a href="/course-library/1/Project Management Fundamentals/detail/" style="color: rgb(235,148,79)">View course library</a></p>
         </div>
     </div>
     {% else %}
     <div class="centered reading-card jumbotron hidden-lg-up hidden-sm-down">
         <div class="card-block">
             <h4>Register now to start learning</h4>
-            <p><a href="#0" style="color: rgb(235,148,79)">Register a new account</a></p>
+            <p><a href="/register-account/" style="color: rgb(235,148,79)">Register a new account</a></p>
             <p>Feel free to browse our course library</p>
-            <p><a href="#0" style="color: rgb(235,148,79)">View course library</a></p>
+            <p><a href="/course-library/1/Project Management Fundamentals/detail/" style="color: rgb(235,148,79)">View course library</a></p>
         </div>
     </div>
     {% endif %}
@@ -116,9 +116,9 @@
                     <div class="card reading-card">
                         <div class="card-block">
                             <h4>Register now to start learning</h4>
-                            <p><a href="#0" style="color: rgb(235,148,79)">Register a new account</a></p>
+                            <p><a href="/register-account/" style="color: rgb(235,148,79)">Register a new account</a></p>
                             <p>Feel free to browse our course library</p>
-                            <p><a href="#0" style="color: rgb(235,148,79)">View course library</a></p>
+                            <p><a href="/course-library/1/Project Management Fundamentals/detail/" style="color: rgb(235,148,79)">View course library</a></p>
                         </div>
                     </div>
                 </div>
@@ -189,5 +189,7 @@
 {% endblock %}
 
 {% block scripts%}
+{% if not user.is_authenticated %}
 <script src="{% static 'vendor/assets/js/register-form-validate.js' %}"></script>
+{% endif %}
 {% endblock %}

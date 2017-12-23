@@ -6,7 +6,14 @@ $('#cd-menu-trigger, main').click(function() {
     } else {
         $('#cd-menu-trigger').css('background-color', 'rgb(28,78,200)');
     }
-})       
+})
 
+$('#hide-cart').click(function() {
+    $(".wrap-cart").animate({left: "-500px"});
+});
+
+$('#show-cart').click(function() {
+    $(".wrap-cart").animate({left: "-2px"});
+});
 
 });

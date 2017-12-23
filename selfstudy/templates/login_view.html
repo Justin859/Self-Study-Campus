@@ -23,6 +23,8 @@
                     <p class="text-danger">{{message}}</p>
                     {% endfor %}
                 {% endif %}
+    <div class="card" style="padding: 15px !important;">
+        <div class="card-block" id="register">
             <form method="post" action="">
             {% csrf_token %}
 
@@ -38,7 +40,8 @@
                 <input class="form-control btn btn-primary" type="submit" value="login" />
             </div>
             </form>
-
+        </div>
+    </div>
         </div>
         {% else %}
         <h4>Would you like to <a href="/logout/">Logout</a></h4>

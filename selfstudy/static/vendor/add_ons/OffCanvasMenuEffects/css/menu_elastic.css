@@ -52,7 +52,7 @@ body,
 
 @media screen and (max-width: 544px) {
 	.menu-button {
-		margin-top: -6px;
+		margin-top: -3px;
 		margin-left: -3px;
 	}
 }

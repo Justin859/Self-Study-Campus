@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+
+<br />
+
+<div class="d-none">
+    {% for field in form %}
+        {{field}}
+    {% endfor %}
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="card" style="padding: 15px !important;">
+                <div class="card-block" id="register">
+                    <h4 class="card-title" style="color: rgb(235,148,79)">Register now to start learning</h4>
+                    <p style="color: #000000;">Enter your info to register an account. You must register before purchasing courses.</p>
+                    <p>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <p class="text-danger">{{message}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </p>
+                    <form class="register-form" action="" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group" id="forFirstName">
+                            <label>First Name</label>
+                            <input type="text" value="{{form.email_address}}" class="form-control" name="firstName" id="firstName" placeholder="first name" required>
+                            <div class='form-control-feedback d-none'>This field can't be less than 2 characters</div>
+                        </div>
+                        <div class="form-group" id="forLastName">
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="last name" required>
+                            <div class='form-control-feedback d-none'>This field can't be less than 2 characters</div>                        
+                        </div>
+                        <div class="form-group" id="forEmail">
+                            <label>Email Address</label>
+                            <input type="email" class="form-control" name="emailAddress" id="emailAddress" placeholder="email address" required>
+                            <div class='form-control-feedback d-none'>This email address is not valid</div>
+                        </div>
+                        <div class="form-group" id="forPassword">
+                            <label>Create Password</label>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="create password" required>
+                            <div class='form-control-feedback d-none'>
+                                <ul>
+                                    <li>Your password must be atleast 8 characters</li>
+                                    <li>Contain at least 1 lower case and 1 uppercase character</li>
+                                    <li>And one special character eg. '?=.[!@#\$%\^&]'</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group" id="forConfirmPassword">
+                            <label>Confirm Password</label>
+                            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="confirm password" required>
+                            <div class='form-control-feedback d-none'>Your passwords don't match</div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn btn-primary" id="submitBtn">Register Account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts%}
+{% if not user.is_authenticated %}
+<script src="{% static 'vendor/assets/js/register-form-validate.js' %}"></script>
+{% endif %}
+{% endblock %}

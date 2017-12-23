@@ -8,27 +8,54 @@
 {% endblock %}
 
 {% block content %}
+{% if messages %}
 
 <div class="row">
+    <div class="col-12 col-md-8 offset-md-2">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{message}}</strong> Has successfuly been added to your shopping cart.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endif %}
+<div class="row pt-2">
     <div class="col-12 col-lg-8">
 
         <div class="card regular-card regular-card-course">
             <div class="card-block">
-                <h2 class="display-4">{{selected_course.title}} <small class="text-muted">{{selected_course.category}}</small></h2>
+                <br />
+                <h3 class="hidden-md-up">{{selected_course.title}}<br /><small class="text-muted">{{selected_course.category}}</small></h3>
+                <h2 class="display-4 hidden-sm-down">{{selected_course.title}}<br /> <small class="text-muted">{{selected_course.category}}</small></h2>
                 <hr />
                 {{selected_course.description | markdown_to_html}}
                 <br /><br />
                 <div class="card-footer">
                     <p>Course Price: &#36; {{selected_course.price}}</p>
-                    <button class="btn btn-primary float-right">Add to Cart</button>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="text" value="{{selected_course.title}}" name="item_title" readonly hidden>
+                        <input type="decimal-local" value="{{selected_course.price}}" step="0.01" name="item_price" readonly hidden>
+                        <button type="submit" class="btn btn-primary float-right">Add to Cart</button>
+                    </form>
+                    
                 </div>
                 
             </div>
         </div>
     </div>
     <div class="col-12 col-lg-4">
+        <div class="card regular-card pl-4">
+            <div class="card-block">
+                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></span></h2>
+            </div>
+        </div>
         <ul class="cd-accordion-menu">
-
         {% for category in categories %}
         <li class="has-children">
                 <input type="checkbox" name ="group-{{forloop.counter}}" id="group-{{forloop.counter}}">
@@ -37,7 +64,7 @@
                   <ul class="course-list">
                     {% for course in courses %}
                     {% if course.category == category.title %}
-                        <li><a href="/course-library/{{course.id}}/detail/">{{course.title}}</a></li>
+                        <li><a href="/course-library/{{course.id}}/{{course.title}}/detail/">{{course.title}}</a></li>
                     {% endif %}
                     {% endfor %}
                   </ul>
@@ -51,5 +78,7 @@
 {% endblock %}
 
 {% block scripts%}
+
 <script src="{% static 'vendor/add_ons/multi-level-accordion-menu/js/main.js' %}"></script>
+
 {% endblock %}

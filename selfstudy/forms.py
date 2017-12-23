@@ -37,3 +37,8 @@ class UserLogin(forms.Form):
     username = forms.CharField(max_length=255)
     password = forms.CharField(max_length=255)
 
+class AddToCart(forms.Form):
+    item_title = forms.CharField(max_length=255)
+    item_price = forms.DecimalField(max_digits=6, decimal_places=2)
+
+
