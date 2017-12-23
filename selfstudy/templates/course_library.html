@@ -41,7 +41,11 @@
                         {% csrf_token %}
                         <input type="text" value="{{selected_course.title}}" name="item_title" readonly hidden>
                         <input type="decimal-local" value="{{selected_course.price}}" step="0.01" name="item_price" readonly hidden>
+                        {% if user.is_authenticated %}
                         <button type="submit" class="btn btn-primary float-right">Add to Cart</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary float-right" disabled>login to purchase</button>
+                        {% endif %}
                     </form>
                     
                 </div>
