@@ -118,7 +118,7 @@ def course_library(request, course_id, course_title):
             cart.save()
 
         messages.success(request, selected_course.title)
-        return HttpResponseRedirect("")
+        return HttpResponseRedirect("/course-library/" +course_id+ "/" +course_title+ "/detail")
     else:
         form = AddToCart()
 
