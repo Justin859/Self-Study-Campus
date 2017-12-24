@@ -16,4 +16,8 @@ $('#show-cart').click(function() {
     $(".wrap-cart").animate({left: "-2px"});
 });
 
+$('#submit-form').click(function() {
+    $(this).prop("disabled")
+})
+
 });

@@ -59,7 +59,7 @@ body {
       font-weight: bold;
       font-family: Albertus Medium;
       font-size: 32px;
-      color: rgb(28,78,200);
+      color: #1C4EC8;
   }
 
   figure {
@@ -227,7 +227,15 @@ body {
     padding-left: 8px;
 }
 
-.cart-view:hover {
-    font-weight: bold;
-    text-decoration: underline;
+.shopping-cart:hover {
+    font-weight: bold !important    ;
+    text-decoration: underline !important;
 }
+
+@media screen and (max-width: 736px) {
+    .alert-success {
+        z-index: 9;
+        position: absolute;
+        top: 50px;
+    }
+} 

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'vendor/add_ons/breadcrumbs-and-multistep-indicator/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <section style="margin-top: 50px !important; padding-top: 0px !important; background-color: #ffffff">
+        <br />
+        <div class="row hidden-sm-down">
+            <div class="col-12">
+                <nav>
+                    <ol class="cd-breadcrumb triangle d-flex justify-content-center" style="margin-top: 0px !important; padding-top: 0px !important;">
+                        <li><em>Cart</em></li>
+                        <li class="current"><em>Check Out</em></li>
+                        <li><em>Done</em></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row hidden-md-up">
+            <div class="col-12">
+                <nav>
+                    <ol class="cd-breadcrumb d-flex justify-content-center">
+                        <li><em style="font-size: 20px; color:#EB944F !important;">Cart</em></li>
+                        <li class="current"><em style="font-size: 20px;">Check Out</em></li>
+                        <li><em style="font-size: 20px;">Done</em></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-12 col-md-6">
+                <br />
+                
+                <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Course</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in user_cart_items %}
+                            
+                            <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <td>{{item.title}}</td>
+                                <td>${{item.price}}</td>
+                            </tr>
+    
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <hr />
+                    <div class="d-flex justify-content-end">
+                        <ul class="list-unstyled">
+                            <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;" >Items</span> <span class="float-right">{{user_cart.items_total}}&nbsp;</span></li>
+                            <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;">Total</span> <span class="float-right">${{user_cart.cart_total}}&nbsp;</span></li>
+                        </ul>
+                    </div>
+
+                <form action="https://sandbox.payfast.co.za/eng/process" method="POST" required>
+                        <input type="hidden" name="merchant_id" value="10004715" required>
+                        <input type="hidden" name="merchant_key" value="dhdw9uqzmpzo0" required>
+                        <input type="hidden" name="return_url" value="https://lit-gorge-69771.herokuapp.com/success" required>
+                        <input type="hidden" name="cancel_url" value="https://lit-gorge-69771.herokuapp.com/cancel" required>
+                        <input type="hidden" name="notify_url" value="https://lit-gorge-69771.herokuapp.com/notify" required>
+                        <input type="hidden" name="name_first" value="{{user.first_name}}">
+                        <input type="hidden" name="name_last" value="{{user.last_name}}">
+                        <input type="hidden" name="email_address" value="{{user.username}}">
+                        <input type="hidden" name="amount" value="{{user_cart.cart_total}}">
+                        <input type="hidden" name="item_name" value="Self Study Campus - Order Number : #{{user_cart.id}}" required>
+                        <input type="hidden" name="item_description" value="Self Study Campus Course Order" required>
+                        <input type="hidden" name="custom_int1" value="{{user.id}}"required>
+                        <input type="hidden" name="custom_str1" value="{{user.username}}" required>
+                        <input type="hidden" name="payment_method" value="cc" required>
+                        <input type="hidden" name="signature" value="{{signature}}" required>
+                        <div class="btn-group d-flex justify-content-center" role="group" aria-label="button grouping">
+                            <a type="button" href="/shopping-cart/" class="btn btn-primary">Back to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></a>
+                            {% if not cart_empty %}
+                            <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-primary" disabled>Proceed to Payment</button>
+                            {% endif %}
+                        </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<div class="container">
+    <p>{{cart_empty}}</p>
+</div>
+{% endblock %}
+
+{% block scripts%}
+<script src="{% static 'vendor/add_ons/breadcrumbs-and-multistep-indicator/js/modernizr.js' %}"></script>
+{% endblock %}

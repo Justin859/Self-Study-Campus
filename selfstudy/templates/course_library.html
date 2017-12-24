@@ -42,9 +42,13 @@
                         <input type="text" value="{{selected_course.title}}" name="item_title" readonly hidden>
                         <input type="decimal-local" value="{{selected_course.price}}" step="0.01" name="item_price" readonly hidden>
                         {% if user.is_authenticated %}
-                        <button type="submit" class="btn btn-primary float-right">Add to Cart</button>
+                            {% if item_in_cart %}
+                            <button type="submit" id="submit-form" class="btn btn-primary float-right" disabled>Added to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></button>
+                            {% else %}
+                            <button type="submit" id="submit-form" class="btn btn-primary float-right">Add to Cart&nbsp;&nbsp;<i class="fa fa-cart-plus"></i></button>
+                            {% endif %}
                         {% else %}
-                        <button type="submit" class="btn btn-primary float-right" disabled>login to purchase</button>
+                        <button type="submit" class="btn btn-primary float-right" disabled>login to purchase&nbsp;&nbsp;<i class="fa fa-cart-arrow-down"></i></button>
                         {% endif %}
                     </form>
                     

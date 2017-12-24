@@ -41,4 +41,9 @@ class AddToCart(forms.Form):
     item_title = forms.CharField(max_length=255)
     item_price = forms.DecimalField(max_digits=6, decimal_places=2)
 
+class CartEdit(forms.Form):
+    item_id = forms.IntegerField()
+    item_price = forms.DecimalField(max_digits=6, decimal_places=2)
+    item_checked = forms.BooleanField(required=False)
+
 

@@ -35,7 +35,7 @@
                     {% if user.is_authenticated %}
                     <ul class="list-unstyled">
                         <li>
-                            <a href="/cart-view/" class="cart-view">Shopping cart</a><i class="fa fa-pencil" style="padding-left:5px;"></i>
+                            <a href="/shopping-cart/" class="shopping-cart">Shopping cart</a><i class="fa fa-pencil" style="padding-left:5px;"></i>
                         </li>
                         <br />
                         <li>
@@ -46,7 +46,11 @@
                         </li>
                         <br />
                         <li>
-                            <a href="/checkout-cart/" class="btn btn-primary btn-block">Check Out &nbsp;&nbsp;<i class="fa fa-credit-card"></i></a>
+                            {% if not cart_empty %}
+                            <a href="/checkout/" class="btn btn-primary btn-block">Check Out &nbsp;&nbsp;<i class="fa fa-credit-card"></i></a>
+                            {% else %}
+                            <button class="btn btn-primary btn-block" disabled>Check Out &nbsp;&nbsp;<i class="fa fa-credit-card"></i></>
+                            {% endif %}
                         </li>
                     </ul>
                     <hr />
@@ -150,7 +154,7 @@
                                     <li class="list-inline-item"><a href="#0">About</a></li>
                                     <li class="list-inline-item"><a href="#0">Contact</a></li>
                                     {% if user.is_authenticated %}
-                                        <li class="list-inline-item"><a href="/cart-view/">Shopping Cart</a></li>
+                                        <li class="list-inline-item"><a href="/shopping-cart/">Shopping Cart</a></li>
                                     {% else %}
                                         <li class="list-inline-item"><a href="/register-account/">Register</a></li>
                                     {% endif %}
@@ -176,7 +180,7 @@
                                 <li class="list-item"><a href="#0">About</a></li>
                                 <li class="list-item"><a href="#0">Contact</a></li>
                                 {% if user.is_authenticated %}
-                                <li class="list-item"><a href="/cart-view/">Shopping Cart</a></li>
+                                <li class="list-item"><a href="/shopping-cart/">Shopping Cart</a></li>
                                 {% else %}
                                 <li class="list-item"><a href="/register-account/">Register</a></li>
                                 {% endif %}
