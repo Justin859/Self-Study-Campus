@@ -301,7 +301,7 @@ def notify(request):
         user_cart = UserCart.objects.get(user_id=pf_data['custom_int1'])
         user_cart_items = CartItems.objects.filter(user_id=pf_data['custom_int1'])
         user_details = User.objects.get(id=pf_data['custom_int1'])
-        
+
         if pf_data['payment_status'] == 'COMPLETE':
             rand_value = Currency.objects.get(currency='ZAR').current_rate * user_cart.cart_total
 
@@ -327,6 +327,9 @@ def notify(request):
 
             signature = hashlib.md5(url_data.encode()).hexdigest()
             
+            TestSig.objects.create(signature=pf_data['signature'])
+            TestSig.objects.create(signature=signature)
+
             if pf_data['signature'] == signature:
                 for item in user_cart_items:
                     UserCourses.objects.create(
