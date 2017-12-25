@@ -293,7 +293,7 @@ def notify(request):
     host_ip = get_client_ip(request)
     valid_ip = ['41.74.179.194', '41.74.179.195', '41.74.179.196', '41.74.179.197', '41.74.179.200',
                 '41.74.179.201', '41.74.179.203','41.74.179.204', '41.74.179.210', '41.74.179.211',
-                '41.74.179.212', '41.74.179.217', '41.74.179.218']
+                '41.74.179.212', '41.74.179.217', '41.74.179.218', '127.0.0.1', '197.88.46.29']
 
     if host_ip in valid_ip:
         pf_data = request.POST
@@ -326,7 +326,7 @@ def notify(request):
             url_data = urlencode(data)
 
             signature = hashlib.md5(url_data.encode()).hexdigest()
-
+            
             if pf_data['signature'] == signature:
                 for item in user_cart_items:
                     UserCourses.objects.create(
@@ -335,7 +335,18 @@ def notify(request):
                         item_id=item.item_id,
                         title=item.title
                         )
-                        
+
+                Orders.objects.create(
+                pf_payment_id = pf_data['pf_payment_id'],
+                payment_status = pf_data['payment_status'],
+                item_name = pf_data['item_name'],
+                amount_gross = round(Decimal(pf_data['amount_gross']), 2),
+                amount_fee = round(Decimal(pf_data['amount_fee']), 2),
+                amount_net = round(Decimal(pf_data['amount_net']), 2),
+                name_first = pf_data['name_first'],
+                name_last = pf_data['name_last'],
+                email_address = pf_data['email_address']
+                )
                 CartItems.objects.filter(user_id=user_details.id).delete()
                 UserCart.objects.get(user_id=user_details.id).delete()
             else:
