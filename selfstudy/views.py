@@ -352,9 +352,9 @@ def notify(request):
             else:
                 return HttpResponse(status=403)
         else:
-            return HttpResponse(status=403)
+            return HttpResponse(status=404)
     else:
-        return HttpResponse(status=403)
+        return HttpResponse(status=302)
 
     return HttpResponse()
 
