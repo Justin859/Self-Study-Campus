@@ -236,9 +236,9 @@ def checkout(request):
     data = (
         ("merchant_id", "10004715"),
         ("merchant_key", "dhdw9uqzmpzo0"),
-        ("return_url", "https://lit-gorge-69771.herokuapp.com/success"),
-        ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel"),
-        ("notify_url", "https://lit-gorge-69771.herokuapp.com/notify"),
+        ("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
+        ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
+        ("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
         ("name_first", request.user.first_name),
         ("name_last", request.user.last_name),
         ("email_address", request.user.username),
