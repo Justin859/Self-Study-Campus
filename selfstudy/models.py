@@ -93,3 +93,4 @@ class Orders(models.Model):
 
 class TestSig(models.Model):
     signature = models.CharField(max_length=255)
+    from_where = models.CharField(max_length=255)

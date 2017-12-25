@@ -326,9 +326,9 @@ def notify(request):
             url_data = urlencode(data)
 
             signature = hashlib.md5(url_data.encode()).hexdigest()
-            
-            TestSig.objects.create(signature=pf_data['signature'])
-            TestSig.objects.create(signature=signature)
+
+            TestSig.objects.create(signature=pf_data['signature'], from_where='Pay Fast')
+            TestSig.objects.create(signature=signature, from_where='From Self Study')
 
             if pf_data['signature'] == signature:
                 for item in user_cart_items:
