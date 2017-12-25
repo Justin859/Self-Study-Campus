@@ -303,61 +303,33 @@ def notify(request):
         user_details = User.objects.get(id=pf_data['custom_int1'])
 
         if pf_data['payment_status'] == 'COMPLETE':
-            rand_value = Currency.objects.get(currency='ZAR').current_rate * user_cart.cart_total
 
-            data = (
-                ("merchant_id", "10004715"),
-                ("merchant_key", "dhdw9uqzmpzo0"),
-                ("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
-                ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
-                ("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
-                ("name_first", user_details.first_name),
-                ("name_last", user_details.last_name),
-                ("email_address", user_details.username),
-                ("amount", round(rand_value, 2)),
-                ("item_name", "Self Study Campus - Order Number : #" + str(user_cart.id)),
-                ("item_description", "Self Study Campus Course Order"),
-                ("custom_int1", user_details.id),
-                ("custom_str1", user_details.username),
-                ("payment_method", "cc"),
-                ("passphrase", os.environ['PAYFAST_PASSPHRASE'])
+            for item in user_cart_items:
+                UserCourses.objects.create(
+                    pf_payment_id= pf_data['pf_payment_id'],
+                    user_id=item.user_id,
+                    item_id=item.item_id,
+                    title=item.title
+                    )
+
+            Orders.objects.create(
+            pf_payment_id = pf_data['pf_payment_id'],
+            payment_status = pf_data['payment_status'],
+            item_name = pf_data['item_name'],
+            amount_gross = round(Decimal(pf_data['amount_gross']), 2),
+            amount_fee = round(Decimal(pf_data['amount_fee']), 2),
+            amount_net = round(Decimal(pf_data['amount_net']), 2),
+            name_first = pf_data['name_first'],
+            name_last = pf_data['name_last'],
+            email_address = pf_data['email_address']
             )
+            CartItems.objects.filter(user_id=user_details.id).delete()
+            UserCart.objects.get(user_id=user_details.id).delete()
 
-            url_data = urlencode(data)
-
-            signature = hashlib.md5(url_data.encode()).hexdigest()
-
-            TestSig.objects.create(signature=pf_data['signature'], from_where='Pay Fast')
-            TestSig.objects.create(signature=signature, from_where='From Self Study')
-
-            if pf_data['signature'] == signature:
-                for item in user_cart_items:
-                    UserCourses.objects.create(
-                        pf_payment_id= pf_data['pf_payment_id'],
-                        user_id=item.user_id,
-                        item_id=item.item_id,
-                        title=item.title
-                        )
-
-                Orders.objects.create(
-                pf_payment_id = pf_data['pf_payment_id'],
-                payment_status = pf_data['payment_status'],
-                item_name = pf_data['item_name'],
-                amount_gross = round(Decimal(pf_data['amount_gross']), 2),
-                amount_fee = round(Decimal(pf_data['amount_fee']), 2),
-                amount_net = round(Decimal(pf_data['amount_net']), 2),
-                name_first = pf_data['name_first'],
-                name_last = pf_data['name_last'],
-                email_address = pf_data['email_address']
-                )
-                CartItems.objects.filter(user_id=user_details.id).delete()
-                UserCart.objects.get(user_id=user_details.id).delete()
-            else:
-                return HttpResponse(status=400)
         else:
-            return HttpResponse(status=404)
+            return HttpResponse(status=400)
     else:
-        return HttpResponse(status=302)
+        return HttpResponse(status=403)
 
     return HttpResponse()
 
