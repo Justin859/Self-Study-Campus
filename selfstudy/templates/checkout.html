@@ -25,8 +25,8 @@
             <div class="col-12">
                 <nav>
                     <ol class="cd-breadcrumb d-flex justify-content-center">
-                        <li><em style="font-size: 20px; color:#EB944F !important;">Cart</em></li>
-                        <li class="current"><em style="font-size: 20px;">Check Out</em></li>
+                        <li><em style="font-size: 20px;">Cart</em></li>
+                        <li class="current"><em style="font-size: 20px; color:#EB944F !important;">Check Out</em></li>
                         <li><em style="font-size: 20px;">Done</em></li>
                     </ol>
                 </nav>
@@ -69,9 +69,9 @@
                 <form action="https://sandbox.payfast.co.za/eng/process" method="POST" required>
                         <input type="hidden" name="merchant_id" value="10004715" required>
                         <input type="hidden" name="merchant_key" value="dhdw9uqzmpzo0" required>
-                        <input type="hidden" name="return_url" value="https://lit-gorge-69771.herokuapp.com/success" required>
-                        <input type="hidden" name="cancel_url" value="https://lit-gorge-69771.herokuapp.com/cancel" required>
-                        <input type="hidden" name="notify_url" value="https://lit-gorge-69771.herokuapp.com/notify" required>
+                        <input type="hidden" name="return_url" value="https://lit-gorge-69771.herokuapp.com/success/" required>
+                        <input type="hidden" name="cancel_url" value="https://lit-gorge-69771.herokuapp.com/cancel/" required>
+                        <input type="hidden" name="notify_url" value="https://lit-gorge-69771.herokuapp.com/notify/" required>
                         <input type="hidden" name="name_first" value="{{user.first_name}}">
                         <input type="hidden" name="name_last" value="{{user.last_name}}">
                         <input type="hidden" name="email_address" value="{{user.username}}">

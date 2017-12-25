@@ -257,6 +257,7 @@ def checkout(request):
 
     return render(request, 'checkout.html', {'user_cart': user_cart, 'user_cart_items': user_cart_items, 'signature': signature, 'cart_empty': cart_empty})
 
+@csrf_exempt
 def notify(request):
     
     pf_data = request.POST
