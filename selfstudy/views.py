@@ -348,11 +348,11 @@ def notify(request):
                 CartItems.objects.filter(user_id=user_details.id).delete()
                 UserCart.objects.get(user_id=user_details.id).delete()
             else:
-                return HttpResponse(status=403)
+                return HttpResponse("signature does not match.")
         else:
-            return HttpResponse(status=403)
+            return HttpResponse("payment status is not complete.")
     else:
-        return HttpResponse(status=403)
+        return HttpResponse("invalid ip address.")
 
     return HttpResponse()
 
