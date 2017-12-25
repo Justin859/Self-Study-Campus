@@ -1,7 +1,8 @@
 import hashlib
-from urllib.parse import urlencode
 import os
+import requests 
 
+from urllib.parse import urlencode
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
@@ -9,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django import forms
 from django.forms import formset_factory
 
@@ -17,6 +18,24 @@ from decimal import *
 
 from .forms import *
 from .models import *
+
+# Custom methods
+
+def user_is_admin(user):
+    users_in_group = Group.objects.get(name='admin').user_set.all()
+    
+    if user in users_in_group:
+        return True
+    else:
+        return False
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 # Create your views here.
 def index(request):
@@ -204,6 +223,7 @@ def cart_view(request):
                     user_cart.items_total -= 1
                     user_cart.cart_total -= item['item_price']
             user_cart.save()
+            messages.success(request, 'Selected items have been removed from your cart.')
             return HttpResponseRedirect('/shopping-cart/')
     else:
         formset = CartEditFormSet()
@@ -233,6 +253,8 @@ def checkout(request):
     else:
         user_cart_items = False;
 
+    rand_value = Currency.objects.get(currency='ZAR').current_rate * user_cart.cart_total
+
     data = (
         ("merchant_id", "10004715"),
         ("merchant_key", "dhdw9uqzmpzo0"),
@@ -242,7 +264,7 @@ def checkout(request):
         ("name_first", request.user.first_name),
         ("name_last", request.user.last_name),
         ("email_address", request.user.username),
-        ("amount", user_cart.cart_total),
+        ("amount", round(rand_value, 2)),
         ("item_name", "Self Study Campus - Order Number : #" + str(user_cart.id)),
         ("item_description", "Self Study Campus Course Order"),
         ("custom_int1", request.user.id),
@@ -255,22 +277,115 @@ def checkout(request):
 
     signature = hashlib.md5(url_data.encode()).hexdigest()
 
-    return render(request, 'checkout.html', {'user_cart': user_cart, 'user_cart_items': user_cart_items, 'signature': signature, 'cart_empty': cart_empty})
+    return render(request, 'checkout.html', {
+        'user_cart': user_cart,
+        'user_cart_items': user_cart_items,
+        'signature': signature,
+        'cart_empty': cart_empty,
+        'rand_value': round(rand_value, 2)
+        })
 
 @csrf_exempt
 def notify(request):
-    
-    pf_data = request.POST
+
+    host_ip = get_client_ip(request)
+    valid_ip = ['41.74.179.194', '41.74.179.195', '41.74.179.196', '41.74.179.197', '41.74.179.200',
+                '41.74.179.201', '41.74.179.203','41.74.179.204', '41.74.179.210', '41.74.179.211',
+                '41.74.179.212', '41.74.179.217', '41.74.179.218', '197.97.145.156']
+
+    if host_ip in valid_ip:
+        pf_data = request.POST
+
+        user_cart = UserCart.objects.get(user_id=pf_data['custom_int1'])
+        user_cart_items = CartItems.filter(user_id=pf_data['custom_int1'])
+        user_details = User.objects.get(id=pf_data['custom_int1'])
+        
+        if pf_data['payment_status'] == 'COMPLETE':
+            rand_value = Currency.objects.get(currency='ZAR').current_rate * user_cart.cart_total
+
+            data = (
+                ("merchant_id", "10004715"),
+                ("merchant_key", "dhdw9uqzmpzo0"),
+                ("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
+                ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
+                ("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
+                ("name_first", user_details.first_name),
+                ("name_last", user_details.last_name),
+                ("email_address", user_details.username),
+                ("amount", round(rand_value, 2)),
+                ("item_name", "Self Study Campus - Order Number : #" + str(user_cart.id)),
+                ("item_description", "Self Study Campus Course Order"),
+                ("custom_int1", user_details.id),
+                ("custom_str1", user_details.username),
+                ("payment_method", "cc"),
+                ("passphrase", os.environ['PAYFAST_PASSPHRASE'])
+            )
+
+            url_data = urlencode(data)
+
+            signature = hashlib.md5(url_data.encode()).hexdigest()
+
+            if pf_data['signature'] == signature:
+                for item in user_cart_items:
+                    UserCourses.objects.create(
+                        pf_payment_id= pf_data['pf_payment_id'],
+                        user_id=item.user_id,
+                        item_id=item.item_id,
+                        title=item.title
+                        )
+
+                CartItems.objects.filter(user_id=user_details.id).delete()
+                Orders.objects.create(
+                pf_payment_id = pf_data['pf_payment_id'],
+                payment_status = pf_data['payment_status'],
+                item_name = pf_data['item_name'],
+                amount_gross = round(pf_data['amount_gross'], 2),
+                amount_fee = round(pf_data['amount_fee'], 2),
+                amount_net = round(pf_data['amount_net'], 2),
+                name_first = pf_data['name_first'],
+                name_last = pf_data['name_last'],
+                email_address = pf_data['email_address']
+                )
+            else:
+                return HttpResponse(status=403)
+        else:
+            return HttpResponse(status=403)
+    else:
+        return HttpResponse(status=403)
 
     return HttpResponse()
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/login/')
 def cancel(request):
 
     return render(request, 'cancel.html', {})
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/login/')
 def success(request):
 
     return render(request, 'success.html', {})
 
+@login_required(login_url='/login/')
+def update_currency(request):
+    if not user_is_admin(request.user):
+
+        return HttpResponse(status=403)
+    else:
+        zar = Currency.objects.get(currency='ZAR') 
+        if request.method == 'POST':
+            form = UpdateCurrency(request.POST)
+
+            if form.is_valid():
+                currency_zar = form.cleaned_data['currency']
+                current_rate_usd = form.cleaned_data['current_rate']
+
+                update = requests.get('https://openexchangerates.org/api/latest.json?app_id=' + os.environ['OPENEXCHANGE_APP_ID'] ).json()
+                zar.current_rate = round(update['rates']['ZAR'], 2)
+                zar.save()
+                HttpResponseRedirect('/update-currency/')
+
+                messages.success(request, 'ZAR has been updated')
+        else:
+            form = UpdateCurrency()
+
+        return render(request, 'update_currency.html', {'form': form, 'zar': zar})

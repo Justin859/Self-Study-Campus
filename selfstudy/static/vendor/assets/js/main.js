@@ -20,4 +20,14 @@ $('#submit-form').click(function() {
     $(this).prop("disabled")
 })
 
+$('#DropDownAccount').on('hidden.bs.collapse', function () {
+    $('#faq').removeClass('hidden-sm-down');
+    $('#tc').removeClass('hidden-sm-down');
+});
+
+$('#DropDownAccount').on('show.bs.collapse', function () {
+    $('#faq').addClass('hidden-sm-down');
+    $('#tc').addClass('hidden-sm-down');
+})
+
 });

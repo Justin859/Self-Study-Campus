@@ -67,4 +67,26 @@ class CartItems(models.Model):
     class Meta:
         verbose_name = 'Cart Item'
         verbose_name_plural = 'Cart Items'
-        
+
+class Currency(models.Model):
+
+    currency = models.CharField(max_length=255)
+    current_rate = models.DecimalField(max_digits=9, decimal_places=2)
+
+class UserCourses(models.Model):
+
+    pf_payment_id = models.CharField(max_length=101)
+    user_id = models.IntegerField()
+    item_id = models.IntegerField()
+    title = models.CharField(max_length=255)
+
+class Orders(models.Model):
+    pf_payment_id = models.IntegerField()
+    payment_status = models.CharField(max_length=255)
+    item_name = models.CharField(max_length=255)
+    amount_gross = models.DecimalField(max_digits=9, decimal_places=2)
+    amount_fee = models.DecimalField(max_digits=9, decimal_places=2)
+    amount_net = models.DecimalField(max_digits=9, decimal_places=2)
+    name_first = models.CharField(max_length=255)
+    name_last = models.CharField(max_length=255)
+    email_address = models.CharField(max_length=255)

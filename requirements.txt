@@ -6,4 +6,5 @@ whitenoise==2.0.6
 pysocks==1.6.7
 twilio==6.9.1
 markdown2==2.3.4
+requests==2.18.4
 

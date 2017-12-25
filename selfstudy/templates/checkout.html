@@ -62,7 +62,8 @@
                     <div class="d-flex justify-content-end">
                         <ul class="list-unstyled">
                             <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;" >Items</span> <span class="float-right">{{user_cart.items_total}}&nbsp;</span></li>
-                            <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;">Total</span> <span class="float-right">${{user_cart.cart_total}}&nbsp;</span></li>
+                            <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;">Total</span> <span class="float-right">USD ${{user_cart.cart_total}}&nbsp;</span></li>
+                            <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;"></span> <span class="float-right">ZAR R{{rand_value}}&nbsp;</span></li>
                         </ul>
                     </div>
 
@@ -75,7 +76,7 @@
                         <input type="hidden" name="name_first" value="{{user.first_name}}">
                         <input type="hidden" name="name_last" value="{{user.last_name}}">
                         <input type="hidden" name="email_address" value="{{user.username}}">
-                        <input type="hidden" name="amount" value="{{user_cart.cart_total}}">
+                        <input type="hidden" name="amount" value="{{rand_value}}">
                         <input type="hidden" name="item_name" value="Self Study Campus - Order Number : #{{user_cart.id}}" required>
                         <input type="hidden" name="item_description" value="Self Study Campus Course Order" required>
                         <input type="hidden" name="custom_int1" value="{{user.id}}"required>

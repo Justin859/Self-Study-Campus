@@ -46,4 +46,8 @@ class CartEdit(forms.Form):
     item_price = forms.DecimalField(max_digits=6, decimal_places=2)
     item_checked = forms.BooleanField(required=False)
 
+class UpdateCurrency(forms.Form):
+    currency = forms.CharField(max_length=255)
+    current_rate = forms.DecimalField(max_digits=9, decimal_places=2)
+
 

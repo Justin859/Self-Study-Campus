@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^notify/$', selfstudy.views.notify, name='notify'),
     url(r'^cancel/$', selfstudy.views.cancel, name='cancel'),
     url(r'^success/$', selfstudy.views.success, name='success'),
+    url(r'^update-currency/$', selfstudy.views.update_currency, name='currency'),
     url(r'^course-library/(?P<course_id>[0-9]+)/(?P<course_title>[A-Za-z\s:0-9]+)/detail/$', selfstudy.views.course_library, name='courses')
 ]

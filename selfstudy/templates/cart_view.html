@@ -6,6 +6,20 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="row">
+    <div class="col-12 col-md-8 offset-md-2">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{message}}</strong> Has successfuly been added to your shopping cart.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 <div class="container-fluid">
 
     <section style="margin-top: 50px !important; padding-top: 0px !important; background-color: #ffffff">
