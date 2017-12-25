@@ -46,6 +46,8 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% if user_cart_items %}
+                            
                             {% for item in user_cart_items %}
                             
                             <tr>
@@ -55,6 +57,8 @@
                             </tr>
     
                             {% endfor %}
+                            
+                            {% endif %}
                         </tbody>
                     </table>
 

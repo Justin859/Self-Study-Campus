@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'vendor/add_ons/breadcrumbs-and-multistep-indicator/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <section style="margin-top: 50px !important; padding-top: 0px !important; background-color: #ffffff">
+        <br />
+        <div class="row hidden-sm-down">
+            <div class="col-12">
+                <nav>
+                    <ol class="cd-breadcrumb triangle d-flex justify-content-center" style="margin-top: 0px !important; padding-top: 0px !important;">
+                        <li><em>Cart</em></li>
+                        <li><em>Check Out</em></li>
+                        <li class="current"><em>Done</em></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row hidden-md-up">
+            <div class="col-12">
+                <nav>
+                    <ol class="cd-breadcrumb d-flex justify-content-center">
+                        <li><em style="font-size: 20px;">Cart</em></li>
+                        <li class="current"><em>Check Out</em></li>
+                        <li><em style="font-size: 20px; font-size: 20px; color:#EB944F !important;">Done</em></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-12 col-md-6">
+                <br />
+                <h1>Order Successful <small class="text-muted">Thank you for your purchase!</small></h1>
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}
+
+{% block scripts%}
+<script src="{% static 'vendor/add_ons/breadcrumbs-and-multistep-indicator/js/modernizr.js' %}"></script>
+{% endblock %}

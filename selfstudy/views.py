@@ -205,16 +205,18 @@ def cart_view(request):
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
+        CartEditFormSet = formset_factory(CartEdit, extra=user_cart.items_total)
     else:
         user_cart = False
         cart_empty = True
+        CartEditFormSet = formset_factory(CartEdit)
 
     if user_cart:
         user_cart_items = CartItems.objects.filter(cart_id=user_cart.id)
     else:
         user_cart_items = False;
 
-    CartEditFormSet = formset_factory(CartEdit, extra=user_cart.items_total)
+    
 
     if request.method == 'POST':
         formset = CartEditFormSet(request.POST)
@@ -246,16 +248,18 @@ def checkout(request):
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
+        rand_value = Currency.objects.get(currency='ZAR').current_rate * user_cart.cart_total
+        user_cart_id = user_cart.id
     else:
         user_cart = False
+        user_cart_id = 000
         cart_empty = True
+        rand_value = 0
 
     if user_cart:
         user_cart_items = CartItems.objects.filter(cart_id=user_cart.id)
     else:
         user_cart_items = False;
-
-    rand_value = Currency.objects.get(currency='ZAR').current_rate * user_cart.cart_total
 
     data = (
         ("merchant_id", "10004715"),
@@ -267,7 +271,7 @@ def checkout(request):
         ("name_last", request.user.last_name),
         ("email_address", request.user.username),
         ("amount", round(rand_value, 2)),
-        ("item_name", "Self Study Campus - Order Number : #" + str(user_cart.id)),
+        ("item_name", "Self Study Campus - Order Number : #" + str(user_cart_id)),
         ("item_description", "Self Study Campus Course Order"),
         ("custom_int1", request.user.id),
         ("custom_str1", request.user.username),
@@ -336,7 +340,7 @@ def notify(request):
 @login_required(login_url='/login/')
 def cancel(request):
 
-    return render(request, 'cancel.html', {})
+    return HttpResponseRedirect('/shopping-cart/')
 
 @login_required(login_url='/login/')
 def success(request):
