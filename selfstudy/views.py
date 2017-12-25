@@ -335,17 +335,7 @@ def notify(request):
                         )
 
                 CartItems.objects.filter(user_id=user_details.id).delete()
-                Orders.objects.create(
-                pf_payment_id = pf_data['pf_payment_id'],
-                payment_status = pf_data['payment_status'],
-                item_name = pf_data['item_name'],
-                amount_gross = round(pf_data['amount_gross'], 2),
-                amount_fee = round(pf_data['amount_fee'], 2),
-                amount_net = round(pf_data['amount_net'], 2),
-                name_first = pf_data['name_first'],
-                name_last = pf_data['name_last'],
-                email_address = pf_data['email_address']
-                )
+
             else:
                 return HttpResponse(status=403)
         else:
