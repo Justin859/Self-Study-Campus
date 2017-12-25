@@ -350,7 +350,7 @@ def notify(request):
                 CartItems.objects.filter(user_id=user_details.id).delete()
                 UserCart.objects.get(user_id=user_details.id).delete()
             else:
-                return HttpResponse(status=403)
+                return HttpResponse(status=400)
         else:
             return HttpResponse(status=404)
     else:
