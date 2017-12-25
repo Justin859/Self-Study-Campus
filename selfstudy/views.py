@@ -39,6 +39,8 @@ def get_client_ip(request):
 
 # Create your views here.
 def index(request):
+    host_ip = get_client_ip(request)
+
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
     if user_has_cart:
@@ -76,7 +78,7 @@ def index(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'index.html', {'form': form, 'user_cart': user_cart, 'cart_empty': cart_empty})
+    return render(request, 'index.html', {'form': form, 'user_cart': user_cart, 'cart_empty': cart_empty, 'host_ip': host_ip})
 
 def user_login(request):
     logout(request)
@@ -291,7 +293,7 @@ def notify(request):
     host_ip = get_client_ip(request)
     valid_ip = ['41.74.179.194', '41.74.179.195', '41.74.179.196', '41.74.179.197', '41.74.179.200',
                 '41.74.179.201', '41.74.179.203','41.74.179.204', '41.74.179.210', '41.74.179.211',
-                '41.74.179.212', '41.74.179.217', '41.74.179.218', '197.97.145.156']
+                '41.74.179.212', '41.74.179.217', '41.74.179.218']
 
     if host_ip in valid_ip:
         pf_data = request.POST
@@ -338,9 +340,9 @@ def notify(request):
                 pf_payment_id = pf_data['pf_payment_id'],
                 payment_status = pf_data['payment_status'],
                 item_name = pf_data['item_name'],
-                amount_gross = round(pf_data['amount_gross'], 2),
-                amount_fee = round(pf_data['amount_fee'], 2),
-                amount_net = round(pf_data['amount_net'], 2),
+                amount_gross = round(Decimal(pf_data['amount_gross']), 2),
+                amount_fee = round(Decimal(pf_data['amount_fee']), 2),
+                amount_net = round(Decimal(pf_data['amount_net']), 2),
                 name_first = pf_data['name_first'],
                 name_last = pf_data['name_last'],
                 email_address = pf_data['email_address']
@@ -348,11 +350,11 @@ def notify(request):
                 CartItems.objects.filter(user_id=user_details.id).delete()
                 UserCart.objects.get(user_id=user_details.id).delete()
             else:
-                return HttpResponse(403)
+                return HttpResponse(status=403)
         else:
-            return HttpResponse(404)
+            return HttpResponse(status=403)
     else:
-        return HttpResponse(500)
+        return HttpResponse(status=403)
 
     return HttpResponse()
 
