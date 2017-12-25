@@ -326,7 +326,7 @@ def notify(request):
             url_data = urlencode(data)
 
             signature = hashlib.md5(url_data.encode()).hexdigest()
-            TestSig.objects.create(signature=signature)
+
             if pf_data['signature'] == signature:
                 for item in user_cart_items:
                     UserCourses.objects.create(
@@ -335,18 +335,7 @@ def notify(request):
                         item_id=item.item_id,
                         title=item.title
                         )
-
-                Orders.objects.create(
-                pf_payment_id = pf_data['pf_payment_id'],
-                payment_status = pf_data['payment_status'],
-                item_name = pf_data['item_name'],
-                amount_gross = round(Decimal(pf_data['amount_gross']), 2),
-                amount_fee = round(Decimal(pf_data['amount_fee']), 2),
-                amount_net = round(Decimal(pf_data['amount_net']), 2),
-                name_first = pf_data['name_first'],
-                name_last = pf_data['name_last'],
-                email_address = pf_data['email_address']
-                )
+                        
                 CartItems.objects.filter(user_id=user_details.id).delete()
                 UserCart.objects.get(user_id=user_details.id).delete()
             else:

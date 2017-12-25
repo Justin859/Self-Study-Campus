@@ -90,6 +90,3 @@ class Orders(models.Model):
     name_first = models.CharField(max_length=255)
     name_last = models.CharField(max_length=255)
     email_address = models.CharField(max_length=255)
-
-class TestSig(models.Model):
-    signature = models.CharField(max_length=255)
