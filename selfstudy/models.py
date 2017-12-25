@@ -75,13 +75,13 @@ class Currency(models.Model):
 
 class UserCourses(models.Model):
 
-    pf_payment_id = models.CharField(max_length=101)
+    pf_payment_id = models.IntegerField()
     user_id = models.IntegerField()
     item_id = models.IntegerField()
     title = models.CharField(max_length=255)
 
 class Orders(models.Model):
-    pf_payment_id = models.CharField(max_length=255)
+    pf_payment_id = models.IntegerField()
     payment_status = models.CharField(max_length=255)
     item_name = models.CharField(max_length=255)
     amount_gross = models.DecimalField(max_digits=9, decimal_places=2)
