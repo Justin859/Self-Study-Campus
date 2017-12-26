@@ -363,6 +363,7 @@ def notify(request):
                 return HttpResponse(status=400)
         else:
             print(pf_data)
+            print("My Signature: " + signature)
             return HttpResponse(status=409)
     else:
         return HttpResponse(status=403)
