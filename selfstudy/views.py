@@ -149,7 +149,7 @@ def course_library(request, course_id, course_title):
                 cart.items_total += 1
                 cart.save()
         
-            messages.success(request, selected_course.title)
+            messages.success(request, selected_course.title + " has been added to your shopping cart.")
             
         return HttpResponseRedirect("/course-library/" +course_id+ "/" +course_title+ "/detail")
     else:
@@ -280,7 +280,6 @@ def checkout(request):
     )
 
     url_data = urlencode(data)
-
     signature = hashlib.md5(url_data.encode()).hexdigest()
 
     return render(request, 'checkout.html', {
@@ -297,45 +296,68 @@ def notify(request):
     host_ip = get_client_ip(request)
     valid_ip = ['41.74.179.194', '41.74.179.195', '41.74.179.196', '41.74.179.197', '41.74.179.200',
                 '41.74.179.201', '41.74.179.203','41.74.179.204', '41.74.179.210', '41.74.179.211',
-                '41.74.179.212', '41.74.179.217', '41.74.179.218', '127.0.0.1', '197.88.46.29']
+                '41.74.179.212', '41.74.179.217', '41.74.179.218']
 
     if host_ip in valid_ip:
         pf_data = request.POST
+
+        data = (
+            ('pf_payment_id', pf_data['pf_payment_id']),
+            ('payment_status', pf_data['payment_status']),
+            ('item_name', pf_data['item_name']),
+            ('item_description', pf_data['item_description']),
+            ('amount_gross', pf_data['amount_gross']),
+            ('amount_fee', pf_data['amount_fee']),
+            ('amount_net', pf_data['amount_net']),
+            ('custom_str1', pf_data['custom_str1']),
+            ('custom_int1', pf_data['custom_int1']),
+            ('name_first', pf_data['name_first']),
+            ('name_last', pf_data['name_last']),
+            ('email_address', pf_data['email_address']),
+            ('merchant_id', pf_data['merchant_id']),
+            ('passphrase', os.environ['PAYFAST_PASSPHRASE'])
+        )
+
+        url_data = urlencode(data)
+        signature = hashlib.md5(url_data.encode()).hexdigest()
 
         user_cart = UserCart.objects.get(user_id=pf_data['custom_int1'])
         user_cart_items = CartItems.objects.filter(user_id=pf_data['custom_int1'])
         user_details = User.objects.get(id=pf_data['custom_int1'])
 
-        if pf_data['payment_status'] == 'COMPLETE':
+        if signature == pf_data['signature']:
+            if pf_data['payment_status'] == 'COMPLETE':
 
-            for item in user_cart_items:
-                UserCourses.objects.create(
-                    pf_payment_id= pf_data['pf_payment_id'],
-                    user_id=item.user_id,
-                    item_id=item.item_id,
-                    title=item.title
-                    )
+                for item in user_cart_items:
+                    UserCourses.objects.create(
+                        pf_payment_id= pf_data['pf_payment_id'],
+                        user_id=item.user_id,
+                        item_id=item.item_id,
+                        title=item.title
+                        )
 
-            Orders.objects.create(
-            pf_payment_id = pf_data['pf_payment_id'],
-            payment_status = pf_data['payment_status'],
-            item_name = pf_data['item_name'],
-            amount_gross = round(Decimal(pf_data['amount_gross']), 2),
-            amount_fee = round(Decimal(pf_data['amount_fee']), 2),
-            amount_net = round(Decimal(pf_data['amount_net']), 2),
-            name_first = pf_data['name_first'],
-            name_last = pf_data['name_last'],
-            email_address = pf_data['email_address']
-            )
-            CartItems.objects.filter(user_id=user_details.id).delete()
-            UserCart.objects.get(user_id=user_details.id).delete()
+                Orders.objects.create(
+                pf_payment_id = pf_data['pf_payment_id'],
+                payment_status = pf_data['payment_status'],
+                item_name = pf_data['item_name'],
+                amount_gross = round(Decimal(pf_data['amount_gross']), 2),
+                amount_fee = round(Decimal(pf_data['amount_fee']), 2),
+                amount_net = round(Decimal(pf_data['amount_net']), 2),
+                name_first = pf_data['name_first'],
+                name_last = pf_data['name_last'],
+                email_address = pf_data['email_address']
+                )
+                CartItems.objects.filter(user_id=user_details.id).delete()
+                UserCart.objects.get(user_id=user_details.id).delete()
 
+            else:
+                return HttpResponse(status=400)
         else:
-            return HttpResponse(status=400)
+            return HttpResponse(status=409)
     else:
         return HttpResponse(status=403)
 
-    return HttpResponse()
+    return HttpResponse(pf_data)
 
 @login_required(login_url='/login/')
 def cancel(request):
