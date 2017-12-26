@@ -302,6 +302,7 @@ def notify(request):
         pf_data = request.POST
 
         data = (
+            ('m_payment_id', pf_data['m_payment_id']),
             ('pf_payment_id', pf_data['pf_payment_id']),
             ('payment_status', pf_data['payment_status']),
             ('item_name', pf_data['item_name']),
@@ -310,7 +311,15 @@ def notify(request):
             ('amount_fee', pf_data['amount_fee']),
             ('amount_net', pf_data['amount_net']),
             ('custom_str1', pf_data['custom_str1']),
+            ('custom_str1', pf_data['custom_str2']),
+            ('custom_str1', pf_data['custom_str3']),
+            ('custom_str1', pf_data['custom_str4']),
+            ('custom_str1', pf_data['custom_str5']),
             ('custom_int1', pf_data['custom_int1']),
+            ('custom_int1', pf_data['custom_int2']),
+            ('custom_int1', pf_data['custom_int3']),
+            ('custom_int1', pf_data['custom_int4']),
+            ('custom_int1', pf_data['custom_int5']),
             ('name_first', pf_data['name_first']),
             ('name_last', pf_data['name_last']),
             ('email_address', pf_data['email_address']),
