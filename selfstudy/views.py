@@ -351,6 +351,7 @@ def notify(request):
                 UserCart.objects.get(user_id=user_details.id).delete()
 
             else:
+                print(pf_data)
                 return HttpResponse(status=400)
         else:
             return HttpResponse(status=409)
