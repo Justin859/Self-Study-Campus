@@ -358,17 +358,17 @@ def notify(request):
                 )
                 CartItems.objects.filter(user_id=user_details.id).delete()
                 UserCart.objects.get(user_id=user_details.id).delete()
-
+                
+                url_data = urlencode(pf_data)
+                r = requests.post('https://sandbox.payfast.co.za/eng/query/validate', data=url_data)
+                print(r.text)
             else:
                 return HttpResponse(status=400)
         else:
-            print(pf_data)
-            print("My Signature: " + signature)
             return HttpResponse(status=409)
     else:
         return HttpResponse(status=403)
-
-    return HttpResponse(pf_data)
+    return HttpResponse()
 
 @login_required(login_url='/login/')
 def cancel(request):
