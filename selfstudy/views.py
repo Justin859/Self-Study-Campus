@@ -521,6 +521,8 @@ def cancel(request):
 
 @login_required(login_url='/login/')
 def success(request):
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+    
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
