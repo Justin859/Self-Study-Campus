@@ -79,6 +79,8 @@ class UserCourses(models.Model):
     user_id = models.IntegerField()
     item_id = models.IntegerField()
     title = models.CharField(max_length=255)
+    voucher = models.CharField(max_length=255)
+    voucher_expiry_date = models.CharField(max_length=255)
 
 class Orders(models.Model):
     pf_payment_id = models.IntegerField()
@@ -103,3 +105,8 @@ class Vouchers(models.Model):
     class Meta:
         verbose_name = 'Course Voucher'
         verbose_name_plural = 'Course Vouchers'
+
+class PaidUser(models.Model):
+    user_id = models.IntegerField()
+    user_name = models.CharField(max_length=255)
+    user_password = models.CharField(max_length=255)

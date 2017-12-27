@@ -70,8 +70,8 @@
                             <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;"></span> <span class="float-right">ZAR R{{rand_value}}&nbsp;</span></li>
                         </ul>
                     </div>
-
-                <form action="https://sandbox.payfast.co.za/eng/process" method="POST" required>
+                <form action="" method="POST">
+                    {% csrf_token %}
                         <input type="hidden" name="merchant_id" value="10004715" required>
                         <input type="hidden" name="merchant_key" value="dhdw9uqzmpzo0" required>
                         <input type="hidden" name="return_url" value="https://lit-gorge-69771.herokuapp.com/success/" required>
@@ -83,7 +83,7 @@
                         <input type="hidden" name="amount" value="{{rand_value}}">
                         <input type="hidden" name="item_name" value="Self Study Campus - Order Number : #{{user_cart.id}}" required>
                         <input type="hidden" name="item_description" value="Self Study Campus Course Order" required>
-                        <input type="hidden" name="custom_int1" value="{{user.id}}"required>
+                        <input type="hidden" name="custom_int1" value="{{user.id}}" required>
                         <input type="hidden" name="custom_str1" value="{{user.username}}" required>
                         <input type="hidden" name="payment_method" value="cc" required>
                         <input type="hidden" name="signature" value="{{signature}}" required>

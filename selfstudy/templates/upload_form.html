@@ -5,13 +5,21 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Success</strong> {{message}}.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-12">
-            <h1><span style="color: #1C4EC8">Upload Voucherss to Self Study Campus Database</span></h1>
-            {% if messages %}
-                {% for message in messages %}
-                    <h4>{{message}}</h4>
-                {% endfor %}
-            {% endif %}
+            <h1><span style="color: #1C4EC8">Upload Vouchers to Self Study Campus Database</span></h1>
         </div>
     </div>
     <div class="row">

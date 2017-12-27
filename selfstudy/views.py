@@ -1,14 +1,17 @@
 import hashlib
 import os
 import requests 
+import random
 
 import django_excel as excel
 from mohawk import Sender
 
 from urllib.parse import urlencode
+from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -209,10 +212,13 @@ def cart_view(request):
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
         CartEditFormSet = formset_factory(CartEdit, extra=user_cart.items_total)
+        rand_value = Currency.objects.get(currency='ZAR').current_rate * user_cart.cart_total
+
     else:
         user_cart = False
         cart_empty = True
         CartEditFormSet = formset_factory(CartEdit)
+        rand_value = 0
 
     if user_cart:
         user_cart_items = CartItems.objects.filter(cart_id=user_cart.id)
@@ -240,7 +246,8 @@ def cart_view(request):
       'user_cart': user_cart,
       'user_cart_items': user_cart_items,
       'formset': formset,
-      'cart_empty': cart_empty
+      'cart_empty': cart_empty,
+      'rand_value': round(rand_value, 2)
       })
 
 @login_required(login_url='/login/')
@@ -283,14 +290,59 @@ def checkout(request):
     )
 
     url_data = urlencode(data)
+    data_for_payfast = urlencode(data[:14])
     signature = hashlib.md5(url_data.encode()).hexdigest()
+
+    if request.method == 'POST':
+        form = PayFastForm(request.POST)
+        
+        if form.is_valid():
+            merchant_id_sent = form.cleaned_data['merchant_id'] 
+            merchant_key_sent = form.cleaned_data['merchant_key']
+            return_url_sent = form.cleaned_data['return_url']
+            cancel_url_sent = form.cleaned_data['cancel_url']
+            notify_url_sent = form.cleaned_data['notify_url']
+            name_first_sent = form.cleaned_data['name_first']
+            name_last_sent = form.cleaned_data['name_last']
+            email_addres_sent = form.cleaned_data['email_address']
+            amount_sent = form.cleaned_data['amount']
+            item_name_sent = form.cleaned_data['item_name']
+            item_description_sent = form.cleaned_data['item_description']
+            custom_int1_sent = form.cleaned_data['custom_int1']
+            custom_str1_sent = form.cleaned_data['custom_str1']
+            payment_method_sent = form.cleaned_data['payment_method']
+            signature_sent = form.cleaned_data['signature']
+
+            if (merchant_id_sent == data[0][1] and
+                merchant_key_sent == data[1][1] and
+                return_url_sent == data[2][1] and
+                cancel_url_sent == data[3][1] and
+                notify_url_sent == data[4][1] and
+                name_first_sent == data[5][1] and
+                name_last_sent == data[6][1] and
+                email_addres_sent == data[7][1] and
+                amount_sent == data[8][1] and
+                item_name_sent == data[9][1] and
+                item_description_sent == data[10][1] and
+                custom_int1_sent == data[11][1] and
+                custom_str1_sent == data[12][1] and
+                payment_method_sent == data[13][1] and
+                signature_sent == signature):
+
+                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
+            else:
+                return TemplateResponse(request, 'server_error.html', {})
+
+    else:
+        form = PayFastForm()
 
     return render(request, 'checkout.html', {
         'user_cart': user_cart,
         'user_cart_items': user_cart_items,
         'signature': signature,
         'cart_empty': cart_empty,
-        'rand_value': round(rand_value, 2)
+        'rand_value': round(rand_value, 2),
+        'form': form
         })
 
 @csrf_exempt
@@ -339,29 +391,85 @@ def notify(request):
 
         if signature == pf_data['signature']:
             if pf_data['payment_status'] == 'COMPLETE':
+                url = 'https://api.znanja.com/api/hawk/v1/users'
+                method = 'PUT'
+                content_type = 'application/json'
+                content = '{\"first_name\": \"'+pf_data['name_first']+'\", \"last_name\": \"'+pf_data['name_last']+'\", \"email\": \"'+pf_data['email_address']+'\", \"is_active\": false }'
 
-                for item in user_cart_items:
-                    UserCourses.objects.create(
-                        pf_payment_id= pf_data['pf_payment_id'],
-                        user_id=item.user_id,
-                        item_id=item.item_id,
-                        title=item.title
+                sender = Sender({'id': os.environ['ZNANJA_API_ID'],
+                                'key': os.environ['ZNANJA_API_KEY'],
+                                'algorithm': 'sha256'},
+                                url,
+                                method,
+                                content=content,
+                                content_type=content_type)
+
+                r = requests.put(url, data=content,
+                                headers={'Authorization': sender.request_header,
+                                        'Content-Type': content_type})
+                password = ''
+
+                for i in range(10):
+                    password += random.choice(os.environ['PASSWORD_CHARS'])
+                
+                new_paid_user = PaidUser.objects.create(user_id=pf_data['custom_int1'], user_name=pf_data['custom_str1'], user_password=password)
+                new_paid_user.save()
+
+                if r.status_code == requests.codes.ok:
+                    url = 'https://api.znanja.com/api/hawk/v1/user/' + pf_data['email_address']
+                    method = 'POST'
+                    content_type = 'application/json'
+                    content = '{\"first_name\": \"'+pf_data['name_first']+'\", \"last_name\": \"'+pf_data['name_last']+'\", \"email\": \"'+pf_data['email_address']+'\", \"password\": \"'+password+'\", \"password_confirm\": \"'+password+'\", \"is_active\": false }'
+
+                    sender = Sender({'id': os.environ['ZNANJA_API_ID'],
+                                    'key': os.environ['ZNANJA_API_KEY'],
+                                    'algorithm': 'sha256'},
+                                    url,
+                                    method,
+                                    content=content,
+                                    content_type=content_type)
+
+                    rpass = requests.post(url, data=content,
+                                    headers={'Authorization': sender.request_header,
+                                            'Content-Type': content_type})
+
+                    if rpass.status_code == requests.codes.ok:
+
+                        with transaction.atomic():
+                            
+                            for item in user_cart_items:
+                                course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
+                                user_courses = UserCourses.objects.create(
+                                    pf_payment_id= pf_data['pf_payment_id'],
+                                    user_id=item.user_id,
+                                    item_id=item.item_id,
+                                    title=item.title,
+                                    voucher=course_voucher.code,
+                                    voucher_expiry_date=course_voucher.expiry
+                                    )
+
+                                course_voucher.delete()
+                                user_courses.save()
+
+                        Orders.objects.create(
+                        pf_payment_id = pf_data['pf_payment_id'],
+                        payment_status = pf_data['payment_status'],
+                        item_name = pf_data['item_name'],
+                        amount_gross = round(Decimal(pf_data['amount_gross']), 2),
+                        amount_fee = round(Decimal(pf_data['amount_fee']), 2),
+                        amount_net = round(Decimal(pf_data['amount_net']), 2),
+                        name_first = pf_data['name_first'],
+                        name_last = pf_data['name_last'],
+                        email_address = pf_data['email_address']
                         )
-
-                Orders.objects.create(
-                pf_payment_id = pf_data['pf_payment_id'],
-                payment_status = pf_data['payment_status'],
-                item_name = pf_data['item_name'],
-                amount_gross = round(Decimal(pf_data['amount_gross']), 2),
-                amount_fee = round(Decimal(pf_data['amount_fee']), 2),
-                amount_net = round(Decimal(pf_data['amount_net']), 2),
-                name_first = pf_data['name_first'],
-                name_last = pf_data['name_last'],
-                email_address = pf_data['email_address']
-                )
-                CartItems.objects.filter(user_id=user_details.id).delete()
-                UserCart.objects.get(user_id=user_details.id).delete()
-
+                        CartItems.objects.filter(user_id=user_details.id).delete()
+                        UserCart.objects.get(user_id=user_details.id).delete()
+                    else:
+                        print(rpass.text)
+                        return HttpResponse(status=rpass.status_code)
+                else:
+                    print(r.text)
+                    return HttpResponse(status=r.status_code)  
             else:
                 return HttpResponse(status=400)
         else:
@@ -415,8 +523,12 @@ def import_data(request):
             vouchers = request.FILES['file'].get_array()[1:]
             course_title = form.cleaned_data['course']
             selected_course = Courses.objects.get(title=course_title)
-            for voucher in vouchers:
-                Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
+            
+            with transaction.atomic():
+                for voucher in vouchers:
+                    voucher_added = Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
+                    voucher_added.save()
+
             messages.success(request, "Successfull Upload !")
             return HttpResponseRedirect('/upload-vouchers/')
     else:

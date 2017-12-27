@@ -52,6 +52,23 @@ class UpdateCurrency(forms.Form):
     currency = forms.CharField(max_length=255)
     current_rate = forms.DecimalField(max_digits=9, decimal_places=2)
 
+class PayFastForm(forms.Form):
+    merchant_id = forms.CharField(max_length=255)
+    merchant_key = forms.CharField(max_length=255)
+    return_url = forms.CharField(max_length=550)
+    cancel_url = forms.CharField(max_length=550)
+    notify_url = forms.CharField(max_length=255)
+    name_first = forms.CharField(max_length=255)
+    name_last = forms.CharField(max_length=255)
+    email_address = forms.EmailField(max_length=255)
+    amount = forms.DecimalField(max_digits=9, decimal_places=2)
+    item_name = forms.CharField(max_length=255)
+    item_description = forms.CharField(max_length=255)
+    custom_int1 = forms.IntegerField()
+    custom_str1 = forms.CharField(max_length=255)
+    payment_method = forms.CharField(max_length=2)
+    signature = forms.CharField(max_length=255)
+
 list_courses = []
 
 for course in Courses.objects.all():
