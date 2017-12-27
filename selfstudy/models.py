@@ -73,6 +73,13 @@ class Currency(models.Model):
     currency = models.CharField(max_length=255)
     current_rate = models.DecimalField(max_digits=9, decimal_places=2)
 
+    def __str__(self):
+        return self.currency
+        
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = 'Currencies'
+
 class UserCourses(models.Model):
 
     pf_payment_id = models.IntegerField()
@@ -81,6 +88,13 @@ class UserCourses(models.Model):
     title = models.CharField(max_length=255)
     voucher = models.CharField(max_length=255)
     voucher_expiry_date = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.user_id + " " + self.title
+        
+    class Meta:
+        verbose_name = 'User Course'
+        verbose_name_plural = 'User Courses'
 
 class Orders(models.Model):
     pf_payment_id = models.IntegerField()
@@ -113,7 +127,21 @@ class VouchersTotal(models.Model):
     total_vouchers = models.IntegerField(default=0)
     added = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.course + " " + str(self.total_vouchers)
+        
+    class Meta:
+        verbose_name = 'Voucher Total'
+        verbose_name_plural = 'Voucher Totals'
+
 class PaidUser(models.Model):
     user_id = models.IntegerField()
     user_name = models.CharField(max_length=255)
     user_password = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.user_name
+        
+    class Meta:
+        verbose_name = 'Paid User'
+        verbose_name_plural = 'Paid users'
