@@ -64,8 +64,6 @@
                     <hr />
                     {{request.user.username}}
                     {% endif %}
-                        
-
                 </div>
             </div>
         </div>
@@ -77,7 +75,11 @@
                 <div class="icon-list">
                     <a href="/"><i class="fa fa-fw fa-home"></i><span>Home</span></a>
                     <a href="/course-library/1/Project Management Fundamentals/detail/"><i class="fa fa-fw fa-mortar-board"></i><span>Courses</span></a>
+                    {% if user_admin %}
+                    <a id="account-menu" data-toggle="collapse" href="#DropDownAccount" aria-expanded="false" aria-controls="DropDownAccount"><i class="fa fa-fw fa-user-o"></i><span>Admin</span><i class="fa fa-fw fa-caret-down"></i></a>
+                    {% else %}
                     <a id="account-menu" data-toggle="collapse" href="#DropDownAccount" aria-expanded="false" aria-controls="DropDownAccount"><i class="fa fa-fw fa-user-o"></i><span>Account</span><i class="fa fa-fw fa-caret-down"></i></a>
+                    {% endif %}
                     <div class="collapse" id="DropDownAccount">
                         <div>
                             <ul class="list-unstyled">
@@ -93,6 +95,9 @@
                                 <li style="padding-left: 5px;"><a href="#0"><i class="fa fa-fw fa-list-alt"></i><span>My Courses</span></a></li>
                                 {% else %}
                                 <li style="padding-left: 5px;"><a href="/register-account/"><i class="fa fa-fw fa-pencil-square-o"></i><span>Register</span></a></li>
+                                {% endif %}
+                                {% if user_admin %}
+                                <li style="padding-left: 5px;"><a href="/upload-vouchers/"><i class="fa fa-fw fa-cloud-upload"></i><span>Vouchers</span></a></li>
                                 {% endif %}
                             </ul>
                         </div>

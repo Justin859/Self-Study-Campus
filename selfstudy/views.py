@@ -45,6 +45,7 @@ def get_client_ip(request):
 
 # Create your views here.
 def index(request):
+    user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
     if user_has_cart:
@@ -82,9 +83,10 @@ def index(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'index.html', {'form': form, 'user_cart': user_cart, 'cart_empty': cart_empty})
+    return render(request, 'index.html', {'form': form, 'user_cart': user_cart, 'cart_empty': cart_empty, 'user_admin': user_admin})
 
 def user_login(request):
+    user_admin = user_is_admin(request.user)
     logout(request)
     if request.method == 'POST':
 
@@ -117,7 +119,7 @@ def user_logout(request):
     return HttpResponseRedirect('/')
 
 def course_library(request, course_id, course_title):
-
+    user_admin = user_is_admin(request.user)
     selected_course = Courses.objects.get(id=course_id, title=course_title)
 
     categories = CourseCategories.objects.all()
@@ -169,7 +171,8 @@ def course_library(request, course_id, course_title):
      'user_cart': user_cart,
      'item_in_cart': item_in_cart,
      'cart_empty': cart_empty,
-     'user_course': user_course
+     'user_course': user_course,
+     'user_admin': user_admin
      })
 
 def register(request):
@@ -206,6 +209,7 @@ def register(request):
 
 @login_required(login_url='/login/')
 def cart_view(request):
+    user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
     
     if user_has_cart:
@@ -247,12 +251,13 @@ def cart_view(request):
       'user_cart_items': user_cart_items,
       'formset': formset,
       'cart_empty': cart_empty,
-      'rand_value': round(rand_value, 2)
+      'rand_value': round(rand_value, 2),
+      'user_admin': user_admin
       })
 
 @login_required(login_url='/login/')
 def checkout(request):
-
+    user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
     if user_has_cart:
@@ -342,7 +347,8 @@ def checkout(request):
         'signature': signature,
         'cart_empty': cart_empty,
         'rand_value': round(rand_value, 2),
-        'form': form
+        'form': form,
+        'user_admin': user_admin
         })
 
 @csrf_exempt
@@ -521,8 +527,9 @@ def cancel(request):
 
 @login_required(login_url='/login/')
 def success(request):
+    user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
-    
+
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
@@ -530,10 +537,11 @@ def success(request):
         user_cart = False
         cart_empty = True
 
-    return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty': cart_empty})
+    return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty': cart_empty, 'user_admin': user_admin})
 
 @login_required(login_url='/login/')
 def update_currency(request):
+    user_admin = user_is_admin(request.user)
     if not user_is_admin(request.user):
 
         return HttpResponse(status=403)
@@ -555,14 +563,16 @@ def update_currency(request):
         else:
             form = UpdateCurrency()
 
-        return render(request, 'update_currency.html', {'form': form, 'zar': zar})
+        return render(request, 'update_currency.html', {'form': form, 'zar': zar, 'user_admin': user_admin})
 
 def import_data(request):
+    user_admin = user_is_admin(request.user)
+
     if not user_is_admin(request.user):
         return HttpResponse(status=403)
     else:
 
-        vouchers = Vouchers.objects.all().order_by('course_id')
+        vouchers = VouchersTotal.objects.all().order_by('course_id')
 
         courses = Courses.objects.all().order_by('id')
 
@@ -573,12 +583,20 @@ def import_data(request):
                 vouchers = request.FILES['file'].get_array()[1:]
                 course_title = form.cleaned_data['course']
                 selected_course = Courses.objects.get(title=course_title)
-                voucher_total = VouchersTotal.objects.create(course=course_title, course_id=selected_course.id, expiry=vouchers[0][1])
+                voucher_total_exists = VouchersTotal.objects.filter(course_id=selected_course.id).exists()
+                user_courses = UserCourses.objects.all()
+                if not voucher_total_exists:
+                    voucher_total = VouchersTotal.objects.create(course=course_title, course_id=selected_course.id, expiry=vouchers[0][1])
+                else:
+                    voucher_total = VouchersTotal.objects.get(course_id=selected_course.id)
                 with transaction.atomic():
                     for voucher in vouchers:
-                        voucher_added = Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
-                        voucher_added.save()
-                        voucher_total.total_vouchers += 1
+                        voucher_already_exits = Vouchers.objects.filter(code=voucher[0], course_id=selected_course.id).exists()
+                        voucher_with_user = UserCourses.objects.filter(voucher=voucher[0], item_id=selected_course.id).exists()
+                        if not voucher_already_exits and not voucher_with_user:
+                            voucher_added = Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
+                            voucher_added.save()
+                            voucher_total.total_vouchers += 1
                 voucher_total.save()
                 messages.success(request, "Successfull Upload !")
                 return HttpResponseRedirect('/upload-vouchers/')
@@ -589,5 +607,7 @@ def import_data(request):
             'upload_form.html',
             {
                 'form': form,
-                'courses': courses
+                'courses': courses,
+                'vouchers': vouchers,
+                'user_admin': user_admin
             })

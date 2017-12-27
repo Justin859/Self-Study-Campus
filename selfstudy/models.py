@@ -121,8 +121,8 @@ class Vouchers(models.Model):
     expiry = models.CharField(max_length=255)
 
     def __str__(self):
-        return "Course: " + self.course + " | Expriy Date: " + self.expiry
-        
+        return "Course: " + self.course + " | Expriy Date: " + self.expiry + " | Voucher: " + self.code
+
     class Meta:
         verbose_name = 'Course Voucher'
         verbose_name_plural = 'Course Vouchers'

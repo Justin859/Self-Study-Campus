@@ -49,8 +49,27 @@
                 <input type="submit" class="btn btn-primary float-right" value="Upload">
             </form>
         </div>
-        <div class="col-12 col-md-6">
-
+        <div class="col-12 col-md-6">              
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">added</th>
+                    <th scope="col">Vouchers</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for course in vouchers %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{course.course}}</td>
+                    <td>{{course.added}}</td>
+                    <td>{{course.total_vouchers}}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
         </div>
     </div>
 </div>
