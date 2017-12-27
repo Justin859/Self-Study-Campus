@@ -29,7 +29,7 @@ from .models import *
 
 def user_is_admin(user):
     users_in_group = Group.objects.get(name='admin').user_set.all()
-    
+
     if user in users_in_group:
         return True
     else:
@@ -45,8 +45,6 @@ def get_client_ip(request):
 
 # Create your views here.
 def index(request):
-    host_ip = get_client_ip(request)
-
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
     if user_has_cart:
@@ -84,7 +82,7 @@ def index(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'index.html', {'form': form, 'user_cart': user_cart, 'cart_empty': cart_empty, 'host_ip': host_ip})
+    return render(request, 'index.html', {'form': form, 'user_cart': user_cart, 'cart_empty': cart_empty})
 
 def user_login(request):
     logout(request)
@@ -126,7 +124,8 @@ def course_library(request, course_id, course_title):
     courses = Courses.objects.all().order_by('id')
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
     item_in_cart = CartItems.objects.filter(user_id=request.user.id, item_id=course_id).exists()
-    
+    user_course = UserCourses.objects.filter(user_id=request.user.id, item_id=course_id).exists()
+
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
@@ -169,7 +168,8 @@ def course_library(request, course_id, course_title):
      'user_has_cart': user_has_cart,
      'user_cart': user_cart,
      'item_in_cart': item_in_cart,
-     'cart_empty': cart_empty
+     'cart_empty': cart_empty,
+     'user_course': user_course
      })
 
 def register(request):
@@ -388,37 +388,15 @@ def notify(request):
         user_cart = UserCart.objects.get(user_id=pf_data['custom_int1'])
         user_cart_items = CartItems.objects.filter(user_id=pf_data['custom_int1'])
         user_details = User.objects.get(id=pf_data['custom_int1'])
+        is_paid_user = PaidUser.objects.filter(user_id=request.user.id).exists()
 
         if signature == pf_data['signature']:
             if pf_data['payment_status'] == 'COMPLETE':
-                url = 'https://api.znanja.com/api/hawk/v1/user'
-                method = 'PUT'
-                content_type = 'application/json'
-                content = '{\"first_name\": \"'+user_details.first_name+'\", \"last_name\": \"'+user_details.last_name+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"is_active\": false }'
-
-                sender = Sender({'id': os.environ['ZNANJA_API_ID'],
-                                'key': os.environ['ZNANJA_API_KEY'],
-                                'algorithm': 'sha256'},
-                                url,
-                                method,
-                                content=content,
-                                content_type=content_type)
-
-                r = requests.put(url, data=content,
-                                headers={'Authorization': sender.request_header,
-                                        'Content-Type': content_type})
-                password = ''
-
-                for i in range(10):
-                    password += random.choice(os.environ['PASSWORD_CHARS'])
-
-                if r.status_code == requests.codes.ok:
-                    new_paid_user = PaidUser.objects.create(user_id=pf_data['custom_int1'], user_name=pf_data['custom_str1'], user_password=password)
-                    new_paid_user.save()
-                    url = 'https://api.znanja.com/api/hawk/v1/user/' + pf_data['custom_str1']
-                    method = 'POST'
+                if not is_paid_user:
+                    url = 'https://api.znanja.com/api/hawk/v1/user'
+                    method = 'PUT'
                     content_type = 'application/json'
-                    content = '{\"first_name\": \"'+user_details.first_name+'\", \"last_name\": \"'+user_details.last_name+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"password\": \"'+password+'\", \"password_confirm\": \"'+password+'\", \"is_active\": false }'
+                    content = '{\"first_name\": \"'+user_details.first_name+'\", \"last_name\": \"'+user_details.last_name+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"is_active\": false }'
 
                     sender = Sender({'id': os.environ['ZNANJA_API_ID'],
                                     'key': os.environ['ZNANJA_API_KEY'],
@@ -428,47 +406,106 @@ def notify(request):
                                     content=content,
                                     content_type=content_type)
 
-                    rpass = requests.post(url, data=content,
+                    r = requests.put(url, data=content,
                                     headers={'Authorization': sender.request_header,
                                             'Content-Type': content_type})
+                    password = ''
 
-                    if rpass.status_code == requests.codes.ok:
+                    for i in range(10):
+                        password += random.choice(os.environ['PASSWORD_CHARS'])
 
-                        with transaction.atomic():
-                            
-                            for item in user_cart_items:
-                                course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
-                                user_courses = UserCourses.objects.create(
-                                    pf_payment_id= pf_data['pf_payment_id'],
-                                    user_id=item.user_id,
-                                    item_id=item.item_id,
-                                    title=item.title,
-                                    voucher=course_voucher.code,
-                                    voucher_expiry_date=course_voucher.expiry
-                                    )
+                    if r.status_code == requests.codes.ok:
+                        new_paid_user = PaidUser.objects.create(user_id=pf_data['custom_int1'], user_name=pf_data['custom_str1'], user_password=password)
+                        new_paid_user.save()
+                        url = 'https://api.znanja.com/api/hawk/v1/user/' + pf_data['custom_str1']
+                        method = 'POST'
+                        content_type = 'application/json'
+                        content = '{\"first_name\": \"'+user_details.first_name+'\", \"last_name\": \"'+user_details.last_name+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"password\": \"'+password+'\", \"password_confirm\": \"'+password+'\", \"is_active\": false }'
 
-                                course_voucher.delete()
-                                user_courses.save()
+                        sender = Sender({'id': os.environ['ZNANJA_API_ID'],
+                                        'key': os.environ['ZNANJA_API_KEY'],
+                                        'algorithm': 'sha256'},
+                                        url,
+                                        method,
+                                        content=content,
+                                        content_type=content_type)
 
-                        Orders.objects.create(
-                        pf_payment_id = pf_data['pf_payment_id'],
-                        payment_status = pf_data['payment_status'],
-                        item_name = pf_data['item_name'],
-                        amount_gross = round(Decimal(pf_data['amount_gross']), 2),
-                        amount_fee = round(Decimal(pf_data['amount_fee']), 2),
-                        amount_net = round(Decimal(pf_data['amount_net']), 2),
-                        name_first = pf_data['name_first'],
-                        name_last = pf_data['name_last'],
-                        email_address = pf_data['email_address']
-                        )
-                        CartItems.objects.filter(user_id=user_details.id).delete()
-                        UserCart.objects.get(user_id=user_details.id).delete()
+                        rpass = requests.post(url, data=content,
+                                        headers={'Authorization': sender.request_header,
+                                                'Content-Type': content_type})
+
+                        if rpass.status_code == requests.codes.ok:
+
+                            with transaction.atomic():
+                                
+                                for item in user_cart_items:
+                                    course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
+                                    voucher_total = VouchersTotal.objects.get(course_id=item.itemm_id)
+                                    user_courses = UserCourses.objects.create(
+                                        pf_payment_id= pf_data['pf_payment_id'],
+                                        user_id=item.user_id,
+                                        item_id=item.item_id,
+                                        title=item.title,
+                                        voucher=course_voucher.code,
+                                        voucher_expiry_date=course_voucher.expiry
+                                        )
+                                    voucher_total -= 1
+                                    course_voucher.delete()
+                                    user_courses.save()
+                                    voucher_total.save()
+
+                            Orders.objects.create(
+                            pf_payment_id = pf_data['pf_payment_id'],
+                            payment_status = pf_data['payment_status'],
+                            item_name = pf_data['item_name'],
+                            amount_gross = round(Decimal(pf_data['amount_gross']), 2),
+                            amount_fee = round(Decimal(pf_data['amount_fee']), 2),
+                            amount_net = round(Decimal(pf_data['amount_net']), 2),
+                            name_first = pf_data['name_first'],
+                            name_last = pf_data['name_last'],
+                            email_address = pf_data['email_address']
+                            )
+                            CartItems.objects.filter(user_id=user_details.id).delete()
+                            UserCart.objects.get(user_id=user_details.id).delete()
+
+                        else:
+                            print(rpass.text)
+                            return HttpResponse(status=rpass.status_code)
                     else:
-                        print(rpass.text)
-                        return HttpResponse(status=rpass.status_code)
+                        print(r.text)
+                        return HttpResponse(status=r.status_code)
                 else:
-                    print(r.text)
-                    return HttpResponse(status=r.status_code)  
+                    with transaction.atomic():
+                        
+                        for item in user_cart_items:
+                            course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
+                            voucher_total = VouchersTotal.objects.get(course_id=item.itemm_id)
+                            user_courses = UserCourses.objects.create(
+                                pf_payment_id= pf_data['pf_payment_id'],
+                                user_id=item.user_id,
+                                item_id=item.item_id,
+                                title=item.title,
+                                voucher=course_voucher.code,
+                                voucher_expiry_date=course_voucher.expiry
+                                )
+                            voucher_total -= 1
+                            course_voucher.delete()
+                            user_courses.save()
+                            voucher_total.save()
+
+                    Orders.objects.create(
+                    pf_payment_id = pf_data['pf_payment_id'],
+                    payment_status = pf_data['payment_status'],
+                    item_name = pf_data['item_name'],
+                    amount_gross = round(Decimal(pf_data['amount_gross']), 2),
+                    amount_fee = round(Decimal(pf_data['amount_fee']), 2),
+                    amount_net = round(Decimal(pf_data['amount_net']), 2),
+                    name_first = pf_data['name_first'],
+                    name_last = pf_data['name_last'],
+                    email_address = pf_data['email_address']
+                    )
+                    CartItems.objects.filter(user_id=user_details.id).delete()
+                    UserCart.objects.get(user_id=user_details.id).delete()
             else:
                 return HttpResponse(status=400)
         else:
@@ -513,29 +550,36 @@ def update_currency(request):
         return render(request, 'update_currency.html', {'form': form, 'zar': zar})
 
 def import_data(request):
-    courses = Courses.objects.all().order_by('id')
-
-    if request.method == "POST":
-        form = UploadFileForm(request.POST,
-                              request.FILES)
-        if form.is_valid():
-            vouchers = request.FILES['file'].get_array()[1:]
-            course_title = form.cleaned_data['course']
-            selected_course = Courses.objects.get(title=course_title)
-            
-            with transaction.atomic():
-                for voucher in vouchers:
-                    voucher_added = Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
-                    voucher_added.save()
-
-            messages.success(request, "Successfull Upload !")
-            return HttpResponseRedirect('/upload-vouchers/')
+    if not user_is_admin(request.user):
+        return HttpResponse(status=403)
     else:
-        form = UploadFileForm()
-    return render(
-        request,
-        'upload_form.html',
-        {
-            'form': form,
-            'courses': courses
-        })
+
+        vouchers = Vouchers.objects.all().order_by('course_id')
+
+        courses = Courses.objects.all().order_by('id')
+
+        if request.method == "POST":
+            form = UploadFileForm(request.POST,
+                                request.FILES)
+            if form.is_valid():
+                vouchers = request.FILES['file'].get_array()[1:]
+                course_title = form.cleaned_data['course']
+                selected_course = Courses.objects.get(title=course_title)
+                voucher_total = VouchersTotal.objects.create(course=course_title, course_id=selected_course.id, expiry=vouchers[0][1])
+                with transaction.atomic():
+                    for voucher in vouchers:
+                        voucher_added = Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
+                        voucher_added.save()
+                        voucher_total.total_vouchers += 1
+                voucher_total.save()
+                messages.success(request, "Successfull Upload !")
+                return HttpResponseRedirect('/upload-vouchers/')
+        else:
+            form = UploadFileForm()
+        return render(
+            request,
+            'upload_form.html',
+            {
+                'form': form,
+                'courses': courses
+            })

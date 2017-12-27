@@ -11,7 +11,7 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <strong>Success</strong> {{message}}.
+                    <strong>Success</strong> {{message}}
                 </div>
             {% endfor %}
         </div>
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             <form action="" enctype="multipart/form-data"  method="post">
                 {% csrf_token %}
                 <div class="form-group">
@@ -48,6 +48,9 @@
                 <hr />
                 <input type="submit" class="btn btn-primary float-right" value="Upload">
             </form>
+        </div>
+        <div class="col-12 col-md-6">
+
         </div>
     </div>
 </div>

@@ -106,6 +106,13 @@ class Vouchers(models.Model):
         verbose_name = 'Course Voucher'
         verbose_name_plural = 'Course Vouchers'
 
+class VouchersTotal(models.Model):
+    course = models.CharField(max_length=255, choices=COURSES_LIST)
+    course_id = models.IntegerField()
+    expiry = models.CharField(max_length=255)
+    total_vouchers = models.IntegerField(default=0)
+    added = models.DateTimeField(auto_now_add=True)
+
 class PaidUser(models.Model):
     user_id = models.IntegerField()
     user_name = models.CharField(max_length=255)
