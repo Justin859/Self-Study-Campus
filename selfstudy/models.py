@@ -90,7 +90,7 @@ class UserCourses(models.Model):
     voucher_expiry_date = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.user_id + " " + self.title
+        return str(self.user_id) + " " + self.title
         
     class Meta:
         verbose_name = 'User Course'
@@ -108,11 +108,11 @@ class Orders(models.Model):
     email_address = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.pf_payment_id + " | " + self.email_address
+        return str(self.pf_payment_id) + " | " + self.email_address
         
     class Meta:
-        verbose_name = 'Currency'
-        verbose_name_plural = 'Currencies'    
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'    
 
 class Vouchers(models.Model):
     course = models.CharField(max_length=500, choices=COURSES_LIST)
