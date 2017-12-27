@@ -107,6 +107,13 @@ class Orders(models.Model):
     name_last = models.CharField(max_length=255)
     email_address = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.pf_payment_id + " | " + self.email_address
+        
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = 'Currencies'    
+
 class Vouchers(models.Model):
     course = models.CharField(max_length=500, choices=COURSES_LIST)
     course_id = models.IntegerField()

@@ -440,7 +440,7 @@ def notify(request):
                                 
                                 for item in user_cart_items:
                                     course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
-                                    voucher_total = VouchersTotal.objects.get(course_id=item.itemm_id)
+                                    voucher_total = VouchersTotal.objects.get(course_id=item.item_id)
                                     user_courses = UserCourses.objects.create(
                                         pf_payment_id= pf_data['pf_payment_id'],
                                         user_id=item.user_id,
@@ -461,9 +461,9 @@ def notify(request):
                             amount_gross = round(Decimal(pf_data['amount_gross']), 2),
                             amount_fee = round(Decimal(pf_data['amount_fee']), 2),
                             amount_net = round(Decimal(pf_data['amount_net']), 2),
-                            name_first = pf_data['name_first'],
-                            name_last = pf_data['name_last'],
-                            email_address = pf_data['email_address']
+                            name_first = user_details.first_name,
+                            name_last = user_details.last_name,
+                            email_address = pf_data['custom_str1']
                             )
                             CartItems.objects.filter(user_id=user_details.id).delete()
                             UserCart.objects.get(user_id=user_details.id).delete()
@@ -479,7 +479,7 @@ def notify(request):
                         
                         for item in user_cart_items:
                             course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
-                            voucher_total = VouchersTotal.objects.get(course_id=item.itemm_id)
+                            voucher_total = VouchersTotal.objects.get(course_id=item.item_id)
                             user_courses = UserCourses.objects.create(
                                 pf_payment_id= pf_data['pf_payment_id'],
                                 user_id=item.user_id,
@@ -500,9 +500,9 @@ def notify(request):
                     amount_gross = round(Decimal(pf_data['amount_gross']), 2),
                     amount_fee = round(Decimal(pf_data['amount_fee']), 2),
                     amount_net = round(Decimal(pf_data['amount_net']), 2),
-                    name_first = pf_data['name_first'],
-                    name_last = pf_data['name_last'],
-                    email_address = pf_data['email_address']
+                    name_first = user_details.first_name,
+                    name_last = user_details.last_name,
+                    email_address = pf_data['custom_str1']
                     )
                     CartItems.objects.filter(user_id=user_details.id).delete()
                     UserCart.objects.get(user_id=user_details.id).delete()
