@@ -38,7 +38,7 @@ class Courses(models.Model):
 for course in Courses.objects.all():
     list_courses.append((course.title, course.title))
 
-COURSES_LIST = tuple(list_courses)    
+COURSES_LIST = tuple(list_courses)
 
 class UserCart(models.Model):
 
@@ -90,3 +90,16 @@ class Orders(models.Model):
     name_first = models.CharField(max_length=255)
     name_last = models.CharField(max_length=255)
     email_address = models.CharField(max_length=255)
+
+class Vouchers(models.Model):
+    course = models.CharField(max_length=500, choices=COURSES_LIST)
+    course_id = models.IntegerField()
+    code = models.CharField(max_length=255)
+    expiry = models.CharField(max_length=255)
+
+    def __str__(self):
+        return "Course: " + self.course + " | Expriy Date: " + self.expiry
+        
+    class Meta:
+        verbose_name = 'Course Voucher'
+        verbose_name_plural = 'Course Vouchers'

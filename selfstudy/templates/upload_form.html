@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1><span style="color: #1C4EC8">Upload Voucherss to Self Study Campus Database</span></h1>
+            {% if messages %}
+                {% for message in messages %}
+                    <h4>{{message}}</h4>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <form action="" enctype="multipart/form-data"  method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="inputFile"><span style="color: #EB944F">Voucher File</span></label>
+                    <input type="file" name="file" class="form-control form-control-file" id="inputFile" aria-describedby="fileHelp" required>
+                    <small id="fileHelp" class="form-text text-muted">Make sure that the file type is .xls, .xlsx, .csv or .ods</small>
+                    {% if form.file.errors %}
+                    {% for error in form.file.errors %}
+                    <div class="form-control-feedback text-danger">{{error | escape}}</div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="inlineFormCustomSelect"><span style="color: #EB944F">Course</span></label>
+                    <select class="custom-select form-control" id="inlineFormCustomSelect" name="course">
+                      <option selected disabled value="Select"> -- select a course -- </option>
+                        {% for course in courses %}
+                            <option value="{{course.title}}">{{course.title}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <hr />
+                <input type="submit" class="btn btn-primary float-right" value="Upload">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

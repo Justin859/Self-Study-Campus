@@ -7,4 +7,8 @@ pysocks==1.6.7
 twilio==6.9.1
 markdown2==2.3.4
 requests==2.18.4
-
+django-excel==0.0.9
+pyexcel-xls==0.5.5
+pyexcel-xlsx==0.5.5
+pyexcel-ods==0.5.2
+mohawk==0.3.4

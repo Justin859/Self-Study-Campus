@@ -2,9 +2,11 @@ import re
 
 from django import forms
 
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+
+from .models import Courses
 
 # validators
 
@@ -50,4 +52,13 @@ class UpdateCurrency(forms.Form):
     currency = forms.CharField(max_length=255)
     current_rate = forms.DecimalField(max_digits=9, decimal_places=2)
 
+list_courses = []
 
+for course in Courses.objects.all():
+    list_courses.append((course.title, course.title))
+
+COURSES_LIST = tuple(list_courses)
+
+class UploadFileForm(forms.Form):
+    course = forms.ChoiceField(choices=COURSES_LIST)
+    file = forms.FileField(validators=[FileExtensionValidator(['xls', 'xlsx', 'ods', 'csv'], 'Incorect file extension.')])

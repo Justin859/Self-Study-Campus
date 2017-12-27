@@ -2,10 +2,13 @@ import hashlib
 import os
 import requests 
 
+import django_excel as excel
+from mohawk import Sender
+
 from urllib.parse import urlencode
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -358,10 +361,7 @@ def notify(request):
                 )
                 CartItems.objects.filter(user_id=user_details.id).delete()
                 UserCart.objects.get(user_id=user_details.id).delete()
-                
-                url_data = urlencode(pf_data)
-                r = requests.post('https://sandbox.payfast.co.za/eng/query/validate', data=url_data)
-                print(r.text)
+
             else:
                 return HttpResponse(status=400)
         else:
@@ -404,3 +404,27 @@ def update_currency(request):
             form = UpdateCurrency()
 
         return render(request, 'update_currency.html', {'form': form, 'zar': zar})
+
+def import_data(request):
+    courses = Courses.objects.all().order_by('id')
+
+    if request.method == "POST":
+        form = UploadFileForm(request.POST,
+                              request.FILES)
+        if form.is_valid():
+            vouchers = request.FILES['file'].get_array()[1:]
+            course_title = form.cleaned_data['course']
+            selected_course = Courses.objects.get(title=course_title)
+            for voucher in vouchers:
+                Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
+            messages.success(request, "Successfull Upload !")
+            return HttpResponseRedirect('/upload-vouchers/')
+    else:
+        form = UploadFileForm()
+    return render(
+        request,
+        'upload_form.html',
+        {
+            'form': form,
+            'courses': courses
+        })
