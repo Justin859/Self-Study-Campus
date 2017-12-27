@@ -449,7 +449,7 @@ def notify(request):
                                         voucher=course_voucher.code,
                                         voucher_expiry_date=course_voucher.expiry
                                         )
-                                    voucher_total -= 1
+                                    voucher_total.total_vouchers -= 1
                                     course_voucher.delete()
                                     user_courses.save()
                                     voucher_total.save()
@@ -488,7 +488,7 @@ def notify(request):
                                 voucher=course_voucher.code,
                                 voucher_expiry_date=course_voucher.expiry
                                 )
-                            voucher_total -= 1
+                            voucher_total.total_vouchers -= 1
                             course_voucher.delete()
                             user_courses.save()
                             voucher_total.save()
@@ -521,8 +521,14 @@ def cancel(request):
 
 @login_required(login_url='/login/')
 def success(request):
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
 
-    return render(request, 'success.html', {})
+    return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty', cart_empty})
 
 @login_required(login_url='/login/')
 def update_currency(request):
