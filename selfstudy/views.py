@@ -528,7 +528,7 @@ def success(request):
         user_cart = False
         cart_empty = True
 
-    return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty', cart_empty})
+    return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty': cart_empty})
 
 @login_required(login_url='/login/')
 def update_currency(request):
