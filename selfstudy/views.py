@@ -391,7 +391,7 @@ def notify(request):
 
         if signature == pf_data['signature']:
             if pf_data['payment_status'] == 'COMPLETE':
-                url = 'https://api.znanja.com/api/hawk/v1/users'
+                url = 'https://api.znanja.com/api/hawk/v1/user'
                 method = 'PUT'
                 content_type = 'application/json'
                 content = '{\"first_name\": \"'+pf_data['name_first']+'\", \"last_name\": \"'+pf_data['name_last']+'\", \"email\": \"'+pf_data['email_address']+'\", \"is_active\": false }'
@@ -411,11 +411,10 @@ def notify(request):
 
                 for i in range(10):
                     password += random.choice(os.environ['PASSWORD_CHARS'])
-                
-                new_paid_user = PaidUser.objects.create(user_id=pf_data['custom_int1'], user_name=pf_data['custom_str1'], user_password=password)
-                new_paid_user.save()
 
                 if r.status_code == requests.codes.ok:
+                    new_paid_user = PaidUser.objects.create(user_id=pf_data['custom_int1'], user_name=pf_data['custom_str1'], user_password=password)
+                    new_paid_user.save()
                     url = 'https://api.znanja.com/api/hawk/v1/user/' + pf_data['email_address']
                     method = 'POST'
                     content_type = 'application/json'
