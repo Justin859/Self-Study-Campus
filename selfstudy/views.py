@@ -394,7 +394,7 @@ def notify(request):
                 url = 'https://api.znanja.com/api/hawk/v1/user'
                 method = 'PUT'
                 content_type = 'application/json'
-                content = '{\"first_name\": \"'+pf_data['name_first']+'\", \"last_name\": \"'+pf_data['name_last']+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"is_active\": false }'
+                content = '{\"first_name\": \"'+user_details.first_name+'\", \"last_name\": \"'+user_details.last_name+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"is_active\": false }'
 
                 sender = Sender({'id': os.environ['ZNANJA_API_ID'],
                                 'key': os.environ['ZNANJA_API_KEY'],
@@ -418,7 +418,7 @@ def notify(request):
                     url = 'https://api.znanja.com/api/hawk/v1/user/' + pf_data['custom_str1']
                     method = 'POST'
                     content_type = 'application/json'
-                    content = '{\"first_name\": \"'+pf_data['name_first']+'\", \"last_name\": \"'+pf_data['name_last']+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"password\": \"'+password+'\", \"password_confirm\": \"'+password+'\", \"is_active\": false }'
+                    content = '{\"first_name\": \"'+user_details.first_name+'\", \"last_name\": \"'+user_details.last_name+'\", \"email\": \"'+pf_data['custom_str1']+'\", \"password\": \"'+password+'\", \"password_confirm\": \"'+password+'\", \"is_active\": false }'
 
                     sender = Sender({'id': os.environ['ZNANJA_API_ID'],
                                     'key': os.environ['ZNANJA_API_KEY'],
