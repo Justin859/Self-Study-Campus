@@ -448,8 +448,8 @@ def notify(request):
                             with transaction.atomic():
                                 
                                 for item in user_cart_items:
-                                    course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
-                                    voucher_total = VouchersTotal.objects.get(course_id=item.item_id)
+                                    course_voucher = CourseVouchers.objects.filter(course_id=item.item_id, expiry__gt=(datetime.now()))[0]
+                                    voucher_total = CourseVouchersTotal.objects.get(course_id=item.item_id)
                                     user_courses = UserCourses.objects.create(
                                         pf_payment_id= pf_data['pf_payment_id'],
                                         user_id=item.user_id,
@@ -487,8 +487,8 @@ def notify(request):
                     with transaction.atomic():
                         
                         for item in user_cart_items:
-                            course_voucher = Vouchers.objects.filter(course_id=item.item_id)[0]
-                            voucher_total = VouchersTotal.objects.get(course_id=item.item_id)
+                            course_voucher = CourseVouchers.objects.filter(course_id=item.item_id, expiry__gt=(datetime.now()))[0]
+                            voucher_total = CourseVouchersTotal.objects.get(course_id=item.item_id)
                             user_courses = UserCourses.objects.create(
                                 pf_payment_id= pf_data['pf_payment_id'],
                                 user_id=item.user_id,
@@ -576,7 +576,6 @@ def import_data(request):
     else:
 
         vouchers = CourseVouchersTotal.objects.all().order_by('course_id')
-
         courses = Courses.objects.all().order_by('id')
 
         if request.method == "POST":
@@ -614,7 +613,3 @@ def import_data(request):
                 'vouchers': vouchers,
                 'user_admin': user_admin
             })
-
-#####################################################################
-# check expiry dates for vouchers before using it for new purchases.#
-#####################################################################
