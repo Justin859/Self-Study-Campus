@@ -152,3 +152,28 @@ class PaidUser(models.Model):
     class Meta:
         verbose_name = 'Paid User'
         verbose_name_plural = 'Paid users'
+
+class CourseVouchers(models.Model):
+    course = models.CharField(max_length=500, choices=COURSES_LIST)
+    course_id = models.IntegerField()
+    code = models.CharField(max_length=255)
+    expiry = models.DateTimeField()
+    def __str__(self):
+        return "Course: " + self.course + " | Expriy Date: " + self.expiry + " | Voucher: " + self.code
+
+    class Meta:
+        verbose_name = 'Course Voucher 2'
+        verbose_name_plural = 'Course Vouchers 2'
+
+class CourseVouchersTotal(models.Model):
+    course = models.CharField(max_length=255, choices=COURSES_LIST)
+    course_id = models.IntegerField()
+    total_vouchers = models.IntegerField(default=0)
+    added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.course + " " + str(self.total_vouchers)
+        
+    class Meta:
+        verbose_name = 'Voucher Total 2'
+        verbose_name_plural = 'Voucher Totals 2'

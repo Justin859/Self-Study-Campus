@@ -6,6 +6,9 @@ import random
 import django_excel as excel
 from mohawk import Sender
 
+from dateutil import parser
+from datetime import datetime
+
 from urllib.parse import urlencode
 from django.db import transaction
 from django.shortcuts import render
@@ -572,7 +575,7 @@ def import_data(request):
         return HttpResponse(status=403)
     else:
 
-        vouchers = VouchersTotal.objects.all().order_by('course_id')
+        vouchers = CourseVouchersTotal.objects.all().order_by('course_id')
 
         courses = Courses.objects.all().order_by('id')
 
@@ -583,18 +586,18 @@ def import_data(request):
                 vouchers = request.FILES['file'].get_array()[1:]
                 course_title = form.cleaned_data['course']
                 selected_course = Courses.objects.get(title=course_title)
-                voucher_total_exists = VouchersTotal.objects.filter(course_id=selected_course.id).exists()
+                voucher_total_exists = CourseVouchersTotal.objects.filter(course_id=selected_course.id).exists()
                 user_courses = UserCourses.objects.all()
                 if not voucher_total_exists:
-                    voucher_total = VouchersTotal.objects.create(course=course_title, course_id=selected_course.id, expiry=vouchers[0][1])
+                    voucher_total = CourseVouchersTotal.objects.create(course=course_title, course_id=selected_course.id)
                 else:
-                    voucher_total = VouchersTotal.objects.get(course_id=selected_course.id)
+                    voucher_total = CourseVouchersTotal.objects.get(course_id=selected_course.id)
                 with transaction.atomic():
                     for voucher in vouchers:
-                        voucher_already_exits = Vouchers.objects.filter(code=voucher[0], course_id=selected_course.id).exists()
+                        voucher_already_exits = CourseVouchers.objects.filter(code=voucher[0], course_id=selected_course.id).exists()
                         voucher_with_user = UserCourses.objects.filter(voucher=voucher[0], item_id=selected_course.id).exists()
-                        if not voucher_already_exits and not voucher_with_user:
-                            voucher_added = Vouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=voucher[1])
+                        if not voucher_already_exits and not voucher_with_user and voucher[3] == 'No':
+                            voucher_added = CourseVouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=parser.parse(voucher[1]))
                             voucher_added.save()
                             voucher_total.total_vouchers += 1
                 voucher_total.save()
@@ -611,3 +614,7 @@ def import_data(request):
                 'vouchers': vouchers,
                 'user_admin': user_admin
             })
+
+#####################################################################
+# check expiry dates for vouchers before using it for new purchases.#
+#####################################################################
