@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Success</strong> {{message}}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h1><span style="color: #1C4EC8">Your Self Study Courses</span></h1>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-12 col-md-5">
+            {% if paid_user and user_courses %}
+
+            <h3 class="text-muted">Portal Login Details</h3>
+            <br />
+            <div class="form-group">
+                <label for="user_name">Login Email address</label>
+                <input type="text" class="form-control" value="{{paid_user.user_name}}" readonly>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" class="form-control" value="{{paid_user.user_password}}" readonly>
+                <span class="input-group-btn">
+                <button class="btn btn-secondary password-toggle" type="button">Show</button>
+                </span>
+            </div><br />
+            <a href="https://self-study-campus.znanja.com/login" class="btn btn-success">Login to Portal</a>
+        </div>
+        <div class="col-12 col-md-5 offset-md-1">
+            <h3 class="text-muted">Courses</h3>
+            <p>Your courses must be redeemed with the below vouchers first.</p>
+            <p>You can reedem your courses <a href="https://self-study-campus.znanja.com/redeem" target="_blank">here</a>. Login first with your portal login details.</p>
+            <br />
+            {% for item in user_courses %}
+                <div class="form-group">
+                    <h5>{{item.title}}</h5>
+                    <br />
+                    <button class="btn btn-primary btn-clip" data-clipboard-text="{{item.voucher}}" data-toggle="popover" data-content="Your voucher has been copied to clip board. Redeem it <a href='https://self-study-campus.znanja.com/redeem' target='_blank'>here</a>">
+                            Copy voucher to clipboard
+                    </button>
+                </div>
+                <hr />
+            {% endfor%}
+            {% else %}
+
+            <h2>You have not purchased any courses yet.</h2>
+
+            <p>Browse our Course Library <a href="/course-library/1/Project Management Fundamentals/detail/">here</a> and start learning</p>
+
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <!-- including the plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+    <script src="{% static 'vendor/bower_components/hideshowpassword/hideShowPassword.min.js' %}"></script>
+    <script src="{% static 'vendor/assets/js/account.js' %}"></script>
+
+{% endblock %}

@@ -131,6 +131,7 @@ class CourseVouchers(models.Model):
     course_id = models.IntegerField()
     code = models.CharField(max_length=255)
     expiry = models.DateTimeField()
+
     def __str__(self):
         return "Course: " + self.course + " | Expriy Date: " + self.expiry + " | Voucher: " + self.code
 

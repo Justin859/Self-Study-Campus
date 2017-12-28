@@ -568,6 +568,7 @@ def update_currency(request):
 
         return render(request, 'update_currency.html', {'form': form, 'zar': zar, 'user_admin': user_admin})
 
+@login_required(login_url='/login/')
 def import_data(request):
     user_admin = user_is_admin(request.user)
 
@@ -613,3 +614,18 @@ def import_data(request):
                 'vouchers': vouchers,
                 'user_admin': user_admin
             })
+
+@login_required(login_url='/login/')
+def my_courses(request):
+
+    user_courses = UserCourses.objects.filter(user_id=request.user.id).exists()
+    has_purchased = PaidUser.objects.filter(user_id=request.user.id).exists()
+
+    if has_purchased and user_courses:
+        user_courses = UserCourses.objects.filter(user_id=request.user.id)
+        paid_user = PaidUser.objects.get(user_id=request.user.id)
+    else:
+        user_courses = False
+        paid_user = False
+
+    return render(request, 'user_account/my_courses.html', {'user_courses': user_courses, 'paid_user': paid_user})
