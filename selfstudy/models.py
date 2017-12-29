@@ -98,6 +98,7 @@ class UserCourses(models.Model):
 
 class Orders(models.Model):
     pf_payment_id = models.IntegerField()
+    user_id = models.IntegerField()
     payment_status = models.CharField(max_length=255)
     item_name = models.CharField(max_length=255)
     amount_gross = models.DecimalField(max_digits=9, decimal_places=2)

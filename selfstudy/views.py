@@ -465,6 +465,7 @@ def notify(request):
 
                             Orders.objects.create(
                             pf_payment_id = pf_data['pf_payment_id'],
+                            user_id = user_details.id,
                             payment_status = pf_data['payment_status'],
                             item_name = pf_data['item_name'],
                             amount_gross = round(Decimal(pf_data['amount_gross']), 2),
@@ -504,6 +505,7 @@ def notify(request):
 
                     Orders.objects.create(
                     pf_payment_id = pf_data['pf_payment_id'],
+                    user_id = user_details.id,
                     payment_status = pf_data['payment_status'],
                     item_name = pf_data['item_name'],
                     amount_gross = round(Decimal(pf_data['amount_gross']), 2),
@@ -532,6 +534,7 @@ def cancel(request):
 def success(request):
     user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+    orders = Orders.objects.filter(user_id=request.user.id).exists()
 
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
@@ -539,8 +542,13 @@ def success(request):
     else:
         user_cart = False
         cart_empty = True
+    
+    if orders:
+        user_order = Orders.objects.filter(user_id=request.user.id).order_by('order_date')[0]
 
-    return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty': cart_empty, 'user_admin': user_admin})
+        return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty': cart_empty, 'user_admin': user_admin})
+    else:
+        return HttpResponseBadRequest()
 
 @login_required(login_url='/login/')
 def update_currency(request):
