@@ -397,7 +397,7 @@ def notify(request):
         user_cart = UserCart.objects.get(user_id=pf_data['custom_int1'])
         user_cart_items = CartItems.objects.filter(user_id=pf_data['custom_int1'])
         user_details = User.objects.get(id=pf_data['custom_int1'])
-        is_paid_user = PaidUser.objects.filter(user_id=request.user.id).exists()
+        is_paid_user = PaidUser.objects.filter(user_id=user_details['id']).exists()
 
         if signature == pf_data['signature']:
             if pf_data['payment_status'] == 'COMPLETE':
