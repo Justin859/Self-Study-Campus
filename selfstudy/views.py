@@ -618,6 +618,7 @@ def import_data(request):
 @login_required(login_url='/login/')
 def my_courses(request):
 
+    user_admin = user_is_admin(request.user)
     user_courses = UserCourses.objects.filter(user_id=request.user.id).exists()
     has_purchased = PaidUser.objects.filter(user_id=request.user.id).exists()
 
@@ -628,4 +629,4 @@ def my_courses(request):
         user_courses = False
         paid_user = False
 
-    return render(request, 'user_account/my_courses.html', {'user_courses': user_courses, 'paid_user': paid_user})
+    return render(request, 'user_account/my_courses.html', {'user_courses': user_courses, 'paid_user': paid_user, 'user_admin': user_admin})
