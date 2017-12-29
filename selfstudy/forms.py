@@ -79,3 +79,10 @@ COURSES_LIST = tuple(list_courses)
 class UploadFileForm(forms.Form):
     course = forms.ChoiceField(choices=COURSES_LIST)
     file = forms.FileField(validators=[FileExtensionValidator(['xls', 'xlsx', 'ods', 'csv'], 'Incorect file extension.')])
+
+class UserEditForm(forms.Form):
+    firstName = forms.CharField(label='First Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
+    lastName = forms.CharField(label='First Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
+    emailAddress = forms.EmailField(label='First Name', max_length=100, validators=[validate_email])
+    password = forms.CharField(label='Create Password', max_length=255, validators=[validate_password], required=False)
+    confirmPassword = forms.CharField(label='Confirm Password', max_length=255, required=False)

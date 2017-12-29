@@ -170,6 +170,7 @@ body {
     z-index: 1;
     padding: 0px !important;
     margin: 0px !important;
+    z-index: 99999;
 }
 
 .cart-panel {
@@ -206,10 +207,14 @@ body {
     .view-cart, .wrap-cart {
         top: 70px;
     }
+
+    .view-cart a {
+        margin-right: 7px !important;
+    }
 }
 
 .view-cart {
-    position: fixed;
+    position: absolute;
     left: -2px;
     z-index: 1;
     padding: 5px !important;
@@ -231,6 +236,7 @@ body {
 .shopping-cart:hover {
     font-weight: bold !important    ;
     text-decoration: underline !important;
+    
 }
 
 @media screen and (max-width: 736px) {

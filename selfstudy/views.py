@@ -644,6 +644,7 @@ def my_courses(request):
         rand_value = Currency.objects.get(currency='ZAR').current_rate
     else:
         user_orders = False
+        rand_value = 0
 
     if has_purchased and user_courses:
         user_courses = UserCourses.objects.filter(user_id=request.user.id)
@@ -677,3 +678,113 @@ def my_courses(request):
      'rand_value': rand_value,
      'todays_date': todays_date,
      'user_orders': user_orders})
+
+@login_required(login_url='/login/')
+def edit_details(request):
+
+    user_has_orders = Orders.objects.filter(user_id=request.user.id).exists()
+    is_paid_user = PaidUser.objects.filter(user_id=request.user.id).exists()
+
+    if request.method == 'POST':
+
+        form = UserEditForm(request.POST)
+
+        if form.is_valid():
+
+            first_name = form.cleaned_data['firstName']
+            last_name = form.cleaned_data['lastName']
+            email_address = form.cleaned_data['emailAddress']
+            password = form.cleaned_data['password']
+            confirm_password = form.cleaned_data['confirmPassword']
+
+            if email_address != request.user.email:
+
+                if User.objects.filter(username=email_address).exists():
+                    messages.error(request, '[ '+email_address+' ] ' + 'A user with that email address already exists.')
+                else:
+                    if is_paid_user:
+                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  request.user.email
+                        method = 'POST'
+                        content_type = 'application/json'
+                        content = '{\"first_name\": \"'+first_name+'\", \"last_name\": \"'+last_name+'\", \"email\": \"'+email_address+'\", \"is_active\": false }'
+
+                        sender = Sender({'id': os.environ['ZNANJA_API_ID'],
+                                        'key': os.environ['ZNANJA_API_KEY'],
+                                        'algorithm': 'sha256'},
+                                        url,
+                                        method,
+                                        content=content,
+                                        content_type=content_type)
+
+                        rpass = requests.post(url, data=content,
+                                        headers={'Authorization': sender.request_header,
+                                                'Content-Type': content_type})
+                        print(rpass)
+
+                        if rpass.status_code != requests.codes.ok:
+
+                            raise forms.ValidationError("user email is already with portal.")
+                            print("user email is already with portal.")
+                            
+                    user = User.objects.get(id=request.user.id)
+
+                    user.username = email_address
+                    user.last_name = last_name
+                    user.first_name = first_name
+                    user.email = email_address
+
+                    if password != confirm_password:
+                        raise forms.ValidationError("Passwords do not match")
+                    else:
+
+                        if password != "":
+                            user.set_password(password)
+                        user.save()
+
+                        if user_has_orders:
+                            Orders.objects.filter(user_id=request.user.id).update(email_address=email_address)
+
+                        if is_paid_user:
+                            PaidUser.objects.filter(user_id=request.user.id).update(user_name=email_address)
+
+                        return HttpResponseRedirect('/login/')
+            else:
+                if password != confirm_password:
+                    raise forms.ValidationError("Passwords do not match")
+                else:
+
+                    if is_paid_user:
+                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  request.user.email
+                        method = 'POST'
+                        content_type = 'application/json'
+                        content = '{\"first_name\": \"'+first_name+'\", \"last_name\": \"'+last_name+'\", \"email\": \"'+email_address+'\", \"is_active\": false }'
+
+                        sender = Sender({'id': os.environ['ZNANJA_API_ID'],
+                                        'key': os.environ['ZNANJA_API_KEY'],
+                                        'algorithm': 'sha256'},
+                                        url,
+                                        method,
+                                        content=content,
+                                        content_type=content_type)
+
+                        rpass = requests.post(url, data=content,
+                                        headers={'Authorization': sender.request_header,
+                                                'Content-Type': content_type})
+
+                        if rpass.status_code != requests.codes.ok:
+                            raise forms.ValidationError("Portal update error.")
+                            print("Portal update error.")              
+
+                    user = User.objects.get(id=request.user.id)
+
+                    user.last_name = last_name
+                    user.first_name = first_name
+                    if password != "":
+                        user.set_password(password)
+                    user.save()
+
+                    return HttpResponseRedirect('/login/')
+    else:
+        form = UserEditForm()
+
+    return render(request, 'user_account/edit.html', {'form': form})

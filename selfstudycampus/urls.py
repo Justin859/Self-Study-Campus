@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^update-currency/$', selfstudy.views.update_currency, name='currency'),
     url(r'^course-library/(?P<course_id>[0-9]+)/(?P<course_title>[A-Za-z\s:,0-9]+)/detail/$', selfstudy.views.course_library, name='courses'),
     url(r'^account/my-courses/$', selfstudy.views.my_courses, name='my-courses'),
+    url(r'^account/edit/$', selfstudy.views.edit_details, name='user-edit'),
     url(r'^upload-vouchers/$', selfstudy.views.import_data, name='import data')
 ]

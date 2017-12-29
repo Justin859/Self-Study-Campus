@@ -63,6 +63,7 @@ $(document).ready(function(){
             $("#forEmail .form-control-feedback").addClass("d-none");
             $("#forEmail").addClass("has-success");
             $(this).addClass("form-control-success");
+            $("#submitBtn").removeAttr('disabled');
         } else {
             $("#forEmail").addClass("has-warning");
             $("#forEmail .form-control-feedback").removeClass("d-none"); 
