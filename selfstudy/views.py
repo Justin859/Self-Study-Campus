@@ -539,14 +539,22 @@ def success(request):
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
+
     else:
         user_cart = False
         cart_empty = True
     
     if orders:
-        user_order = Orders.objects.filter(user_id=request.user.id).order_by('order_date')[0]
+        user_order = Orders.objects.filter(user_id=request.user.id).order_by('-payment_date')[0]
+        rand_value = Currency.objects.get(currency='ZAR').current_rate
+        usd = user_order.amount_gross / rand_value
 
-        return render(request, 'success.html', {'user_cart': user_cart, 'cart_empty': cart_empty, 'user_admin': user_admin})
+        return render(request, 'success.html',
+         {'user_cart': user_cart,
+          'cart_empty': cart_empty,
+          'user_admin': user_admin,
+          'usd': usd,
+          'user_order': user_order})
     else:
         return HttpResponseBadRequest()
 
@@ -629,12 +637,43 @@ def my_courses(request):
     user_admin = user_is_admin(request.user)
     user_courses = UserCourses.objects.filter(user_id=request.user.id).exists()
     has_purchased = PaidUser.objects.filter(user_id=request.user.id).exists()
+    orders = Orders.objects.filter(user_id=request.user.id).exists()
+    todays_date = datetime.now()
+    if orders:
+        user_orders = Orders.objects.filter(user_id=request.user.id).order_by('-payment_date')
+        rand_value = Currency.objects.get(currency='ZAR').current_rate
+    else:
+        user_orders = False
 
     if has_purchased and user_courses:
         user_courses = UserCourses.objects.filter(user_id=request.user.id)
         paid_user = PaidUser.objects.get(user_id=request.user.id)
+        course_array = []
+        course_category_array = []
+
+        for item in user_courses:
+            course_array.append(item.item_id)
+    
+        courses = Courses.objects.filter(id__in=course_array)
+
+        for category in courses:
+            if category.category not in course_category_array:
+                course_category_array.append(category.category)
+
+        course_categories = CourseCategories.objects.filter(title__in=course_category_array)
+
     else:
         user_courses = False
         paid_user = False
+        courses = False
+        course_categories = False
 
-    return render(request, 'user_account/my_courses.html', {'user_courses': user_courses, 'paid_user': paid_user, 'user_admin': user_admin})
+    return render(request, 'user_account/my_courses.html',
+     {'user_courses': user_courses,
+     'paid_user': paid_user,
+     'user_admin': user_admin,
+     'course_categories': course_categories,
+     'courses': courses,
+     'rand_value': rand_value,
+     'todays_date': todays_date,
+     'user_orders': user_orders})
