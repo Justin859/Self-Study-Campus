@@ -3,29 +3,18 @@
 {% block content %}
 
 <div class="container">
-    <div class="row justify-content-md-center" style="margin-top:5em">
-        <div class="col-12 col-lg-4">
-            <br>
-            {% if not user.is_authenticated %}
-            <h2>User Login</h2>
-            {% else %}
-            <h2>You're logged in as - <small class="text-muted">{{request.user.get_full_name}}</small></h2>
-            {% endif %}
-            <hr>
-        </div>
-    </div>
     <div class="row justify-content-md-center">
         <div class="col-12 col-lg-4">
-            {% if not user.is_authenticated %}
-
-                {% if messages %}
-                    {% for message in messages %}
-                    <p class="text-danger">{{message}}</p>
-                    {% endfor %}
-                {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+        <p class="text-danger">{{message}}</p>
+        {% endfor %}
+    {% endif %}
+    <br /><br />
     <div class="card" style="padding: 15px !important;">
         <div class="card-block" id="register">
-            <form method="post" action="">
+            <h4 class="card-title" style="color: rgb(235,148,79)">User Login</h4>
+            <form id="submit-form" method="post" action="">
             {% csrf_token %}
 
             <div class="form-group">
@@ -40,12 +29,11 @@
                 <input class="form-control btn btn-primary" type="submit" value="login" />
             </div>
             </form>
+            <span class="float-right"><a href="/reset-password/">forgot your password?</a></span>
         </div>
     </div>
         </div>
-        {% else %}
-        <h4>Would you like to <a href="/logout/">Logout</a></h4>
-        {% endif %}
+
     </div>
 </div>
 

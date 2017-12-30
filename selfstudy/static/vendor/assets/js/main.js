@@ -23,11 +23,22 @@ $('#submit-form').click(function() {
 $('#DropDownAccount').on('hidden.bs.collapse', function () {
     $('#faq').removeClass('hidden-sm-down');
     $('#tc').removeClass('hidden-sm-down');
+    $('#caret-position').addClass('fa-caret-down');
+    $('#caret-position').removeClass('fa-caret-up');
 });
 
 $('#DropDownAccount').on('show.bs.collapse', function () {
     $('#faq').addClass('hidden-sm-down');
     $('#tc').addClass('hidden-sm-down');
+    $('#caret-position').addClass('fa-caret-up');
+    $('#caret-position').removeClass('fa-caret-down');
 })
+
+if($("#view-more")) {
+    $("#more-orders").hide()
+    $("#view-more").click(function() {
+        $("#more-orders").toggle()
+    });
+}
 
 });

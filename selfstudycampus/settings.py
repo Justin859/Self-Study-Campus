@@ -74,6 +74,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'selfstudycampus.wsgi.application'
 
+# Email Settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.yourdev.co.za'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'no-reply@yourdev.co.za' 
+EMAIL_HOST_PASSWORD = 'Password#3'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'no-reply@yourdev.co.za'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases

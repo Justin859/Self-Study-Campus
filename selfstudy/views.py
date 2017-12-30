@@ -640,10 +640,12 @@ def my_courses(request):
     orders = Orders.objects.filter(user_id=request.user.id).exists()
     todays_date = datetime.now()
     if orders:
-        user_orders = Orders.objects.filter(user_id=request.user.id).order_by('-payment_date')
+        user_orders = Orders.objects.filter(user_id=request.user.id).order_by('-payment_date')[:4]
+        user_more_orders = Orders.objects.filter(user_id=request.user.id).order_by('-payment_date')[4:]
         rand_value = Currency.objects.get(currency='ZAR').current_rate
     else:
         user_orders = False
+        user_more_orders = False
         rand_value = 0
 
     if has_purchased and user_courses:
@@ -661,7 +663,7 @@ def my_courses(request):
             if category.category not in course_category_array:
                 course_category_array.append(category.category)
 
-        course_categories = CourseCategories.objects.filter(title__in=course_category_array)
+        course_categories = CourseCategories.objects.filter(title__in=course_category_array).order_by('id')
 
     else:
         user_courses = False
@@ -677,7 +679,8 @@ def my_courses(request):
      'courses': courses,
      'rand_value': rand_value,
      'todays_date': todays_date,
-     'user_orders': user_orders})
+     'user_orders': user_orders,
+     'user_more_orders': user_more_orders})
 
 @login_required(login_url='/login/')
 def edit_details(request):
@@ -788,3 +791,4 @@ def edit_details(request):
         form = UserEditForm()
 
     return render(request, 'user_account/edit.html', {'form': form})
+

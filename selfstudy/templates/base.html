@@ -76,9 +76,9 @@
                     <a href="/"><i class="fa fa-fw fa-home"></i><span>Home</span></a>
                     <a href="/course-library/1/Project Management Fundamentals/detail/"><i class="fa fa-fw fa-mortar-board"></i><span>Courses</span></a>
                     {% if user_admin %}
-                    <a id="account-menu" data-toggle="collapse" href="#DropDownAccount" aria-expanded="false" aria-controls="DropDownAccount"><i class="fa fa-fw fa-user-o"></i><span>Admin</span><i class="fa fa-fw fa-caret-down"></i></a>
+                    <a id="account-menu" data-toggle="collapse" href="#DropDownAccount" aria-expanded="false" aria-controls="DropDownAccount"><i class="fa fa-fw fa-user-o"></i><span>Admin</span><i id="caret-position" class="fa fa-fw fa-caret-down" style="padding-left:10px;"></i></a>
                     {% else %}
-                    <a id="account-menu" data-toggle="collapse" href="#DropDownAccount" aria-expanded="false" aria-controls="DropDownAccount"><i class="fa fa-fw fa-user-o"></i><span>Account</span><i class="fa fa-fw fa-caret-down"></i></a>
+                    <a id="account-menu" data-toggle="collapse" href="#DropDownAccount" aria-expanded="false" aria-controls="DropDownAccount"><i class="fa fa-fw fa-user-o"></i><span>Account</span><i id="caret-position" class="fa fa-fw fa-caret-down" style="padding-left:10px;"></i></a>
                     {% endif %}
                     <div class="collapse" id="DropDownAccount">
                         <div>
