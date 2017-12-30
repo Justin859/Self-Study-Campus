@@ -119,6 +119,7 @@ class Orders(models.Model):
 
 class PaidUser(models.Model):
     user_id = models.IntegerField()
+    portal_id = models.IntegerField()
     user_name = models.CharField(max_length=255)
     user_password = models.CharField(max_length=255)
 

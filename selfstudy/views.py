@@ -424,7 +424,7 @@ def notify(request):
                         password += random.choice(os.environ['PASSWORD_CHARS'])
 
                     if r.status_code == requests.codes.ok:
-                        new_paid_user = PaidUser.objects.create(user_id=pf_data['custom_int1'], user_name=pf_data['custom_str1'], user_password=password)
+                        new_paid_user = PaidUser.objects.create(user_id=pf_data['custom_int1'], portal_id=r.json()['id'], user_name=pf_data['custom_str1'], user_password=password)
                         new_paid_user.save()
                         url = 'https://api.znanja.com/api/hawk/v1/user/' + pf_data['custom_str1']
                         method = 'POST'
@@ -754,7 +754,7 @@ def edit_details(request):
                 else:
 
                     if is_paid_user:
-                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  request.user.email
+                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  PaidUser.objects.get(id=request.user.id).portal_id
                         method = 'POST'
                         content_type = 'application/json'
                         content = '{\"first_name\": \"'+first_name+'\", \"last_name\": \"'+last_name+'\", \"email\": \"'+email_address+'\", \"is_active\": false }'
