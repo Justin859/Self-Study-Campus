@@ -703,7 +703,7 @@ def edit_details(request):
                     messages.error(request, '[ '+email_address+' ] ' + 'A user with that email address already exists.')
                 else:
                     if is_paid_user:
-                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  PaidUser.objects.get(user_id=request.user.id).portal_id
+                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  str(PaidUser.objects.get(user_id=request.user.id).portal_id)
                         method = 'POST'
                         content_type = 'application/json'
                         content = '{\"first_name\": \"'+first_name+'\", \"last_name\": \"'+last_name+'\", \"email\": \"'+email_address+'\", \"is_active\": false }'
@@ -754,7 +754,7 @@ def edit_details(request):
                 else:
 
                     if is_paid_user:
-                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  PaidUser.objects.get(user_id=request.user.id).portal_id
+                        url = 'https://api.znanja.com/api/hawk/v1/user/' +  str(PaidUser.objects.get(user_id=request.user.id).portal_id)
                         method = 'POST'
                         content_type = 'application/json'
                         content = '{\"first_name\": \"'+first_name+'\", \"last_name\": \"'+last_name+'\", \"email\": \"'+email_address+'\", \"is_active\": false }'
