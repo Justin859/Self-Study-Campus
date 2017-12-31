@@ -137,7 +137,7 @@ class CourseVouchers(models.Model):
     expiry = models.DateTimeField()
 
     def __str__(self):
-        return "Course: " + self.course + " | Expriy Date: " + self.expiry + " | Voucher: " + self.code
+        return "Course: " + self.course + " | Expriy Date: " + self.expiry.strftime('%m/%d/%Y') + " | Voucher: " + self.code
 
     class Meta:
         verbose_name = 'Course Voucher'
