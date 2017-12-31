@@ -245,3 +245,15 @@ body {
         top: 50px;
     }
 } 
+
+.regular-card-course ul {
+    padding: 25px;
+    padding-left: 50px;
+}
+
+.regular-card-course li {
+    color: #EB944F;
+    list-style-type: circle;
+    font-weight: bold;
+    padding: 10px;
+}
