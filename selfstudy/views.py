@@ -826,7 +826,7 @@ def contact(request):
                         "Client Name: " + firstName + " " + lastName + "\n\n" +
                         "Query: \n\n" + clientQuery,
                         emailAddress,
-                        ['justin@yourdev.co.za'],
+                        ['support@selfstudycampus.com'],
                         fail_silently=False,
                         )
             except BadHeaderError:
