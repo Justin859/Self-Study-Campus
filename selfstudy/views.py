@@ -340,8 +340,8 @@ def checkout(request):
                 payment_method_sent == data[13][1] and
                 signature_sent == signature):
 
-                #return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
-                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
+                return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
+                #return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
             else:
                 return TemplateResponse(request, 'server_error.html', {})
 
