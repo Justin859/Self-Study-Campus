@@ -486,7 +486,7 @@ def notify(request):
                                 send_mail(
                                         "Self Study Campus User Portal Login Details",
                                         "Welcome to Self Study Campus!\n\n" +
-                                        "Below is your portal login details. Please go to https://www.selfstudycampus.com/account/my-courses/ for more information and instructions on how to redeem your courses.\n" + 
+                                        "Below is your portal login details. Please go to https://www.selfstudycampus.com/account/my-courses/\n for more information and instructions on how to redeem your courses.\n\n" + 
                                         "Email: " + pf_data['custom_str1'] + "\n"
                                         "password: " + password,
                                         'no-reply@selfstudycampus.com',
@@ -495,8 +495,6 @@ def notify(request):
                                         )
                             except BadHeaderError:
                                 return HttpResponse('Invalid header found.')
-                            messages.success(request, "An email has been sent with your portal login details.")
-
                         else:
                             print(rpass.text)
                             return HttpResponse(status=rpass.status_code)
