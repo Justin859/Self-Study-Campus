@@ -280,8 +280,8 @@ def checkout(request):
         user_cart_items = False;
 
     data = (
-        ("merchant_id", "10004715"),
-        ("merchant_key", "dhdw9uqzmpzo0"),
+        ("merchant_id", "1031552"),
+        ("merchant_key", "qi6olaz410k1v"),
         ("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
         ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
         ("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
@@ -337,7 +337,7 @@ def checkout(request):
                 payment_method_sent == data[13][1] and
                 signature_sent == signature):
 
-                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
+                return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
             else:
                 return TemplateResponse(request, 'server_error.html', {})
 
