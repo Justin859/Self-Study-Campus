@@ -26,14 +26,12 @@
                 <label for="user_name">Login Email address</label>
                 <input type="text" class="form-control" value="{{paid_user.user_name}}" readonly>
             </div>
-            <div class="input-group">
-                <input type="password" id="password" class="form-control" value="{{paid_user.user_password}}" readonly>
-                <span class="input-group-btn">
-                <button class="btn btn-secondary password-toggle" type="button">Show</button>
-                </span>
+            <div class="form-group">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="https://self-study-campus.znanja.com/login" target="_blank" class="btn btn-secondary">Portal Login</a>
+                    <a href="/portal-password-reset/" class="btn btn-secondary">Reset Portal Password</a>
+                </div>
             </div>
-            <br />
-            <a href="https://self-study-campus.znanja.com/login" class="btn btn-success">Login to Portal</a>
             <hr />
             <h3 class="text-muted">Order History</h3>
             <br />

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+
+<br />
+
+<div class="d-none">
+    {% for field in form %}
+        {{field}}
+    {% endfor %}
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6 offset-md-3">
+            <div class="card" style="padding: 15px !important;">
+                <div class="card-block" id="register">
+                    <h4 class="card-title" style="color: rgb(235,148,79)">Contact Self Study Campus</h4>
+                    <p style="color: #000000;">Fill in all the requred fields to send us a query and we will get back to you</p>
+                    <p style="color: #000000;">You can email us directly at <a href="mailto:support@selfstudycampus.com?Subject=Self%20Study%20Campus%20Query" target="_top">support@selfstudycampus.com</a></p>
+                    <p>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <p class="text-danger">{{message}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </p>
+                    <form class="register-form" action="" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group" id="forFirstName">
+                            <label>First Name</label>
+                            <input type="text" maxlength="100" class="form-control" name="firstName" id="firstName" placeholder="first name" required>
+                            <div class='form-control-feedback d-none'>This field can't be less than 2 characters</div>
+                        </div>
+                        <div class="form-group" id="forLastName">
+                            <label>Last Name</label>
+                            <input type="text" maxlength="100" class="form-control" name="lastName" id="lastName" placeholder="last name" required>
+                            <div class='form-control-feedback d-none'>This field can't be less than 2 characters</div>
+                        </div>
+                        <div class="form-group" id="forEmail">
+                            <label>Email Address</label>
+                            <input type="email" maxlength="100" class="form-control" name="emailAddress" id="emailAddress" placeholder="email address" required>
+                            <div class='form-control-feedback d-none'>This email address is not valid</div>
+                        </div>
+                        <div class="form-group" id="forQuery">
+                            <label>Your Query</label>
+                            <textarea type="text" maxlength="1001" class="form-control" name="clientQuery" id="clientQuery" placeholder="Enter Query" required></textarea>
+                            <div class='form-control-feedback d-none'>This field can not be empty</div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn btn-primary" id="submitBtn">Send Query</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts%}
+
+<script src="{% static 'vendor/assets/js/contact-form-validate.js' %}"></script>
+
+{% endblock %}

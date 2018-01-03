@@ -22,6 +22,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django import forms
 from django.forms import formset_factory
+from django.core.mail import send_mail
 
 from decimal import *
 
@@ -280,8 +281,10 @@ def checkout(request):
         user_cart_items = False;
 
     data = (
-        ("merchant_id", "10315552"),
-        ("merchant_key", "qi6olaz410k1v"),
+        #("merchant_id", "10315552"),
+        #("merchant_key", "qi6olaz410k1v"),
+        ("merchant_id", "10004715"),
+        ("merchant_key", "dhdw9uqzmpzo0"),
         ("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
         ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
         ("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
@@ -337,7 +340,8 @@ def checkout(request):
                 payment_method_sent == data[13][1] and
                 signature_sent == signature):
 
-                return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
+                #return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
+                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
             else:
                 return TemplateResponse(request, 'server_error.html', {})
 
@@ -477,6 +481,21 @@ def notify(request):
                             )
                             CartItems.objects.filter(user_id=user_details.id).delete()
                             UserCart.objects.get(user_id=user_details.id).delete()
+
+                            try:
+                                send_mail(
+                                        "Self Study Campus User Portal Login Details",
+                                        "Welcome to Self Study Campus!\n\n" +
+                                        "Below is your portal login details. Please go to https://www.selfstudycampus.com/account/my-courses/ for more information and instructions on how to redeem your courses.\n" + 
+                                        "Email: " + pf_data['custom_str1'] + "\n"
+                                        "password: " + password,
+                                        emailAddress,
+                                        [pf_data['custom_str1']],
+                                        fail_silently=False,
+                                        )
+                            except BadHeaderError:
+                                return HttpResponse('Invalid header found.')
+                            messages.success(request, "An email has been sent with your portal login details.")
 
                         else:
                             print(rpass.text)
@@ -776,7 +795,7 @@ def edit_details(request):
 
                         if rpass.status_code != requests.codes.ok:
                             raise forms.ValidationError("Portal update error.")
-                            print("Portal update error.")              
+                            print("Portal update error.")
 
                     user = User.objects.get(id=request.user.id)
 
@@ -792,3 +811,32 @@ def edit_details(request):
 
     return render(request, 'user_account/edit.html', {'form': form})
 
+def contact(request):
+
+    if request.method == 'POST':
+        form = Contactform(request.POST)
+
+        if form.is_valid():
+
+            firstName = form.cleaned_data['firstName']
+            lastName = form.cleaned_data['lastName']
+            emailAddress = form.cleaned_data['emailAddress']
+            clientQuery = form.cleaned_data['clientQuery']
+            try:
+                send_mail(
+                        "Self Study Campus Online Query",
+                        "Client Name: " + firstName + " " + lastName + "\n\n" +
+                        "Query: \n\n" + clientQuery,
+                        emailAddress,
+                        ['justin@yourdev.co.za'],
+                        fail_silently=False,
+                        )
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            messages.success(request, "Thank you, " +firstName+ "! Your query has been sent. We will get back to you as soon as possible.")
+            return HttpResponseRedirect('/')
+
+    else:
+        form = Contactform()
+
+    return render(request, 'contact.html', {'form': form})

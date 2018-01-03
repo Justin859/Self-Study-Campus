@@ -82,7 +82,13 @@ class UploadFileForm(forms.Form):
 
 class UserEditForm(forms.Form):
     firstName = forms.CharField(label='First Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
-    lastName = forms.CharField(label='First Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
-    emailAddress = forms.EmailField(label='First Name', max_length=100, validators=[validate_email])
+    lastName = forms.CharField(label='Last Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
+    emailAddress = forms.EmailField(label='Email Address', max_length=100, validators=[validate_email])
     password = forms.CharField(label='Create Password', max_length=255, validators=[validate_password], required=False)
     confirmPassword = forms.CharField(label='Confirm Password', max_length=255, required=False)
+
+class Contactform(forms.Form):
+    firstName = forms.CharField(label='First Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
+    lastName = forms.CharField(label='Last Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
+    emailAddress = forms.EmailField(label='Email Address', max_length=100, validators=[validate_email])
+    clientQuery = forms.CharField(label='Your Query', max_length=1001)
