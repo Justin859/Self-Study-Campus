@@ -98,7 +98,7 @@
                         </h5>
                         <br />
                             <div class="d-flex justify-content-center">
-                                <button class="btn btn-secondary btn-clip" data-clipboard-text="{{user_course.voucher}}" data-toggle="popover" data-content="Your voucher has been copied to clip board. Redeem it <a href='https://self-study-campus.znanja.com/redeem' target='_blank'>here</a>">
+                                <button class="btn btn-secondary btn-clip" data-clipboard-text="{{user_course.voucher}}" data-toggle="popover" data-content="Your voucher has been copied to clipboard. Redeem it <a href='https://self-study-campus.znanja.com/redeem' target='_blank'>here</a>">
                                         Copy Voucher Code &nbsp;&nbsp;<i class="fa fa-clipboard"></i>
                                 </button>
                             </div>
@@ -131,6 +131,6 @@
     <!-- including the plugin -->
     <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
     <script src="{% static 'vendor/bower_components/hideshowpassword/hideShowPassword.min.js' %}"></script>
-    <script src="{% static 'vendor/assets/js/account.js' %}"></script>
+    <script src="{% static 'vendor/assets/js/account.min.js' %}"></script>
 
 {% endblock %}

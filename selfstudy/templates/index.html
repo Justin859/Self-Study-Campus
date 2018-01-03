@@ -57,7 +57,7 @@
                 <div class="card-block">
                     <h3>Step 1</h3>
                     <hr>
-                    <p>Register an account with Self Study Campus and</p>
+                    <p>Register an account with <b>Self Study Campus</b> and</p>
                     <p>Login with your newly created account.</p>
                 </div>
             </div>
@@ -67,9 +67,8 @@
                 <div class="card-block">
                     <h3>Step 2</h3>
                     <hr />
-                    <p>Browes our course library and find courses</p>
-                    <p>to add to your cart.</p>
-                    <p>After purchasing your courses you will recieve login details for our training portal.</p>
+                    <p>Browse our <b>Course Library</b> and find courses to add to your cart.</p>
+                    <p>After purchasing your courses you will find login details for our training portal at your <b>My Courses</b> page.</p>
                 </div>
             </div>
         </div>
@@ -78,7 +77,7 @@
                 <div class="card-block">
                     <h3>Step 3</h3>
                     <hr />
-                    <p>Once logged into the portal you will be able to view and start your new courses</p>
+                    <p>Once logged into the portal you will be able redeem your courses with the course vouchers available at the <b>My Courses</b> Page.</p>
                 </div>
             </div>
         </div>
@@ -94,8 +93,11 @@
     {% if user.is_authenticated %}
     <div class="centered reading-card jumbotron hidden-sm-down">
         <div class="card-block">
-            <p>Feel free to browse our course library</p>
-            <p><a href="/course-library/1/Project Management Fundamentals/detail/" style="color: rgb(235,148,79)">View course library</a></p>
+            <h4>Feel free to browse our Course Library</h4>
+            <h5><a href="/course-library/1/Project Management Fundamentals/detail/" style="color: rgb(235,148,79)">View Course Library</a></h5>
+            <hr />
+            <h4>Once you have purchased courses you can view your orders and courses at the My Courses page</h4>
+            <h5><a href="/account/my-courses/" style="color: rgb(235,148,79)">View My Courses</a></h5>
         </div>
     </div>
     {% else %}
@@ -190,6 +192,6 @@
 
 {% block scripts%}
 {% if not user.is_authenticated %}
-<script src="{% static 'vendor/assets/js/register-form-validate.js' %}"></script>
+<script src="{% static 'vendor/assets/js/register-form-validate.min.js' %}"></script>
 {% endif %}
 {% endblock %}
