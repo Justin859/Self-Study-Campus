@@ -280,7 +280,7 @@ def checkout(request):
         user_cart_items = False;
 
     data = (
-        ("merchant_id", "1031552"),
+        ("merchant_id", "10315552"),
         ("merchant_key", "qi6olaz410k1v"),
         ("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
         ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
