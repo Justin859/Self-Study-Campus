@@ -489,7 +489,7 @@ def notify(request):
                                         "Below is your portal login details. Please go to https://www.selfstudycampus.com/account/my-courses/ for more information and instructions on how to redeem your courses.\n" + 
                                         "Email: " + pf_data['custom_str1'] + "\n"
                                         "password: " + password,
-                                        emailAddress,
+                                        'no-reply@selfstudycampus.com',
                                         [pf_data['custom_str1']],
                                         fail_silently=False,
                                         )
