@@ -7,9 +7,10 @@ import django_excel as excel
 from mohawk import Sender
 
 from dateutil import parser
+from dateutil.parser import parse
 from datetime import datetime
-
 from urllib.parse import urlencode
+
 from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -486,7 +487,8 @@ def notify(request):
                                 send_mail(
                                         "Self Study Campus User Portal Login Details",
                                         "Welcome to Self Study Campus!\n\n" +
-                                        "Below is your portal login details. Please go to https://www.selfstudycampus.com/account/my-courses/\nfor more information and instructions on how to redeem your courses.\n\n" + 
+                                        "Please go to https://www.selfstudycampus.com/account/my-courses/\nfor more information and instructions on how to redeem your courses.\n\n" + 
+                                        "Portal Login Details:\n\n"
                                         "Email: " + pf_data['custom_str1'] + "\n"
                                         "password: " + password,
                                         'no-reply@selfstudycampus.com',
@@ -656,6 +658,7 @@ def my_courses(request):
     has_purchased = PaidUser.objects.filter(user_id=request.user.id).exists()
     orders = Orders.objects.filter(user_id=request.user.id).exists()
     todays_date = datetime.now()
+
     if orders:
         user_orders = Orders.objects.filter(user_id=request.user.id).order_by('-payment_date')[:4]
         user_more_orders = Orders.objects.filter(user_id=request.user.id).order_by('-payment_date')[4:]
@@ -682,11 +685,152 @@ def my_courses(request):
 
         course_categories = CourseCategories.objects.filter(title__in=course_category_array).order_by('id')
 
+        portal_user_details = (
+            ('user_id', str(paid_user.user_id)),
+            ('portal_user_id', str(paid_user.portal_id)),
+            ('email', paid_user.user_name),
+            ('first_name', request.user.first_name),
+            ('last_name', request.user.last_name),
+            ('passphrase', os.environ['PAYFAST_PASSPHRASE'])
+        )
+
+        url_data = urlencode(portal_user_details)
+        signature = hashlib.md5(url_data.encode()).hexdigest()
+
     else:
         user_courses = False
         paid_user = False
         courses = False
         course_categories = False
+        portal_user_details = False
+        signature = False
+
+    if request.method == 'POST':
+        form = PortalPasswordReset(request.POST)
+
+        if form.is_valid():
+
+            user_id = form.cleaned_data['user_id']
+            portal_user_id = form.cleaned_data['portal_user_id']
+            email = form.cleaned_data['email']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+
+            form_user_details = (
+                ('user_id', str(user_id)),
+                ('portal_user_id', str(portal_user_id)),
+                ('email', email),
+                ('first_name', first_name),
+                ('last_name', last_name),
+                ('passphrase', os.environ['PAYFAST_PASSPHRASE'])
+            )
+
+            form_data_url = urlencode(form_user_details)
+            signature_from_form = hashlib.md5(form_data_url.encode()).hexdigest()
+
+            if signature_from_form == signature:
+                if ProtalPasswordResets.objects.filter(user_id=user_id).exists():
+                    current_user = ProtalPasswordResets.objects.get(user_id=user_id)
+                    if (datetime.now() - parse(current_user.date_changed.strftime('%m/%d/%Y'))).days > 7:
+                        current_user.date_changed = datetime.now()
+
+                        password = ''
+
+                        for i in range(10):
+                            password += random.choice(os.environ['PASSWORD_CHARS'])
+
+                        url = 'https://api.znanja.com/api/hawk/v1/user/' + str(portal_user_id)
+                        method = 'POST'
+                        content_type = 'application/json'
+                        content = '{\"first_name\": \"'+first_name+'\", \"last_name\": \"'+last_name+'\", \"email\": \"'+email+'\", \"password\": \"'+password+'\", \"password_confirm\": \"'+password+'\", \"is_active\": false }'
+
+                        sender = Sender({'id': os.environ['ZNANJA_API_ID'],
+                                        'key': os.environ['ZNANJA_API_KEY'],
+                                        'algorithm': 'sha256'},
+                                        url,
+                                        method,
+                                        content=content,
+                                        content_type=content_type)
+
+                        rpass = requests.post(url, data=content,
+                                        headers={'Authorization': sender.request_header,
+                                                'Content-Type': content_type})
+
+                        if rpass.status_code == requests.codes.ok:
+                            try:
+                                send_mail(
+                                        "Self Study Campus User Portal Login Details",
+                                        "Welcome to Self Study Campus!\n\n" +
+                                        "Please go to https://www.selfstudycampus.com/account/my-courses/\nfor more information and instructions on how to redeem your courses.\n\n" + 
+                                        "Portal Login Details:\n\n"
+                                        "Email: " + email + "\n"
+                                        "password: " + password,
+                                        'no-reply@selfstudycampus.com',
+                                        [email],
+                                        fail_silently=False,
+                                        )
+                                messages.success(request, "Your password has been reset and a new email has been sent to your Self Study Campus email address")
+                            except BadHeaderError:
+                                return HttpResponse('Invalid header found.')
+                                
+                            paid_user.user_password = password
+                            paid_user.save()
+                        else:
+                            messages.error(request, 'An error has ocurred please contact support@selfstudycampus.com for assistance or changeyou password in the portal.')
+                            return HttpResponseRedirect('/account/my-courses/')
+                    else:
+                        messages.error(request, 'Your password has been changed too recently. You can change your password form the portal.')
+                        return HttpResponseRedirect('/account/my-courses/')
+                else:
+                    ProtalPasswordResets.objects.create(user_id=user_id, portal_user_id=portal_user_id)
+
+                    password = ''
+
+                    for i in range(10):
+                        password += random.choice(os.environ['PASSWORD_CHARS'])
+
+                    url = 'https://api.znanja.com/api/hawk/v1/user/' + str(portal_user_id)
+                    method = 'POST'
+                    content_type = 'application/json'
+                    content = '{\"first_name\": \"'+first_name+'\", \"last_name\": \"'+last_name+'\", \"email\": \"'+email+'\", \"password\": \"'+password+'\", \"password_confirm\": \"'+password+'\", \"is_active\": false }'
+
+                    sender = Sender({'id': os.environ['ZNANJA_API_ID'],
+                                    'key': os.environ['ZNANJA_API_KEY'],
+                                    'algorithm': 'sha256'},
+                                    url,
+                                    method,
+                                    content=content,
+                                    content_type=content_type)
+
+                    rpass = requests.post(url, data=content,
+                                    headers={'Authorization': sender.request_header,
+                                            'Content-Type': content_type})
+                    if rpass.status_code == requests.codes.ok:
+                        try:
+                            send_mail(
+                                    "Self Study Campus User Portal Login Details",
+                                    "Welcome to Self Study Campus!\n\n" +
+                                    "Please go to https://www.selfstudycampus.com/account/my-courses/\nfor more information and instructions on how to redeem your courses.\n\n" + 
+                                    "Portal Login Details:\n\n"
+                                    "Email: " + email + "\n"
+                                    "password: " + password,
+                                    'no-reply@selfstudycampus.com',
+                                    [email],
+                                    fail_silently=False,
+                                    )
+                            messages.success(request, "Your password has been reset and a new email has been sent to your Self Study Campus email address")
+                        except BadHeaderError:
+                            return HttpResponse('Invalid header found.')
+                        paid_user.user_password = password
+                        paid_user.save()
+                    else:
+                        messages.error(request, 'An error has ocurred please contact support@selfstudycampus.com for assistance or changeyou password in the portal.')
+                        return HttpResponseRedirect('/account/my-courses/')
+            else:
+                messages.error(request, "An Error has occured please contact support@selfstudycampus.com for assistance or change your password in the portal.")
+                return HttpResponseRedirect('/account/my-courses/')
+    else:
+        form = PortalPasswordReset()
 
     return render(request, 'user_account/my_courses.html',
      {'user_courses': user_courses,
@@ -697,7 +841,9 @@ def my_courses(request):
      'rand_value': rand_value,
      'todays_date': todays_date,
      'user_orders': user_orders,
-     'user_more_orders': user_more_orders})
+     'user_more_orders': user_more_orders,
+     'signature': signature,
+     'form': form})
 
 @login_required(login_url='/login/')
 def edit_details(request):

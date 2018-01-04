@@ -158,12 +158,6 @@ body {
     border: none;
 }
 
-.alert-danger {
-    position: absolute;
-    z-index: 9;
-    top: 90px;
-}
-
 .wrap-cart {
     position: fixed;
     left: -500px;
@@ -239,7 +233,7 @@ body {
 }
 
 @media screen and (max-width: 736px) {
-    .alert-success {
+    .alert  {
         z-index: 9;
         position: absolute;
         top: 50px;

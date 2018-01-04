@@ -155,3 +155,16 @@ class CourseVouchersTotal(models.Model):
     class Meta:
         verbose_name = 'Voucher Total'
         verbose_name_plural = 'Voucher Totals'
+
+class ProtalPasswordResets(models.Model):
+    user_id = models.IntegerField()
+    portal_user_id = models.IntegerField()
+    date_changed = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user_id) + " | " + str(self.portal_user_id) + " | " + self.date_changed.strftime("%m/%d/%Y")
+
+    class Meta:
+        verbose_name = 'Portal Password Reset'
+        verbose_name_plural = 'Portal Password Resets'
+    

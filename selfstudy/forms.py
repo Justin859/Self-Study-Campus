@@ -92,3 +92,11 @@ class Contactform(forms.Form):
     lastName = forms.CharField(label='Last Name', max_length=100, validators=[MinLengthValidator(2, 'Value cant be less than 2 characters')])
     emailAddress = forms.EmailField(label='Email Address', max_length=100, validators=[validate_email])
     clientQuery = forms.CharField(label='Your Query', max_length=1001)
+
+class PortalPasswordReset(forms.Form):
+    user_id = forms.IntegerField()
+    portal_user_id = forms.IntegerField()
+    first_name = forms.CharField(max_length=100)
+    last_name = forms.CharField(max_length=100)
+    email = forms.CharField(max_length=100)
+    signature = forms.CharField(max_length=255)
