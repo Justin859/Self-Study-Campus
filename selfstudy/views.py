@@ -715,7 +715,6 @@ def my_courses(request):
             email = form.cleaned_data['email']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
-            form_signature = form.cleaned_data['form_signature']
 
             form_user_details = (
                 ('user_id', str(user_id)),
@@ -729,7 +728,7 @@ def my_courses(request):
             form_data_url = urlencode(form_user_details)
             signature_from_form = hashlib.md5(form_data_url.encode()).hexdigest()
 
-            if signature_from_form == signature and form_signature == signature:
+            if signature_from_form == signature:
                 if ProtalPasswordResets.objects.filter(user_id=user_id).exists():
                     current_user = ProtalPasswordResets.objects.get(user_id=user_id)
                     if (datetime.now() - parse(current_user.date_changed.strftime('%m/%d/%Y'))).days > 7:
