@@ -294,9 +294,12 @@ def checkout(request):
         ("merchant_key", "qi6olaz410k1v"),
         #("merchant_id", "10004715"),
         #("merchant_key", "dhdw9uqzmpzo0"),
-        ("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
-        ("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
-        ("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
+        #("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
+        #("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
+        #("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
+        ("return_url", "https://www.selfstudycampus.com/success/"),
+        ("cancel_url", "https://www.selfstudycampus.com/cancel/"),
+        ("notify_url", "https://www.selfstudycampus.com/notify/"),
         ("name_first", request.user.first_name),
         ("name_last", request.user.last_name),
         ("email_address", request.user.username),
@@ -349,8 +352,8 @@ def checkout(request):
                 payment_method_sent == data[13][1] and
                 signature_sent == signature):
 
-                return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
-                #return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
+                #return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
+                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
             else:
                 return TemplateResponse(request, 'server_error.html', {})
 
