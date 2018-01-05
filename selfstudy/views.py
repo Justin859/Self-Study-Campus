@@ -290,10 +290,10 @@ def checkout(request):
         user_cart_items = False;
 
     data = (
-        ("merchant_id", "10315552"),
-        ("merchant_key", "qi6olaz410k1v"),
-        #("merchant_id", "10004715"),
-        #("merchant_key", "dhdw9uqzmpzo0"),
+        #("merchant_id", "10315552"),
+        #("merchant_key", "qi6olaz410k1v"),
+        ("merchant_id", "10004715"),
+        ("merchant_key", "dhdw9uqzmpzo0"),
         #("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
         #("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
         #("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
