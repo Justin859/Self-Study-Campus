@@ -591,6 +591,16 @@ def success(request):
 @login_required(redirect_field_name='next', login_url='/login/')
 def update_currency(request):
     user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
     if not user_is_admin(request.user):
 
         return HttpResponse(status=403)
@@ -612,11 +622,26 @@ def update_currency(request):
         else:
             form = UpdateCurrency()
 
-        return render(request, 'update_currency.html', {'form': form, 'zar': zar, 'user_admin': user_admin})
+        return render(request, 'update_currency.html',
+         {'form': form,
+          'zar': zar,
+          'user_has_cart': user_has_cart,
+          'user_cart': user_cart,
+          'cart_empty': cart_empty,          
+          'user_admin': user_admin})
 
 @login_required(redirect_field_name='next', login_url='/login/')
 def import_data(request):
     user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
 
     if not user_is_admin(request.user):
         return HttpResponse(status=403)
@@ -658,7 +683,10 @@ def import_data(request):
                 'form': form,
                 'courses': courses,
                 'vouchers': vouchers,
-                'user_admin': user_admin
+                'user_admin': user_admin,
+                'user_has_cart': user_has_cart,
+                'user_cart': user_cart,
+                'cart_empty': cart_empty
             })
 
 @login_required(redirect_field_name='next', login_url='/login/')
@@ -866,7 +894,7 @@ def my_courses(request):
      'user_has_cart': user_has_cart,
      'user_cart': user_cart,
      'cart_empty': cart_empty,
-     'user_admin': user_admin,     
+     'user_admin': user_admin,
      'form': form})
 
 @login_required(redirect_field_name='next', login_url='/login/')
