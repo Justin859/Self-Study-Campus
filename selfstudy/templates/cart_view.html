@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block title %}Shopping Cart{% endblock %}
+
 {% block styles %}
 <link rel="stylesheet" href="{% static 'vendor/add_ons/breadcrumbs-and-multistep-indicator/css/style.css' %}">
 {% endblock %}
@@ -91,7 +93,7 @@
                         <li><span style="font-weight: bold; padding-right: 25px; color:#EB944F;"></span> <span class="float-right">ZAR R{{rand_value}}&nbsp;</span></li>
                     </ul>
                 </div>
-                <div class="btn-group d-flex justify-content-center" role="group" aria-label="button grouping">
+                <div class="btn-group d-flex justify-content-center justify-content-md-end" role="group" aria-label="button grouping">
                     {% if not cart_empty %}
                     <button type="submit" id="submit-form" class="btn btn-primary">Remove Selected&nbsp;&nbsp;<i class="fa fa-trash-o"></i></button>
                     {% else %}

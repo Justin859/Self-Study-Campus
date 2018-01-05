@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load features %}
-{% block title %}{{selected_course.title}}{% endblock %}
+{% block title %}Course Library{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'vendor/add_ons/multi-level-accordion-menu/css/style.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendor/add_ons/multi-level-accordion-menu/css/reset.min.css' %}">
@@ -22,12 +22,6 @@
                 <span itemprop="name">Course Library</span>
             </a>
             <meta itemprop="position" content="2" />
-        </li>
-        <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
-            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/{{selected_course.id}}/{{selected_course.title}}/detail/">
-                <span>{{selected_course.title}}</span>
-            </a>
-            <meta itemprop="position" content="3" />
         </li>
     </ol>
 </nav>
@@ -53,34 +47,14 @@
         <div class="card regular-card regular-card-course">
             <div class="card-block">
                 <br />
-                <h3 class="hidden-md-up">{{selected_course.title}}<br /><small class="text-muted">{{selected_course.category}}</small></h3>
-                <h2 class="display-4 hidden-sm-down">{{selected_course.title}}<br /> <small class="text-muted">{{selected_course.category}}</small></h2>
+                <h3 class="hidden-md-up">Welcome to The Self Study Campus Course Library<br /><small class="text-muted">{{selected_course.category}}</small></h3>
+                <h2 class="display-4 hidden-sm-down">Welcome to The Self Study Campus Course Library<br /> <small class="text-muted">{{selected_course.category}}</small></h2>
                 <hr />
-                {{selected_course.description | markdown_to_html}}
-                <br /><br />
-                <div class="card-footer">
-                    <p>Course Price: &#36; {{selected_course.price}}</p>
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        <input type="text" value="{{selected_course.title}}" name="item_title" readonly hidden>
-                        <input type="decimal-local" value="{{selected_course.price}}" step="0.01" name="item_price" readonly hidden>
-                        {% if user.is_authenticated %}
-                            {% if item_in_cart or user_course %}
-                                {% if item_in_cart %}
-                                <button type="submit" id="submit-form" class="btn btn-primary float-right" disabled>Added to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></button>
-                                {% else %}
-                                <button type="submit" id="submit-form" class="btn btn-primary float-right" disabled>In My Courses&nbsp;&nbsp;<i class="fa fa-fw fa-list-alt"></i></button>
-                                {% endif %}
-                            {% else %}
-                            <button type="submit" id="submit-form" class="btn btn-primary float-right">Add to Cart&nbsp;&nbsp;<i class="fa fa-cart-plus"></i></button>
-                            {% endif %}
-                        {% else %}
-                        <button type="submit" class="btn btn-primary float-right" disabled>login to purchase&nbsp;&nbsp;<i class="fa fa-cart-arrow-down"></i></button>
-                        {% endif %}
-                    </form>
+                <p>
+                    All courses are listed by category.
                     
-                </div>
-                
+                    Be sure to read the discription and key points before making a purchase.
+                </p>
             </div>
         </div>
     </div>
@@ -114,17 +88,5 @@
 {% block scripts%}
 
 <script src="{% static 'vendor/add_ons/multi-level-accordion-menu/js/main.min.js' %}"></script>
-<script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "Course",
-      "name": "{{selected_course.title}}",
-      "description": "{{selected_course.description|truncatechars:200}}",
-      "provider": {
-        "@type": "Organization",
-        "name": "Self Study Campus",
-        "sameAs": "https://www.selfstudycampus.com"
-      }
-    }
-</script>
+
 {% endblock %}

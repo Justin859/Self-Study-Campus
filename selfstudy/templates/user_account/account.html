@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-
-{% block title %}Login{% endblock %}
+{% block title %}Account Details{% endblock %}
 {% block content %}
 
 <nav aria-label="breadcrumb">
@@ -13,8 +12,8 @@
             <meta itemprop="position" content="1" />
         </li>
         <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
-            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/login/">
-                <span>Login</span>
+            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/account/">
+                <span>Account</span>
             </a>
             <meta itemprop="position" content="2" />
         </li>
@@ -24,32 +23,25 @@
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-12 col-lg-4">
-    {% if messages %}
-        {% for message in messages %}
-        <p class="text-danger">{{message}}</p>
-        {% endfor %}
-    {% endif %}
     <br /><br />
     <div class="card" style="padding: 15px !important;">
         <div class="card-block" id="register">
-            <h4 class="card-title" style="color: rgb(235,148,79)">User Login</h4>
-            <form id="submit-form" method="post" action="/login/?next={{next}}">
+            <h4 class="card-title" style="color: rgb(235,148,79)">Account Details</h4>
             {% csrf_token %}
 
             <div class="form-group">
-                <label>Your Email address</label>
-                <input type='email' class="form-control" name="username" aria-describedby="emailHelp" placeholder="Enter email" required>
+                <label>Email address</label>
+                <input type='email' value="{{user.email}}" class="form-control" name="username" aria-describedby="emailHelp" placeholder="Enter email" readonly>
             </div>
             <div class="form-group">
-                <label>Your Password</label>
-                <input type='password' class="form-control" name="password" placeholder="Enter Password" required>
+                <label>First Name</label>
+                <input type='text' value="{{user.first_name}}" class="form-control" name="password" placeholder="Enter Password" readonly>
             </div>
             <div class="form-group">
-                <input class="form-control btn btn-primary" type="submit" value="login" />
-                <input type="hidden" name="next" value="{{ next }}" />
+                <label>Last Name</label>
+                <input type='text' value="{{user.last_name}}" class="form-control" name="password" placeholder="Enter Password" readonly>
             </div>
-            </form>
-            <span class="float-right"><a href="/reset-password/">forgot your password?</a></span>
+            <span class="float-right"><a href="/account/edit">Edit your details</a></span>
         </div>
     </div>
         </div>

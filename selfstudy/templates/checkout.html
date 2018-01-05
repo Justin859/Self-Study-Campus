@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-
+{% block title %}Check Out{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'vendor/add_ons/breadcrumbs-and-multistep-indicator/css/style.css' %}">
 {% endblock %}
@@ -87,7 +87,8 @@
                         <input type="hidden" name="custom_str1" value="{{user.username}}" required>
                         <input type="hidden" name="payment_method" value="cc" required>
                         <input type="hidden" name="signature" value="{{signature}}" required>
-                        <div class="btn-group d-flex justify-content-center" role="group" aria-label="button grouping">
+                        <p style="color: #EB944F;">By Proceeding with payment you are in agreement with our <a href="/terms-and-conditions/">T's & C's</a></p>
+                        <div class="btn-group d-flex justify-content-center justify-content-md-end" role="group" aria-label="button grouping">
                             <a type="button" href="/shopping-cart/" class="btn btn-primary">Back to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></a>
                             {% if not cart_empty %}
                             <button type="submit" class="btn btn-primary">Proceed to Payment</button>

@@ -1,21 +1,33 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-
+{% block title %}Self Study Campus{% endblock %}
 {% block styles %}
 {% endblock %}
 
 {% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
+                <span itemprop="name">Home</span>
+            </a>
+            <meta itemprop="position" content="1" />
+        </li>
+    </ol>
+</nav>
+
 {% if messages %}
     {% for message in messages %}
         {% if message.tags == 'error' %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 50px;">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <strong>Error</strong> {{message}} <a href="/#register">go back to form</a>
         </div>
         {% else %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 50px;">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -188,6 +200,7 @@
                             <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="confirm password" required>
                             <div class='form-control-feedback d-none'>Your passwords don't match</div>
                         </div>
+                        <p style="color: #EB944F">By submitting this form you are in agreement with our <a href="/terms-and-conditions/">T's & C's</a></p>
                         <div class="form-group">
                             <button type="submit" class="form-control btn btn-primary" id="submitBtn">Register Account</button>
                         </div>

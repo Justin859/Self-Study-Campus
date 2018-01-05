@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Frequently Asked Questions{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <h1 class="display-4"><span style="color: #1C4EC8;">Frequently</span> <span style="color: #EB944F;">Asked Questions</span></h1>
+        </div>
+    </div>
+    <br />
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <blockquote class="blockquote">
+                <h5 style="color: #1C4EC8;">Q: Can I purchase more than one course at a time?</h5>
+            </blockquote>
+            <blockquote class="blockquote">
+                <h5 style="color: #EB944F;">A: Yes, just add all the courses that you want to purchase to your cart and proceed to checkout.</h5> 
+            </blockquote>
+        </div>
+    </div>
+    <br />
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <blockquote class="blockquote">
+                <h5 style="color: #1C4EC8;">Q: How can I start a course?</h5>
+            </blockquote>
+            <blockquote class="blockquote">
+                <h5 style="color: #EB944F;">A: Register or Login to SelfStudyCampus. Once you login, you can search for a course. Select the course you want to study and select Add to Cart.</h5>
+                <h5 style="color:#000000;">
+                    Once you have purchased your courses navigate to the <a href="/account/my-courses/">My Courses</a> page and follow the simple step by step instructions
+                    on how to redeem your courses.
+                </h5>
+            </blockquote>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <blockquote class="blockquote">
+                <h5 style="color: #1C4EC8;">Q: What do I do if I forgot my password?</h5>
+            </blockquote>
+            <blockquote class="blockquote">
+                <h5 style="color: #EB944F;">A: If you forgot your Self Study Campus account password navigate to the <a href="/login/">Login</a> page and click forgot password and enter your Self Study Campus email address to request a password reset.</h5>
+                <h5 style="color: #000000;">If you forgot your portal login password navigate to the <a href="/account/my-courses/">My Courses</a> page and click Reset Portal Password.</h5>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

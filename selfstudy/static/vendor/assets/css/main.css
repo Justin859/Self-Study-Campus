@@ -193,6 +193,9 @@ body {
     .view-cart, .wrap-cart {
         top: 50px;
     }
+    .nav-pills {
+        padding-top: 50px;
+    }
 }
 
 @media screen and (min-width: 768px) {
@@ -235,7 +238,7 @@ body {
     .alert  {
         z-index: 9;
         position: absolute;
-        top: 50px;
+        top: 100px;
     }
 } 
 
@@ -249,4 +252,26 @@ body {
     list-style-type: circle;
     font-weight: bold;
     padding: 10px;
+}
+
+.breadcrumb {
+    background-color: #EB944F !important;
+    border-radius: 0px !important;
+}
+
+.breadcrumb-item a {
+    text-decoration: none !important;
+    color: #ffffff !important; 
+}
+
+.breadcrumb-item a:hover {
+    color: #1C4EC8 !important;
+}
+
+.alert {
+    border-radius: 0px !important;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0px;
 }

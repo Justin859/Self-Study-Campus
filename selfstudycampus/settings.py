@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'mathfilters',
     'selfstudy'
 )
@@ -136,8 +137,11 @@ DATABASES['default'].update(db_from_env)
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 # Allow all host headers
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'lit-gorge-69771.herokuapp.com', '.selfstudycampus.com']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

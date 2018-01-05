@@ -93,6 +93,11 @@ def index(request):
 def user_login(request):
     user_admin = user_is_admin(request.user)
     logout(request)
+    next = ""
+
+    if request.GET:  
+        next = request.GET['next']
+
     if request.method == 'POST':
 
         form = UserLogin(request.POST)
@@ -107,7 +112,10 @@ def user_login(request):
                 
                 login(request, user)
                 # Redirect to a success page.
-                return HttpResponseRedirect('/')
+                if next == "":
+                    return redirect('/')
+                else:
+                    return redirect(request.GET['next'])
             elif User.objects.filter(username=user_email).exists():
                 messages.error(request, 'Username or Password is incorrect.')
                 # Return an 'invalid login' error message.
@@ -116,7 +124,7 @@ def user_login(request):
     else:
         form = UserLogin()
 
-    return render(request, 'login_view.html', {'form': form})
+    return render(request, 'login_view.html', {'form': form, 'next': next})
 
 def user_logout(request):
     logout(request)
@@ -212,7 +220,7 @@ def register(request):
         
     return render(request, 'register.html', {'form': form})
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def cart_view(request):
     user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
@@ -260,7 +268,7 @@ def cart_view(request):
       'user_admin': user_admin
       })
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def checkout(request):
     user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
@@ -544,12 +552,12 @@ def notify(request):
         return HttpResponse(status=403)
     return HttpResponse()
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def cancel(request):
 
     return HttpResponseRedirect('/shopping-cart/')
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def success(request):
     user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
@@ -577,7 +585,7 @@ def success(request):
     else:
         return HttpResponseBadRequest()
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def update_currency(request):
     user_admin = user_is_admin(request.user)
     if not user_is_admin(request.user):
@@ -603,7 +611,7 @@ def update_currency(request):
 
         return render(request, 'update_currency.html', {'form': form, 'zar': zar, 'user_admin': user_admin})
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def import_data(request):
     user_admin = user_is_admin(request.user)
 
@@ -650,7 +658,7 @@ def import_data(request):
                 'user_admin': user_admin
             })
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def my_courses(request):
 
     user_admin = user_is_admin(request.user)
@@ -845,7 +853,7 @@ def my_courses(request):
      'signature': signature,
      'form': form})
 
-@login_required(login_url='/login/')
+@login_required(redirect_field_name='next', login_url='/login/')
 def edit_details(request):
 
     user_has_orders = Orders.objects.filter(user_id=request.user.id).exists()
@@ -984,3 +992,76 @@ def contact(request):
         form = Contactform()
 
     return render(request, 'contact.html', {'form': form})
+
+def about(request):
+
+    return render(request, 'about.html', {})
+
+@login_required(redirect_field_name='next', login_url='/login/')
+def account(request):
+
+    return render(request, 'user_account/account.html', {})
+
+def course_library_main(request):
+    user_admin = user_is_admin(request.user)
+
+    categories = CourseCategories.objects.all()
+    courses = Courses.objects.all().order_by('id')
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
+    return render(request, 'course_library_main.html',
+     {
+        'categories': categories,
+        'courses': courses,
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+     })
+
+def faq(request):
+    user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
+    return render(request, 'faq.html',
+     {
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+     })
+
+def terms(request):
+    user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
+    return render(request, 'terms.html',
+     {
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+     })
