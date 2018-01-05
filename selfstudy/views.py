@@ -790,7 +790,7 @@ def my_courses(request):
                             messages.error(request, 'An error has ocurred please contact support@selfstudycampus.com for assistance or changeyou password in the portal.')
                             return HttpResponseRedirect('/account/my-courses/')
                     else:
-                        messages.error(request, 'Your password has been changed too recently. You can change your password form the portal.')
+                        messages.error(request, 'Your password has been changed too recently. You can change your password from the portal.')
                         return HttpResponseRedirect('/account/my-courses/')
                 else:
                     ProtalPasswordResets.objects.create(user_id=user_id, portal_user_id=portal_user_id)
