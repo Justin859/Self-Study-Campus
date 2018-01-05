@@ -665,6 +665,16 @@ def import_data(request):
 def my_courses(request):
 
     user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
     user_courses = UserCourses.objects.filter(user_id=request.user.id).exists()
     has_purchased = PaidUser.objects.filter(user_id=request.user.id).exists()
     orders = Orders.objects.filter(user_id=request.user.id).exists()
@@ -846,7 +856,6 @@ def my_courses(request):
     return render(request, 'user_account/my_courses.html',
      {'user_courses': user_courses,
      'paid_user': paid_user,
-     'user_admin': user_admin,
      'course_categories': course_categories,
      'courses': courses,
      'rand_value': rand_value,
@@ -854,6 +863,10 @@ def my_courses(request):
      'user_orders': user_orders,
      'user_more_orders': user_more_orders,
      'signature': signature,
+     'user_has_cart': user_has_cart,
+     'user_cart': user_cart,
+     'cart_empty': cart_empty,
+     'user_admin': user_admin,     
      'form': form})
 
 @login_required(redirect_field_name='next', login_url='/login/')
