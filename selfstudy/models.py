@@ -13,18 +13,10 @@ class CourseCategories(models.Model):
         verbose_name = 'Course Category'
         verbose_name_plural = 'Course Categories'
 
-list_categories = []
-list_courses = []
-
-for category in CourseCategories.objects.all():
-    list_categories.append((category.title, category.title))
-
-COURSE_CATEGORIES = tuple(list_categories)
-
 class Courses(models.Model):
     
     title = models.CharField(max_length=255)
-    category = models.CharField(max_length=255, choices=COURSE_CATEGORIES)
+    category = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
     price = models.DecimalField(max_digits=6, decimal_places=2, default=180.00)
 
@@ -34,11 +26,6 @@ class Courses(models.Model):
     class Meta:
         verbose_name = 'Course'
         verbose_name_plural = 'Courses'
-
-for course in Courses.objects.all():
-    list_courses.append((course.title, course.title))
-
-COURSES_LIST = tuple(list_courses)
 
 class UserCart(models.Model):
 
@@ -58,7 +45,7 @@ class CartItems(models.Model):
     user_id = models.IntegerField()
     item_id = models.IntegerField()
     cart_id = models.IntegerField()
-    title = models.CharField(max_length=255, choices=COURSES_LIST)
+    title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
@@ -131,7 +118,7 @@ class PaidUser(models.Model):
         verbose_name_plural = 'Paid users'
 
 class CourseVouchers(models.Model):
-    course = models.CharField(max_length=500, choices=COURSES_LIST)
+    course = models.CharField(max_length=500)
     course_id = models.IntegerField()
     code = models.CharField(max_length=255)
     expiry = models.DateTimeField()
@@ -144,7 +131,7 @@ class CourseVouchers(models.Model):
         verbose_name_plural = 'Course Vouchers'
 
 class CourseVouchersTotal(models.Model):
-    course = models.CharField(max_length=255, choices=COURSES_LIST)
+    course = models.CharField(max_length=255)
     course_id = models.IntegerField()
     total_vouchers = models.IntegerField(default=0)
     added = models.DateTimeField(auto_now_add=True)
