@@ -25,14 +25,14 @@
 </head>
   <body>
     <div class="view-cart">
-        <a href="#0" id="show-cart"><i class="fa fa-2x fa-shopping-cart"></i></a>
+        <a href="#" id="show-cart"><i class="fa fa-2x fa-shopping-cart"></i></a>
     </div>
     <div class="wrap-cart">
         <div class="row">
             <div class="col-12">
                 <div class="cart-panel">
                     <div class="hide-cart-button">
-                        <a href="#0" id="hide-cart"><i class="fa fa-times"></i></a>
+                        <a href="#" id="hide-cart"><i class="fa fa-times"></i></a>
                     </div>
                     {% if user.is_authenticated %}
                     <ul class="list-unstyled">
@@ -107,6 +107,18 @@
                     <a href="/contact/"><i class="fa fa-fw fa-envelope-open-o"></i><span>Contact</span></a>
                     <a href="/frequently-asked-questions/" id="faq" class=""><i class="fa fa-fw fa-comments-o"></i><span>FAQ</span></a>
                     <a href="/terms-and-conditions/" id="tc" class=""><i class="fa fa-fw fa-book"></i><span>T's & C's </span></a>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a href="https://business.facebook.com/selfstudycampus/?business_id=320653921644863"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li class="list-inline-item d-none">
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li class="list-inline-item d-none">
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </li>
+                    </ul>
+
                 </div>
             </nav>
             <button class="close-button" id="close-button">Close Menu</button>
@@ -152,10 +164,10 @@
                     <div class="row">
                         <div class="col-3 hidden-sm-down d-flex align-items-end">
                             <div class="mr-auto p-2">
-                                <img src="{% static 'vendor/assets/images/logos/company/secure-payments.png' %}" alt="secure-payments-by-payfast" class="img-fluid">
+                                <img src="{% static 'vendor/assets/images/logos/company/secure-payments.png' %}" alt="secure-payments-by-payfast" class="w-100 h-100">
                             </div>
                             <div class="ml-auto p-2">
-                                <img src="{% static 'vendor/assets/images/logos/company/mcvs_acc_opt_hrz_121_3x copy.png' %}" alt="master-card-and-visa" class="img-fluid">                                
+                                <img src="{% static 'vendor/assets/images/logos/company/mcvs_acc_opt_hrz_121_3x copy.png' %}" alt="master-card-and-visa" class="w-100 h-100">
                             </div>
                         </div>
                         <div class="col-12 col-md-6 d-flex justify-content-center">

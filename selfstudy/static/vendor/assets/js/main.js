@@ -41,4 +41,8 @@ if($("#view-more")) {
     });
 }
 
+$('#show-cart, #hide-cart').click(function(event) {
+    event.preventDefault();
+})
+
 });
