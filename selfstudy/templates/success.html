@@ -85,7 +85,7 @@
                 <hr />
                 <p>{{user_order.item_name}}</p>
                 <p><b>Payment ID: </b> {{user_order.pf_payment_id}}</p>
-                <p><b>Amount in USD: </b>${{usd}}.00</p>
+                <p><b>Amount in USD: </b>${{user_order.amount_gross_usd}}</p>
                 <p><b>Amount in ZAR: </b>R{{user_order.amount_gross}}</p>
                 <p><b>Order Date: </b>{{user_order.payment_date}}</p>
             </div>

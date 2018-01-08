@@ -905,6 +905,17 @@ def edit_details(request):
     user_has_orders = Orders.objects.filter(user_id=request.user.id).exists()
     is_paid_user = PaidUser.objects.filter(user_id=request.user.id).exists()
 
+    user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
     if request.method == 'POST':
 
         form = UserEditForm(request.POST)
@@ -1007,9 +1018,26 @@ def edit_details(request):
     else:
         form = UserEditForm()
 
-    return render(request, 'user_account/edit.html', {'form': form})
+    return render(request, 'user_account/edit.html',
+     {
+        'form': form,
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+    })
 
 def contact(request):
+    user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
 
     if request.method == 'POST':
         form = Contactform(request.POST)
@@ -1037,7 +1065,14 @@ def contact(request):
     else:
         form = Contactform()
 
-    return render(request, 'contact.html', {'form': form})
+    return render(request, 'contact.html',
+     {
+        'form': form,
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin    
+    })
 
 def about(request):
 
@@ -1045,8 +1080,24 @@ def about(request):
 
 @login_required(redirect_field_name='next', login_url='/login/')
 def account(request):
+    user_admin = user_is_admin(request.user)
 
-    return render(request, 'user_account/account.html', {})
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
+    return render(request, 'user_account/account.html',
+     {
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+     })
 
 def course_library_main(request):
     user_admin = user_is_admin(request.user)
