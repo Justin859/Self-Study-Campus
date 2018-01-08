@@ -89,6 +89,7 @@ class Orders(models.Model):
     user_id = models.IntegerField()
     payment_status = models.CharField(max_length=255)
     item_name = models.CharField(max_length=255)
+    amount_gross_usd = models.DecimalField(max_digits=9, decimal_places=2)
     amount_gross = models.DecimalField(max_digits=9, decimal_places=2)
     amount_fee = models.DecimalField(max_digits=9, decimal_places=2)
     amount_net = models.DecimalField(max_digits=9, decimal_places=2)

@@ -290,10 +290,10 @@ def checkout(request):
         user_cart_items = False;
 
     data = (
-        ("merchant_id", "10315552"),
-        ("merchant_key", "qi6olaz410k1v"),
-        #("merchant_id", "10004715"),
-        #("merchant_key", "dhdw9uqzmpzo0"),
+        #("merchant_id", "10315552"),
+        #("merchant_key", "qi6olaz410k1v"),
+        ("merchant_id", "10004715"),
+        ("merchant_key", "dhdw9uqzmpzo0"),
         #("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
         #("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
         #("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
@@ -352,8 +352,8 @@ def checkout(request):
                 payment_method_sent == data[13][1] and
                 signature_sent == signature):
 
-                return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
-                #return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
+                #return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
+                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
             else:
                 return TemplateResponse(request, 'server_error.html', {})
 
@@ -484,6 +484,7 @@ def notify(request):
                             user_id = user_details.id,
                             payment_status = pf_data['payment_status'],
                             item_name = pf_data['item_name'],
+                            amount_gross_usd = round(Decimal(user_cart.cart_total), 2),
                             amount_gross = round(Decimal(pf_data['amount_gross']), 2),
                             amount_fee = round(Decimal(pf_data['amount_fee']), 2),
                             amount_net = round(Decimal(pf_data['amount_net']), 2),
@@ -538,6 +539,7 @@ def notify(request):
                     user_id = user_details.id,
                     payment_status = pf_data['payment_status'],
                     item_name = pf_data['item_name'],
+                    amount_gross_usd = round(Decimal(user_cart.cart_total), 2), 
                     amount_gross = round(Decimal(pf_data['amount_gross']), 2),
                     amount_fee = round(Decimal(pf_data['amount_fee']), 2),
                     amount_net = round(Decimal(pf_data['amount_net']), 2),

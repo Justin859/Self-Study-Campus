@@ -93,7 +93,7 @@
             {% for order in user_orders %}
             <p>{{order.item_name}}</p>
             <p><b>Payment ID: </b> {{order.pf_payment_id}}</p>
-            <p><b>Amount in USD: </b>${% with numerator=order.amount_gross denominator=rand_value %}{{numerator|div:denominator}}{% endwith %}.00</p>
+            <p><b>Amount in USD: </b>${{order.amount_gross_usd}}</p>
             <p><b>Amount in ZAR: </b>R{{order.amount_gross}}</p>
             <p><b>Order Date: </b>{{order.payment_date}}</p>
             <hr />
@@ -108,7 +108,7 @@
             {% for order in user_more_orders %}
             <p>{{order.item_name}}</p>
             <p><b>Payment ID: </b> {{order.pf_payment_id}}</p>
-            <p><b>Amount in USD: </b>${% with numerator=order.amount_gross denominator=rand_value %}{{numerator|div:denominator}}{% endwith %}.00</p>
+            <p><b>Amount in USD: </b>${% with numerator=order.amount_gross denominator=rand_value %}{{numerator|div:denominator|floatformat:"0"}}{% endwith %}.00</p>
             <p><b>Amount in ZAR: </b>R{{order.amount_gross}}</p>
             <p><b>Order Date: </b>{{order.payment_date}}</p>
             <hr />
