@@ -6,7 +6,7 @@ from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from .models import Courses
+from .models import CourseImages
 
 # validators
 
@@ -71,7 +71,7 @@ class PayFastForm(forms.Form):
 
 list_courses = []
 
-for course in Courses.objects.all():
+for course in CourseImages.objects.all():
     list_courses.append((course.title, course.title))
 
 COURSES_LIST = tuple(list_courses)

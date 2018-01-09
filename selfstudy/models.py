@@ -13,19 +13,21 @@ class CourseCategories(models.Model):
         verbose_name = 'Course Category'
         verbose_name_plural = 'Course Categories'
 
-class Courses(models.Model):
-    
+class CourseImages(models.Model):
+
     title = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
+    course_image = models.ImageField(upload_to='images/course_images/book', max_length=255, null=True, blank=True)    
+    course_image_main = models.ImageField(upload_to='images/course_images/main', max_length=255, null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, default=180.00)
 
     def __str__(self):
-        return self.title
+        return self.title + " " + str(self.price)
     
     class Meta:
         verbose_name = 'Course'
-        verbose_name_plural = 'Courses'
+        verbose_name_plural = 'Course'
 
 class UserCart(models.Model):
 

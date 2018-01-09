@@ -133,10 +133,10 @@ def user_logout(request):
 
 def course_library(request, course_id, course_title):
     user_admin = user_is_admin(request.user)
-    selected_course = Courses.objects.get(id=course_id, title=course_title)
+    selected_course = CourseImages.objects.get(id=course_id, title=course_title)
 
     categories = CourseCategories.objects.all()
-    courses = Courses.objects.all().order_by('id')
+    courses = CourseImages.objects.all().order_by('id')
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
     item_in_cart = CartItems.objects.filter(user_id=request.user.id, item_id=course_id).exists()
     user_course = UserCourses.objects.filter(user_id=request.user.id, item_id=course_id).exists()
@@ -650,7 +650,7 @@ def import_data(request):
     else:
 
         vouchers = CourseVouchersTotal.objects.all().order_by('course_id')
-        courses = Courses.objects.all().order_by('id')
+        courses = CourseImages.objects.all().order_by('id')
 
         if request.method == "POST":
             form = UploadFileForm(request.POST,
@@ -658,7 +658,7 @@ def import_data(request):
             if form.is_valid():
                 vouchers = request.FILES['file'].get_array()[1:]
                 course_title = form.cleaned_data['course']
-                selected_course = Courses.objects.get(title=course_title)
+                selected_course = CourseImages.objects.get(title=course_title)
                 voucher_total_exists = CourseVouchersTotal.objects.filter(course_id=selected_course.id).exists()
                 user_courses = UserCourses.objects.all()
                 if not voucher_total_exists:
@@ -667,8 +667,8 @@ def import_data(request):
                     voucher_total = CourseVouchersTotal.objects.get(course_id=selected_course.id)
                 with transaction.atomic():
                     for voucher in vouchers:
-                        voucher_already_exits = CourseVouchers.objects.filter(code=voucher[0], course_id=selected_course.id).exists()
-                        voucher_with_user = UserCourses.objects.filter(voucher=voucher[0], item_id=selected_course.id).exists()
+                        voucher_already_exits = CourseVouchers.objects.filter(code=voucher[0]).exists()
+                        voucher_with_user = UserCourses.objects.filter(voucher=voucher[0]).exists()
                         if not voucher_already_exits and not voucher_with_user and voucher[3] == 'No':
                             voucher_added = CourseVouchers.objects.create(course=course_title, course_id=selected_course.id, code=voucher[0], expiry=parser.parse(voucher[1]))
                             voucher_added.save()
@@ -728,7 +728,7 @@ def my_courses(request):
         for item in user_courses:
             course_array.append(item.item_id)
     
-        courses = Courses.objects.filter(id__in=course_array)
+        courses = CourseImages.objects.filter(id__in=course_array)
 
         for category in courses:
             if category.category not in course_category_array:
@@ -1103,7 +1103,7 @@ def course_library_main(request):
     user_admin = user_is_admin(request.user)
 
     categories = CourseCategories.objects.all()
-    courses = Courses.objects.all().order_by('id')
+    courses = CourseImages.objects.all().order_by('id')
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
     if user_has_cart:
