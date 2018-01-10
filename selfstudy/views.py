@@ -15,6 +15,7 @@ from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -136,6 +137,7 @@ def course_library(request, course_id, course_title):
     selected_course = CourseImages.objects.get(id=course_id, title=course_title)
 
     categories = CourseCategories.objects.all()
+    category_selected = CourseCategories.objects.get(title=selected_course.category)
     courses = CourseImages.objects.all().order_by('id')
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
     item_in_cart = CartItems.objects.filter(user_id=request.user.id, item_id=course_id).exists()
@@ -178,6 +180,7 @@ def course_library(request, course_id, course_title):
     return render(request, 'course_library.html',
      {
      'categories': categories,
+     'category_selected': category_selected,
      'courses': courses, 'selected_course': selected_course,
      'form': form,
      'user_has_cart': user_has_cart,
@@ -1104,7 +1107,17 @@ def course_library_main(request):
 
     categories = CourseCategories.objects.all()
     courses = CourseImages.objects.all().order_by('id')
+    paginator = Paginator(courses, 10)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    page = request.GET.get('page', 1)
+    
+    try:
+        courses_on_page = paginator.page(page)
+    except PageNotAnInteger:
+        courses_on_page = paginator.page(1)
+    except EmptyPage:
+        courses_on_page = paginator(paginator.num_pages)
 
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
@@ -1120,7 +1133,11 @@ def course_library_main(request):
         'user_has_cart': user_has_cart,
         'user_cart': user_cart,
         'cart_empty': cart_empty,
-        'user_admin': user_admin
+        'user_admin': user_admin,
+        'courses_on_page': courses_on_page,
+        'paginator': paginator,
+        'page_num': paginator.page(request.GET.get('page'))
+        
      })
 
 def faq(request):
@@ -1157,6 +1174,31 @@ def terms(request):
 
     return render(request, 'terms.html',
      {
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+     })
+
+def courses_by_category(request, category_id, category_title):
+    user_admin = user_is_admin(request.user)
+    categories = CourseCategories.objects.all()
+    category_selected = CourseCategories.objects.get(id=category_id, title=category_title)
+    courses = CourseImages.objects.filter(category=category_title)[:10]
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+        
+    return render(request, 'course_category.html',
+     {
+        'category_selected': category_selected,
+        'categories': categories,
+        'courses': courses,
         'user_has_cart': user_has_cart,
         'user_cart': user_cart,
         'cart_empty': cart_empty,

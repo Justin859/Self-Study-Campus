@@ -18,16 +18,22 @@
             <meta itemprop="position" content="1" />
         </li>
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/">
+            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/?page=1">
                 <span itemprop="name">Course Library</span>
             </a>
             <meta itemprop="position" content="2" />
+        </li>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/{{category_selected.id}}/{{category_selected.title}}/">
+                <span itemprop="name">{{selected_course.category}}</span>
+            </a>
+            <meta itemprop="position" content="3" />
         </li>
         <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
             <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/{{selected_course.id}}/{{selected_course.title}}/detail/">
                 <span>{{selected_course.title}}</span>
             </a>
-            <meta itemprop="position" content="3" />
+            <meta itemprop="position" content="4" />
         </li>
     </ol>
 </nav>
@@ -48,6 +54,22 @@
 
 {% endif %}
 <div class="row pt-2">
+
+    <div class="col-12 col-lg-4">
+        <div class="card regular-card pl-4">
+            <div class="card-block">
+                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></span></h2>
+            </div>
+        </div>
+        <ul class="cd-accordion-menu">
+        {% for category in categories %}
+            <li>
+                <a href="/course-library/{{category.id}}/{{category.title}}/" for="group-{{forloop.counter}}">{{category.title}}</a>
+            </li>
+        {% endfor %}
+
+        </ul> <!-- cd-accordion-menu -->
+    </div>
     <div class="col-12 col-lg-8">
 
         <div class="card regular-card regular-card-course">
@@ -56,8 +78,12 @@
                 <h1 class="hidden-md-up" style="color: rgb(235,148,79);">{{selected_course.title}}<br /><small class="text-muted">{{selected_course.category}}</small></h3>
                 <h1 class="display-4 hidden-sm-down" style="color: rgb(235,148,79);">{{selected_course.title}}<br /> <small class="text-muted">{{selected_course.category}}</small></h2>
                 <hr />
+                <br />
+                <img src="{% static selected_course.course_image|safe %}" alt="book" class="img-fluid w-50 h-50">
+                <br />
                 {{selected_course.description | markdown_to_html}}
-                <br /><br />
+                <br />
+                <br />
                 <div class="card-footer">
                     <p>Course Price: &#36; {{selected_course.price}}</p>
                     <form action="" method="POST">
@@ -84,42 +110,48 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4">
-        <div class="card regular-card pl-4">
-            <div class="card-block">
-                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></span></h2>
+</div>
+<br />
+<div class="row">
+    <div class="col-12">
+        <div class="container-fluid">
+            <div class="card regular-card pl-4">
+                <div class="card-block">
+                    <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">More From The</span><span class="text-muted"> {{selected_course.category}}</span><span style="color: rgb(235,148,79);"> Category</span></span></h2>
+                </div>
             </div>
         </div>
-        <ul class="cd-accordion-menu">
-        {% for category in categories %}
-        <li class="has-children">
-                <input type="checkbox" name ="group-{{forloop.counter}}" id="group-{{forloop.counter}}">
-                <label for="group-{{forloop.counter}}">{{category.title}}</label>
-         
-                  <ul class="course-list">
-                    {% for course in courses %}
-                    {% if course.category == category.title %}
-                        <li><a href="/course-library/{{course.id}}/{{course.title}}/detail/">{{course.title}}</a></li>
-                    {% endif %}
-                    {% endfor %}
-                  </ul>
-            </li>
-        {% endfor %}
-
-        </ul> <!-- cd-accordion-menu -->
     </div>
+</div>
+<div class="row">
+    <div class="grid col-sm-12">
+        {% for course in courses %}
+            {% if course.category == selected_course.category and course.id != selected_course.id %}
+            <div class="grid-item" style="padding: 5px; width: 350px;">
+                <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
+                <p class="card-text text-muted">{{course.description|truncatewords:20}}</p>
+                <a href="/course-library/{{course.id}}/{{course.title}}/detail/">View</a>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>        
+</div>    
+
 </div>
 {% endblock %}
 
 {% block scripts%}
 
 <script src="{% static 'vendor/add_ons/multi-level-accordion-menu/js/main.min.js' %}"></script>
+<script src="{% static 'vendor/bower_components/masonry-layout/dist/masonry.pkgd.min.js' %}"></script>
+<script src="{% static 'vendor/bower_components/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>        
+<script src="{% static 'vendor/assets/js/course.js' %}"></script>
 <script type="application/ld+json">
     {
       "@context": "http://schema.org",
       "@type": "Course",
       "name": "{{selected_course.title}}",
-      "description": "{{selected_course.description|truncatechars:200}}",
+      "description": "{{selected_course.description|truncatechars:170}}",
       "provider": {
         "@type": "Organization",
         "name": "Self Study Campus",

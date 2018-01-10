@@ -27,7 +27,7 @@ class CourseImages(models.Model):
     
     class Meta:
         verbose_name = 'Course'
-        verbose_name_plural = 'Course'
+        verbose_name_plural = 'Courses'
 
 class UserCart(models.Model):
 
