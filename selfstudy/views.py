@@ -21,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.db.models import F
 from django.contrib.auth.models import User, Group
 from django import forms
 from django.forms import formset_factory
@@ -143,6 +144,9 @@ def course_library(request, course_id, course_title):
     item_in_cart = CartItems.objects.filter(user_id=request.user.id, item_id=course_id).exists()
     user_course = UserCourses.objects.filter(user_id=request.user.id, item_id=course_id).exists()
 
+    user_courses = list(UserCourses.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+    user_cart_items = list(CartItems.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+    
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
@@ -188,6 +192,8 @@ def course_library(request, course_id, course_title):
      'item_in_cart': item_in_cart,
      'cart_empty': cart_empty,
      'user_course': user_course,
+     'user_cart_items': user_cart_items,
+     'user_courses': user_courses,
      'user_admin': user_admin
      })
 
@@ -293,10 +299,10 @@ def checkout(request):
         user_cart_items = False;
 
     data = (
-        ("merchant_id", "10315552"),
-        ("merchant_key", "qi6olaz410k1v"),
-        #("merchant_id", "10004715"),
-        #("merchant_key", "dhdw9uqzmpzo0"),
+        #("merchant_id", "10315552"),
+        #("merchant_key", "qi6olaz410k1v"),
+        ("merchant_id", "10004715"),
+        ("merchant_key", "dhdw9uqzmpzo0"),
         #("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
         #("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
         #("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
@@ -355,8 +361,8 @@ def checkout(request):
                 payment_method_sent == data[13][1] and
                 signature_sent == signature):
 
-                return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
-                #return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
+                #return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
+                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
             else:
                 return TemplateResponse(request, 'server_error.html', {})
 
@@ -1110,6 +1116,9 @@ def course_library_main(request):
     paginator = Paginator(courses, 10)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
+    user_courses = list(UserCourses.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+    user_cart_items = list(CartItems.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+
     page = request.GET.get('page', 1)
     
     try:
@@ -1135,6 +1144,8 @@ def course_library_main(request):
         'cart_empty': cart_empty,
         'user_admin': user_admin,
         'courses_on_page': courses_on_page,
+        'user_cart_items': user_cart_items,
+        'user_courses': user_courses,
         'paginator': paginator,
         'page_num': paginator.page(request.GET.get('page'))
         
@@ -1187,6 +1198,9 @@ def courses_by_category(request, category_id, category_title):
     courses = CourseImages.objects.filter(category=category_title)[:10]
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
+    user_courses = list(UserCourses.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+    user_cart_items = list(CartItems.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
@@ -1202,5 +1216,34 @@ def courses_by_category(request, category_id, category_title):
         'user_has_cart': user_has_cart,
         'user_cart': user_cart,
         'cart_empty': cart_empty,
+        'user_courses': user_courses,
+        'user_cart_items': user_cart_items,
         'user_admin': user_admin
      })
+
+@csrf_exempt
+def add_to_cart(request):
+
+    data = request.POST
+
+    item_already_in_cart = CartItems.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
+
+    if not item_already_in_cart:
+        user_cart = UserCart.objects.get(user_id=data['user_id'])
+        item_details = CourseImages.objects.get(id=data['item_id'])
+        cart_update = UserCart.objects.filter(user_id=data['user_id'])
+
+        cart_update.update(cart_total=F('cart_total') + item_details.price)
+        cart_update.update(items_total=F('items_total') + 1)
+
+        CartItems.objects.create(user_id=data['user_id'],
+                                item_id=data['item_id'],
+                                cart_id=user_cart.id,
+                                title=item_details.title,
+                                price=item_details.price
+                                )
+
+    else:
+        print("item already added to cart")
+
+    return HttpResponse()

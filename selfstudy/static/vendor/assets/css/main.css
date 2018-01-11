@@ -206,6 +206,10 @@ body {
     .view-cart a {
         margin-right: 7px !important;
     }
+
+    .page-view {
+        width: 250px;
+    }
 }
 
 .view-cart {
@@ -239,6 +243,10 @@ body {
         z-index: 9;
         position: absolute;
         top: 100px;
+    }
+
+    .page-view {
+        width: 320px;
     }
 } 
 

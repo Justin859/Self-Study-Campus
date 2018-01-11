@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^register-account/$', selfstudy.views.register, name='register'),
     url(r'^shopping-cart/$', selfstudy.views.cart_view, name='cart'),
     url(r'^checkout/$', selfstudy.views.checkout, name='checkout'),
+    url(r'^add-to-cart/$', selfstudy.views.add_to_cart, name='add-to-cart'),
     url(r'^notify/$', selfstudy.views.notify, name='notify'),
     url(r'^cancel/$', selfstudy.views.cancel, name='cancel'),
     url(r'^success/$', selfstudy.views.success, name='success'),

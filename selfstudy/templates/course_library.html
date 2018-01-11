@@ -127,16 +127,29 @@
     <div class="grid col-sm-12">
         {% for course in courses %}
             {% if course.category == selected_course.category and course.id != selected_course.id %}
-            <div class="grid-item" style="padding: 5px; width: 350px;">
+            <div class="grid-item" style="padding: 5px; width: 320px;">
                 <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
+                <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
                 <p class="card-text text-muted">{{course.description|truncatewords:20}}</p>
-                <a href="/course-library/{{course.id}}/{{course.title}}/detail/">View</a>
+                <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
+                    <a href="/course-library/{{course.id}}/{{course.title}}/detail/" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
+                    {% if course.id in user_courses or course.id in user_cart_items %}
+                        {% if course.id in user_cart_items %}
+                        <button type="button" class="btn btn-primary" disabled>Added to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></button>
+                        {% else %}
+                        <button type="button" class="btn btn-primary" disabled>In My Courses&nbsp;&nbsp;<i class="fa fa-fw fa-list-alt"></i></button>       
+                        {% endif %}
+                    {% else %}
+                    <button type="button" data-price="{{course.price}}" onclick="AddToCart({{course.id}}, {{user.id}});" class="btn btn-secondary addToCart">add to cart <i class="fa fa-cart-plus"></i></button>                    
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         {% endfor %}
-    </div>        
-</div>    
-
+    </div>
+</div>
+{{user_cart_items}}
+{{user_courses}}
 </div>
 {% endblock %}
 
@@ -144,7 +157,7 @@
 
 <script src="{% static 'vendor/add_ons/multi-level-accordion-menu/js/main.min.js' %}"></script>
 <script src="{% static 'vendor/bower_components/masonry-layout/dist/masonry.pkgd.min.js' %}"></script>
-<script src="{% static 'vendor/bower_components/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>        
+<script src="{% static 'vendor/bower_components/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
 <script src="{% static 'vendor/assets/js/course.js' %}"></script>
 <script type="application/ld+json">
     {

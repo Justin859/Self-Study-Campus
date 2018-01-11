@@ -45,4 +45,30 @@ $('#show-cart, #hide-cart').click(function(event) {
     event.preventDefault();
 })
 
+$(".addToCart").click(function() {
+    $(this).prop('disabled', true);
+    $(this).html('Added to Cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i>');
+    $(this).removeClass('btn-secondary');
+    $(this).addClass('btn-primary');
+    var price = parseInt($(this).data("price"))
+
+    var totalCost = parseFloat($("#cart-total-cost").text()) + price
+    var totalItems = parseFloat($("#cart-total-items").text()) + 1
+    $("#cart-total-cost").html(totalCost + '.00');
+    $("#cart-total-items").html(totalItems)
 });
+
+});
+
+var AddToCart = function(item_id, user_id) {
+
+    $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:5000/add-to-cart/",
+        data: { user_id: user_id, item_id: item_id },
+        success: function() {
+            console.log("Added to cart");
+        },
+    })
+
+};
