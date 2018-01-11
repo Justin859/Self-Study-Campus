@@ -1225,10 +1225,17 @@ def courses_by_category(request, category_id, category_title):
 def add_to_cart(request):
 
     data = request.POST
+    
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if not user_has_cart:
+        UserCart.objects.create(user_id=request.user.id, items_total=0, cart_total=0)
 
     item_already_in_cart = CartItems.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
+    in_my_courses = UserCourses.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
 
-    if not item_already_in_cart:
+    if not item_already_in_cart and not in_my_courses:
+
         user_cart = UserCart.objects.get(user_id=data['user_id'])
         item_details = CourseImages.objects.get(id=data['item_id'])
         cart_update = UserCart.objects.filter(user_id=data['user_id'])
@@ -1244,6 +1251,6 @@ def add_to_cart(request):
                                 )
 
     else:
-        print("item already added to cart")
+        print("item already added to cart or  my courses")
 
     return HttpResponse()

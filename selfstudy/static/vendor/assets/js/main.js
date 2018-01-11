@@ -64,7 +64,7 @@ var AddToCart = function(item_id, user_id) {
 
     $.ajax({
         type: "POST",
-        url: "http://127.0.0.1:5000/add-to-cart/",
+        url: "https://www.selfstudycampus.com/add-to-cart/",
         data: { user_id: user_id, item_id: item_id },
         success: function() {
             console.log("Added to cart");
