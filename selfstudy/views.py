@@ -142,7 +142,6 @@ def course_library(request, course_id, course_title):
     courses = CourseImages.objects.all().order_by('id')
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
     item_in_cart = CartItems.objects.filter(user_id=request.user.id, item_id=course_id).exists()
-    user_course = UserCourses.objects.filter(user_id=request.user.id, item_id=course_id).exists()
 
     user_courses = list(UserCourses.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
     user_cart_items = list(CartItems.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
@@ -185,15 +184,14 @@ def course_library(request, course_id, course_title):
      {
      'categories': categories,
      'category_selected': category_selected,
-     'courses': courses, 'selected_course': selected_course,
+     'courses': courses,
+     'selected_course': selected_course,
      'form': form,
+     'user_courses': user_courses,
      'user_has_cart': user_has_cart,
      'user_cart': user_cart,
-     'item_in_cart': item_in_cart,
      'cart_empty': cart_empty,
-     'user_course': user_course,
      'user_cart_items': user_cart_items,
-     'user_courses': user_courses,
      'user_admin': user_admin
      })
 
@@ -299,10 +297,10 @@ def checkout(request):
         user_cart_items = False;
 
     data = (
-        #("merchant_id", "10315552"),
-        #("merchant_key", "qi6olaz410k1v"),
-        ("merchant_id", "10004715"),
-        ("merchant_key", "dhdw9uqzmpzo0"),
+        ("merchant_id", "10315552"),
+        ("merchant_key", "qi6olaz410k1v"),
+        #("merchant_id", "10004715"),
+        #("merchant_key", "dhdw9uqzmpzo0"),
         #("return_url", "https://lit-gorge-69771.herokuapp.com/success/"),
         #("cancel_url", "https://lit-gorge-69771.herokuapp.com/cancel/"),
         #("notify_url", "https://lit-gorge-69771.herokuapp.com/notify/"),
@@ -361,8 +359,8 @@ def checkout(request):
                 payment_method_sent == data[13][1] and
                 signature_sent == signature):
 
-                #return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
-                return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
+                return HttpResponseRedirect('https://www.payfast.co.za/eng/process?' + data_for_payfast)
+                #return HttpResponseRedirect('https://sandbox.payfast.co.za/eng/process?' + data_for_payfast)
             else:
                 return TemplateResponse(request, 'server_error.html', {})
 
