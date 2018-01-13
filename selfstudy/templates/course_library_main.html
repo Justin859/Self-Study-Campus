@@ -47,9 +47,7 @@
 
         <div class="card regular-card regular-card-course">
             <div class="card-block">
-                <br />
-                <h1 class="hidden-md-up" style="color: rgb(235,148,79);">Welcome to The Self Study Campus Course Library<br /><small class="text-muted">{{selected_course.category}}</small></h1>
-                <h1 class="display-4 hidden-sm-down" style="color: rgb(235,148,79);">Welcome to The Self Study Campus Course Library<br /> <small class="text-muted">{{selected_course.category}}</small></h1>
+                <h1 style="color: rgb(235,148,79);">Welcome to The Self Study Campus Course Library<br /><small class="text-muted">{{selected_course.category}}</small></h1>
                 <hr />
                 <p>
                     All courses are listed by category.
@@ -71,16 +69,16 @@
             {% endfor %}
         </ul> <!-- cd-accordion-menu -->
     </div>
-    <div class="col-12 col-lg-8">
+    <div class="col-12 col-lg-8" id="main">
             <div class="row">
                 <div class="grid container col-sm-12">
                 {% for course in courses_on_page %}
                 <div class="grid-item page-view" style="padding: 5px;">
                     <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
                     <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
-                    <p class="card-text text-muted">{{course.description|truncatewords:20}}</p>
+                    <p class="card-text text-muted text-justify">{{course.description|truncatewords:20}}</p>
                     <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
-                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
+                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/#main" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
                     {% if user.is_authenticated %}
                         {% if course.id in user_courses or course.id in user_cart_items %}
                             {% if course.id in user_cart_items %}
@@ -106,21 +104,21 @@
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
                                 {% if page_num.has_previous %}
-                                <li class="page-item"><a class="page-link" href="/course-library/?page={{page_num.number|add:-1}}">Previous</a></li>
+                                <li class="page-item"><a class="page-link" href="/course-library/?page={{page_num.number|add:-1}}#main">Previous</a></li>
                                 {% else %}
-                                <li class="page-item disabled"><a class="page-link" href="/course-library/?page={{page_num.number|add:1}}">Previous</a></li>                                
+                                <li class="page-item disabled"><a class="page-link" href="/course-library/?page={{page_num.number|add:1}}#main">Previous</a></li>                                
                                 {% endif %}
                                 {% for page in paginator.page_range %}
                                 {% if page_num.number != forloop.counter %}
-                                <li class="page-item"><a class="page-link" href="/course-library/?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                                <li class="page-item"><a class="page-link" href="/course-library/?page={{forloop.counter}}#main">{{forloop.counter}}</a></li>
                                 {% else %}
-                                <li class="page-item active"><a class="page-link" href="/course-library/?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                                <li class="page-item active"><a class="page-link" href="/course-library/?page={{forloop.counter}}#main">{{forloop.counter}}</a></li>
                                 {% endif %}
                                 {% endfor %}
                                 {% if page_num.has_next %}
-                                <li class="page-item"><a class="page-link" href="/course-library/?page={{page_num.number|add:1}}">Next</a></li>
+                                <li class="page-item"><a class="page-link" href="/course-library/?page={{page_num.number|add:1}}#main">Next</a></li>
                                 {% else %}
-                                <li class="page-item disabled"><a class="page-link" href="/course-library/?page={{page_num.number|add:1}}">Next</a></li>
+                                <li class="page-item disabled"><a class="page-link" href="/course-library/?page={{page_num.number|add:1}}#main">Next</a></li>
                                 {% endif %}
                             </ul>
                         </nav>

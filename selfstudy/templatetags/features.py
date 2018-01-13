@@ -11,3 +11,8 @@ def markdown_to_html(markdown_text):
     html_body = markdown2.markdown(markdown_text)
     return mark_safe(html_body)
 
+@register.filter(name='cut_image')
+def cut_image(url):
+    '''Fixes image problem'''
+    return url[6:]
+

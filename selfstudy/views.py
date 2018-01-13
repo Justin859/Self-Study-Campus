@@ -55,6 +55,11 @@ def index(request):
     user_admin = user_is_admin(request.user)
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
+    user_courses = list(UserCourses.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+    user_cart_items = list(CartItems.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
+
+    courses = CourseImages.objects.all().order_by('?')[:12]
+
     if user_has_cart:
         user_cart = UserCart.objects.get(user_id=request.user.id)
         cart_empty = user_cart.items_total < 1
@@ -90,7 +95,15 @@ def index(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'index.html', {'form': form, 'user_cart': user_cart, 'cart_empty': cart_empty, 'user_admin': user_admin})
+    return render(request, 'index.html',
+     {'form': form,
+      'user_cart': user_cart,
+      'cart_empty': cart_empty,
+      'courses': courses,
+      'user_courses': user_courses,
+      'user_cart_items': user_cart_items, 
+      'user_admin': user_admin
+      })
 
 def user_login(request):
     user_admin = user_is_admin(request.user)
@@ -122,7 +135,7 @@ def user_login(request):
                 messages.error(request, 'Username or Password is incorrect.')
                 # Return an 'invalid login' error message.
             else:
-                messages.error(request, 'The user does not exist.')
+                messages.error(request, 'User does not exist.')
     else:
         form = UserLogin()
 

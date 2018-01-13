@@ -30,7 +30,7 @@
             <meta itemprop="position" content="3" />
         </li>
         <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
-            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/{{selected_course.id}}/{{selected_course.title}}/detail/">
+            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/{{selected_course.id}}/{{selected_course.title}}/detail/#main">
                 <span>{{selected_course.title}}</span>
             </a>
             <meta itemprop="position" content="4" />
@@ -58,7 +58,7 @@
     <div class="col-12 col-lg-4">
         <div class="card regular-card pl-4">
             <div class="card-block">
-                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></span></h2>
+                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></h2>
             </div>
         </div>
         <ul class="cd-accordion-menu">
@@ -70,20 +70,19 @@
 
         </ul> <!-- cd-accordion-menu -->
     </div>
-    <div class="col-12 col-lg-8">
-
+    <div class="col-12 col-lg-8" id="main">
         <div class="card regular-card regular-card-course">
             <div class="card-block">
-                <br />
-                <h1 class="hidden-md-up" style="color: rgb(235,148,79);">{{selected_course.title}}<br /><small class="text-muted">{{selected_course.category}}</small></h3>
-                <h1 class="display-4 hidden-sm-down" style="color: rgb(235,148,79);">{{selected_course.title}}<br /> <small class="text-muted">{{selected_course.category}}</small></h2>
+                <div class="media">
+                    <img class="mr-3 img-fluid" height="105" width="85" src="{% static selected_course.course_image|safe %}" alt="Generic placeholder image">
+                    <div class="media-body">
+                        <h1 class="mt-0" style="color: rgb(235,148,79);">{{selected_course.title}}<br /><small class="text-muted">{{selected_course.category}}</small></h1>
+                    </div>
+                </div>
                 <hr />
-                <br />
-                <img src="{% static selected_course.course_image|safe %}" alt="book" class="img-fluid w-50 h-50">
-                <br />
-                {{selected_course.description | markdown_to_html}}
-                <br />
-                <br />
+                <div class="text-justify">
+                    {{selected_course.description | markdown_to_html}}
+                </div>
                 <div class="card-footer">
                     <p>Course Price: &#36; {{selected_course.price}}</p>
                     <form action="" method="POST">
@@ -117,7 +116,7 @@
         <div class="container-fluid">
             <div class="card regular-card pl-4">
                 <div class="card-block">
-                    <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">More From The</span><span class="text-muted"> {{selected_course.category}}</span><span style="color: rgb(235,148,79);"> Category</span></span></h2>
+                    <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">More From The</span><span class="text-muted"> {{selected_course.category}}</span><span style="color: rgb(235,148,79);"> Category</span></h2>
                 </div>
             </div>
         </div>
@@ -131,9 +130,9 @@
                 <div class="grid-item page-view" style="padding: 5px;">
                     <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
                     <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
-                    <p class="card-text text-muted">{{course.description|truncatewords:20}}</p>
+                    <p class="card-text text-muted text-justify">{{course.description|truncatewords:20}}</p>
                     <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
-                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
+                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/#main" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
                         {% if user.is_authenticated %}
                             {% if course.id in user_courses or course.id in user_cart_items %}
                                 {% if course.id in user_cart_items %}
@@ -153,8 +152,6 @@
             {% endfor %}
         </div>
     </div>
-</div>
-
 </div>
 {% endblock %}
 

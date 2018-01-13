@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load features %}
 {% block title %}Self Study Campus{% endblock %}
 {% block styles %}
+<link rel="stylesheet" href="{% static 'vendor/bower_components/swiper/dist/css/swiper.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -40,7 +42,7 @@
 <img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="hidden-md-up img-fluid" >
 <div class="img-container hidden-sm-down">
     <img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="img-fluid">
-    <div class="centered card reading-card">
+    <div class="centered card reading-card" style="margin-top: 90px !important;">
         <div class="card-block">
             <h1>Welcome to Self Study Campus</h1>
             <p>Learn new skills anywhere, anytime.</p>
@@ -66,10 +68,46 @@
         </div>
     </div>
 </div>
+<br />
+<div class="row">
+    <div class="col-12">
+        <h3 style="padding-left: 10px; color:#EB944F">A Few Courses From Our <a href="/course-library/?page=1" style="color:#1C4EC8">Course Library</a></h3>
+    </div>
+</div>
+<!-- swiper -->
+<br />
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        {% for course in courses %}
+        <div class="swiper-slide h-100" style="min-height: 275px;">
+            <div class="card regular-card h-100 w-100">
+                <div class="card-img-top">
+                    <img class="img-fluid mx-auto d-block w-100" src="{% static 'images' %}{{course.course_image_main|safe|cut_image}}" alt="Card image cap">
+                </div>
+                <div class="card-block d-flex flex-column h-100" style="padding: 5px;">
+                <p class="card-text text-left" style="color: #1C4EC8"><a href="/course-library/{{course.id}}/{{course.title}}/detail/">{{course.title|truncatewords:3}}</a><br /> <small class="text-muted">{{course.category}}</small></p>
+                <p class="d-flex mt-auto justify-content-end align-items-end" style="color:#FFFFFF; background-color: #EB944F; padding-right: 10px !important;">${{course.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <br />
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next" style="opacity: 0.5 !important;"></div>
+    <div class="swiper-button-prev" style="opacity: 0.5 !important;"></div>
+</div>
 
 <hr class="hidden-md-up" />
 <br />
-
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-muted" style="padding-left: 10px;">Getting Started</h3>
+    </div>
+</div>
+<br />
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-md-4" style="margin-bottom: 15px;">

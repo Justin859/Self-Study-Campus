@@ -170,6 +170,7 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 #STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 # File Uploads
 
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
