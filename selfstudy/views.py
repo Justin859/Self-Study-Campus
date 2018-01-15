@@ -1235,33 +1235,41 @@ def courses_by_category(request, category_id, category_title):
 @csrf_exempt
 def add_to_cart(request):
 
-    data = request.POST
-    
-    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+    host_ip = get_client_ip(request)
 
-    if not user_has_cart:
-        UserCart.objects.create(user_id=request.user.id, items_total=0, cart_total=0)
+    valid_ip = ['50.16.237.173', '54.225.185.385', '54.225.179.161', '50.16.227.190', '54.221.212.171',
+                '50.19.121.155', '50.16.250.54','54.204.47.4']
 
-    item_already_in_cart = CartItems.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
-    in_my_courses = UserCourses.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
+    if host_ip in valid_ip:
+        data = request.POST
+        
+        user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 
-    if not item_already_in_cart and not in_my_courses:
+        if not user_has_cart:
+            UserCart.objects.create(user_id=request.user.id, items_total=0, cart_total=0)
 
-        user_cart = UserCart.objects.get(user_id=data['user_id'])
-        item_details = CourseImages.objects.get(id=data['item_id'])
-        cart_update = UserCart.objects.filter(user_id=data['user_id'])
+        item_already_in_cart = CartItems.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
+        in_my_courses = UserCourses.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
 
-        cart_update.update(cart_total=F('cart_total') + item_details.price)
-        cart_update.update(items_total=F('items_total') + 1)
+        if not item_already_in_cart and not in_my_courses:
 
-        CartItems.objects.create(user_id=data['user_id'],
-                                item_id=data['item_id'],
-                                cart_id=user_cart.id,
-                                title=item_details.title,
-                                price=item_details.price
-                                )
+            user_cart = UserCart.objects.get(user_id=data['user_id'])
+            item_details = CourseImages.objects.get(id=data['item_id'])
+            cart_update = UserCart.objects.filter(user_id=data['user_id'])
 
+            cart_update.update(cart_total=F('cart_total') + item_details.price)
+            cart_update.update(items_total=F('items_total') + 1)
+
+            CartItems.objects.create(user_id=data['user_id'],
+                                    item_id=data['item_id'],
+                                    cart_id=user_cart.id,
+                                    title=item_details.title,
+                                    price=item_details.price
+                                    )
+
+        else:
+            print("item already added to cart or my courses")
+
+        return HttpResponse()
     else:
-        print("item already added to cart or  my courses")
-
-    return HttpResponse()
+        return HttpResponse(status=403)
