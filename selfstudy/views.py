@@ -1245,7 +1245,7 @@ def add_to_cart(request):
     item_already_in_cart = CartItems.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
     in_my_courses = UserCourses.objects.filter(user_id=data['user_id'], item_id=data['item_id']).exists()
 
-    if not item_already_in_cart and not in_my_courses:
+    if not item_already_in_cart and not in_my_courses and request.user.id == data['user_id']:
 
         user_cart = UserCart.objects.get(user_id=data['user_id'])
         item_details = CourseImages.objects.get(id=data['item_id'])
@@ -1260,8 +1260,7 @@ def add_to_cart(request):
                                 title=item_details.title,
                                 price=item_details.price
                                 )
-
     else:
-        print("item already added to cart or my courses")
+        return HttpResponse(status=403)
 
     return HttpResponse()
