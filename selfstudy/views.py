@@ -17,7 +17,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -146,6 +146,7 @@ def user_logout(request):
 
     return HttpResponseRedirect('/')
 
+@ensure_csrf_cookie
 def course_library(request, course_id, course_title):
     user_admin = user_is_admin(request.user)
     selected_course = CourseImages.objects.get(id=course_id, title=course_title)
@@ -1119,6 +1120,7 @@ def account(request):
         'user_admin': user_admin
      })
 
+@ensure_csrf_cookie
 def course_library_main(request):
     user_admin = user_is_admin(request.user)
 
@@ -1202,6 +1204,7 @@ def terms(request):
         'user_admin': user_admin
      })
 
+@ensure_csrf_cookie
 def courses_by_category(request, category_id, category_title):
     user_admin = user_is_admin(request.user)
     categories = CourseCategories.objects.all()
