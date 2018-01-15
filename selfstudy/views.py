@@ -1235,11 +1235,6 @@ def courses_by_category(request, category_id, category_title):
 @csrf_exempt
 def add_to_cart(request):
 
-    host_ip = get_client_ip(request)
-
-    valid_ip = ['50.16.237.173', '54.225.185.385', '54.225.179.161', '50.16.227.190', '54.221.212.171',
-                '50.19.121.155', '50.16.250.54','54.204.47.4']
-
     if host_ip in valid_ip:
         data = request.POST
         
