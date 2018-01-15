@@ -1264,6 +1264,6 @@ def add_to_cart(request):
                                 price=item_details.price
                                 )
     else:
-        return HttpResponse(status=403)
+        return HttpResponse(status=400)
 
     return HttpResponse()

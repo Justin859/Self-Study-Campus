@@ -84,7 +84,7 @@ EMAIL_HOST_USER = 'no-reply@selfstudycampus.com'
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = 'no-reply@yselfstudycampus.com'
+DEFAULT_FROM_EMAIL = 'no-reply@selfstudycampus.com'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
