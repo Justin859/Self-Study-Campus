@@ -1272,4 +1272,5 @@ def add_to_cart(request):
 
         return HttpResponse()
     else:
+        print(host_ip)
         return HttpResponse(status=403)
