@@ -1131,7 +1131,7 @@ def course_library_main(request):
 
     user_courses = list(UserCourses.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
     user_cart_items = list(CartItems.objects.filter(user_id=request.user.id).values_list('item_id', flat=True))
-
+    
     page = request.GET.get('page', 1)
     
     try:
@@ -1160,8 +1160,7 @@ def course_library_main(request):
         'user_cart_items': user_cart_items,
         'user_courses': user_courses,
         'paginator': paginator,
-        'page_num': paginator.page(request.GET.get('page'))
-        
+        'page_num': courses_on_page 
      })
 
 def faq(request):
