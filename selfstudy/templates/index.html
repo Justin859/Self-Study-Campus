@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+<nav aria-label="breadcrumb" style="margin-bottom: 0px !important;">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList" style="margin-bottom: 0px !important;">
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
             <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
                 <span itemprop="name">Home</span>
@@ -38,9 +38,9 @@
     {% endfor %}
 {% endif %}
 
-<img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="hidden-lg-up img-fluid" >
+<img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="hidden-lg-up img-fluid" style="margin-top: 0px !important;">
 <div class="img-container hidden-md-down">
-    <img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="img-fluid">
+    <img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="img-fluid" style="margin-top: 0px !important;">
     <div class="centered card reading-card" style="margin-top: 50px !important;">
         <div class="card-block">
             <h1>Welcome to Self Study Campus</h1>
