@@ -1033,9 +1033,11 @@ def edit_details(request):
                     user.first_name = first_name
                     if password != "":
                         user.set_password(password)
-                    user.save()
-
-                    return HttpResponseRedirect('/login/')
+                        user.save()
+                        return HttpResponseRedirect('/login/')
+                    else:
+                        user.save()
+                        return HttpResponseRedirect('/account/')
     else:
         form = UserEditForm()
 

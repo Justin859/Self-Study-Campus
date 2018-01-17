@@ -10,6 +10,8 @@ $(document).ready(function() {
     $grid.imagesLoaded().progress(function() {
         // init Masonry
         $grid.masonry('layout');
+        $('.animate-flicker').addClass('invisible');
+        $('.grid-item').removeClass('hide');
 
     })  
 })

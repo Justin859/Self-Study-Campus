@@ -72,8 +72,9 @@
     <div class="col-12 col-lg-8" id="main">
             <div class="row">
                 <div class="grid container col-sm-12">
+                <div class="animate-flicker">Loading...</div>
                 {% for course in courses_on_page %}
-                <div class="grid-item page-view" style="padding: 5px;">
+                <div class="grid-item page-view hide" style="padding: 5px;">
                     <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
                     <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
                     <p class="card-text text-muted text-justify">{{course.description|truncatewords:20}}</p>

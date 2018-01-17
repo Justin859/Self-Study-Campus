@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+$("form").submit(function(){
+    document.getElementById("loader").style.display = "block";
+});
+
 $('#cd-menu-trigger, main').click(function() {
     if ($('#cd-menu-trigger').hasClass('is-clicked')) {
         $('#cd-menu-trigger').css('background-color', 'rgb(235,148,79)');
