@@ -25,9 +25,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-COMPRESS_OFFLINE = True
 # Application definition
 
 INSTALLED_APPS = (
@@ -38,21 +37,22 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
-    'compressor',
+    #'compressor',
     'mathfilters',
     'storages',
     'selfstudy'
 )
 
-COMPRESS_ENABLED = True
-COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-COMPRESS_URL = "https://selfstudycampus.s3.amazonaws.com/"
+#COMPRESS_ENABLED = True
+#COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+#COMPRESS_URL = "https://selfstudycampus.s3.amazonaws.com/"
+#COMPRESS_OFFLINE = False
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     # other finders..
-    'compressor.finders.CompressorFinder',
+ #   'compressor.finders.CompressorFinder',
 )
 
 MIDDLEWARE_CLASSES = (

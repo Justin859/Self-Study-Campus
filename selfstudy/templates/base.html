@@ -1,4 +1,4 @@
-{% load compress staticfiles %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,17 +9,16 @@
     {% block meta%}{% endblock %}
     <link rel="icon" type="image/png" href="{% static 'vendor/assets/images/logos/SmallLogo.png' %}">
     <!-- Bootstrap CSS -->
-    {% compress css inline %}
+
         <link rel="stylesheet" href="{% static 'vendor/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'vendor/add_ons/OffCanvasMenuEffects/css/normalize.css' %}">
         <link rel="stylesheet" href="{% static 'vendor/add_ons/OffCanvasMenuEffects/css/menu_elastic.min.css' %}">
         <link rel="stylesheet" href="{% static 'vendor/bower_components/font-awesome/css/font-awesome.min.css' %}">
         <link rel="stylesheet" href="{% static 'vendor/assets/css/main.min.css' %}">
         {% block styles %}{% endblock %}
-    {% endcompress %}
-    {% compress js inline %}
+
     <script src="{% static 'vendor/add_ons/OffCanvasMenuEffects/js/snap.svg-min.js' %}"></script>
-    {% endcompress %}
+
     <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -261,16 +260,14 @@
     </div><!-- /container -->
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    {% compress js inline %}
-        <script src="{% static 'vendor/bower_components/jquery/dist/jquery.min.js' %}"></script>
-        <script src="{% static 'vendor/bower_components/tether/dist/js/tether.min.js' %}"></script>
-        <script src="{% static 'vendor/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-        <script src="{% static 'vendor/add_ons/OffCanvasMenuEffects/js/classie.min.js' %}"></script>
-        <script src="{% static 'vendor/add_ons/OffCanvasMenuEffects/js/main3.min.js' %}"></script>
-        {% block scripts %}{% endblock %}
-        <script src="{% static 'vendor/bower_components/swiper/dist/js/swiper.min.js' %}"></script>
-        <script src="{% static 'vendor/assets/js/main.min.js' %}"></script>
-    {% endcompress %}
+    <script src="{% static 'vendor/bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bower_components/tether/dist/js/tether.min.js' %}"></script>
+    <script src="{% static 'vendor/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'vendor/add_ons/OffCanvasMenuEffects/js/classie.min.js' %}"></script>
+    <script src="{% static 'vendor/add_ons/OffCanvasMenuEffects/js/main3.min.js' %}"></script>
+    {% block scripts %}{% endblock %}
+    <script src="{% static 'vendor/bower_components/swiper/dist/js/swiper.min.js' %}"></script>
+    <script src="{% static 'vendor/assets/js/main.min.js' %}"></script>
     <script type="application/ld+json">
         {
           "@context": "http://schema.org",
