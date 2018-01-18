@@ -49,62 +49,64 @@
 {% endif %}
 <div class="container-fluid">
 <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-lg-8">
         <div class="card regular-card regular-card-course">
             <div class="card-block">
                 <h1 style="color: rgb(235,148,79);">{{category_selected.title}}<br /><small class="text-muted">{{selected_course.category}}</small></h1>
             </div>
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-12 col-lg-4">
-            <ul class="cd-accordion-menu">
-                {% for category in categories %}
-                <li>
-                    <a href="/course-library/{{category.id}}/{{category.title}}/" for="group-{{forloop.counter}}">{{category.title}}</a>
-                </li>
-                {% endfor %}
-            </ul> <!-- cd-accordion-menu -->
-    </div>
-    <div class="col-12 hidden-md-up">
-        <div class="card regular-card regular-card-course">
+    <div class="col-12 col-lg-4 hidden-md-down">
+        <br class="hidden-md-up">
+        <div class="card regular-card pl-4">
             <div class="card-block">
-                <h1 style="color: rgb(235,148,79);">Courses<br /></h1>
+                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></h2>
             </div>
         </div>
     </div>
+</div>
+
+<div class="row">
     <div class="col-12 col-lg-8" id="main">
-            <div class="row">
-                <div class="grid col-sm-12">
-                <div class="animate-flicker">Loading...</div>
-                {% for course in courses %}
-                <div class="grid-item page-view hide" style="padding: 5px;">
-                    <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
-                    <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
-                    <p class="card-text text-muted text-justify">{{course.description|truncatewords:20}}</p>
-                    <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
-                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/#main" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
-                        {% if user.is_authenticated %}
-                        {% if course.id in user_courses or course.id in user_cart_items %}
-                            {% if course.id in user_cart_items %}
-                            <button type="button" class="btn btn-primary" disabled>Added to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></button>
-                            {% else %}
-                            <button type="button" class="btn btn-primary" disabled>Purchased&nbsp;&nbsp;<i class="fa fa-fw fa-list-alt"></i></button>       
-                            {% endif %}
+        <div class="row">
+            <div class="grid col-sm-12">
+            <div class="animate-flicker">Loading...</div>
+            {% for course in courses %}
+            <div class="grid-item page-view hide" style="padding: 5px;">
+                <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
+                <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
+                <p class="card-text text-muted text-justify">{{course.description|truncatewords:20}}</p>
+                <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
+                    <a href="/course-library/{{course.id}}/{{course.title}}/detail/" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
+                    {% if user.is_authenticated %}
+                    {% if course.id in user_courses or course.id in user_cart_items %}
+                        {% if course.id in user_cart_items %}
+                        <button type="button" class="btn btn-primary" disabled>Added to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></button>
                         {% else %}
-                        <button type="button" data-price="{{course.price}}" onclick="AddToCart({{course.id}}, {{user.id}});" class="btn btn-secondary addToCart">add to cart <i class="fa fa-cart-plus"></i></button>                    
+                        <button type="button" class="btn btn-primary" disabled>Purchased&nbsp;&nbsp;<i class="fa fa-fw fa-list-alt"></i></button>       
                         {% endif %}
                     {% else %}
-                    <button type="button" class="btn btn-primary float-right" disabled>login to add&nbsp;&nbsp;<i class="fa fa-cart-arrow-down"></i></button>
+                    <button type="button" data-price="{{course.price}}" onclick="AddToCart({{course.id}}, {{user.id}});" class="btn btn-secondary addToCart">add to cart <i class="fa fa-cart-plus"></i></button>                    
                     {% endif %}
-                    </div>
+                {% else %}
+                <button type="button" class="btn btn-primary float-right" disabled>login to add&nbsp;&nbsp;<i class="fa fa-cart-arrow-down"></i></button>
+                {% endif %}
                 </div>
-                {% endfor %}
-                </div>
-            </div> 
+            </div>
+            {% endfor %}
+            </div>
+        </div> 
     </div>
+    <div class="col-12 col-lg-4">
+        <ul class="cd-accordion-menu">
+        {% for category in categories %}
+            <li>
+                <a href="/course-library/{{category.id}}/{{category.title}}/" for="group-{{forloop.counter}}">{{category.title}}</a>
+            </li>
+        {% endfor %}
+
+        </ul> <!-- cd-accordion-menu -->
+    </div>   
 </div>
 
 </div>

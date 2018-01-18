@@ -30,7 +30,7 @@
             <meta itemprop="position" content="3" />
         </li>
         <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" aria-current="page">
-            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/{{selected_course.id}}/{{selected_course.title}}/detail/#main">
+            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/course-library/{{selected_course.id}}/{{selected_course.title}}/detail/">
                 <span>{{selected_course.title}}</span>
             </a>
             <meta itemprop="position" content="4" />
@@ -54,22 +54,6 @@
 
 {% endif %}
 <div class="row pt-2">
-
-    <div class="col-12 col-lg-4">
-        <div class="card regular-card pl-4">
-            <div class="card-block">
-                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></h2>
-            </div>
-        </div>
-        <ul class="cd-accordion-menu">
-        {% for category in categories %}
-            <li>
-                <a href="/course-library/{{category.id}}/{{category.title}}/" for="group-{{forloop.counter}}">{{category.title}}</a>
-            </li>
-        {% endfor %}
-
-        </ul> <!-- cd-accordion-menu -->
-    </div>
     <div class="col-12 col-lg-8" id="main">
         <div class="card regular-card regular-card-course">
             <div class="card-block">
@@ -109,6 +93,21 @@
             </div>
         </div>
     </div>
+    <div class="col-12 col-lg-4">
+        <div class="card regular-card pl-4">
+            <div class="card-block">
+                <h2 class="text-muted card-title"><span style="color: rgb(28,78,200);">Course</span><span style="color: rgb(235,148,79);"> Library</span></h2>
+            </div>
+        </div>
+        <ul class="cd-accordion-menu">
+        {% for category in categories %}
+            <li>
+                <a href="/course-library/{{category.id}}/{{category.title}}/" for="group-{{forloop.counter}}">{{category.title}}</a>
+            </li>
+        {% endfor %}
+
+        </ul> <!-- cd-accordion-menu -->
+    </div>    
 </div>
 <br />
 <div class="row">
@@ -133,7 +132,7 @@
                     <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
                     <p class="card-text text-muted text-justify">{{course.description|truncatewords:20}}</p>
                     <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
-                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/#main" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
+                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
                         {% if user.is_authenticated %}
                             {% if course.id in user_courses or course.id in user_cart_items %}
                                 {% if course.id in user_cart_items %}
