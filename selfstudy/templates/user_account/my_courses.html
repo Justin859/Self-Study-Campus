@@ -191,8 +191,9 @@
 
 {% block scripts %}
     <!-- including the plugin -->
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
     <script src="{% static 'vendor/bower_components/hideshowpassword/hideShowPassword.min.js' %}"></script>
     <script src="{% static 'vendor/assets/js/account.min.js' %}"></script>
-
+{% endblock %}
+{% block seo %}
+<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
 {% endblock %}

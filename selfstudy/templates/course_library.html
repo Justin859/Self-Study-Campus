@@ -165,6 +165,10 @@
 <script src="{% static 'vendor/bower_components/masonry-layout/dist/masonry.pkgd.min.js' %}"></script>
 <script src="{% static 'vendor/bower_components/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
 <script src="{% static 'vendor/assets/js/course.js' %}"></script>
+
+{% endblock %}
+{% block seo %}
+
 <script type="application/ld+json">
     {
       "@context": "http://schema.org",
@@ -178,4 +182,5 @@
       }
     }
 </script>
+
 {% endblock %}

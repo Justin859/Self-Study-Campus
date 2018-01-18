@@ -38,9 +38,21 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+    'compressor',
     'mathfilters',
     'storages',
     'selfstudy'
+)
+
+COMPRESS_ENABLED = True
+COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+COMPRESS_URL = "https://selfstudycampus.s3.amazonaws.com/"
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -17,3 +17,4 @@ django-mathfilters==0.4.0
 boto3==1.4.4
 django-storages==1.5.2
 pillow==2.4.0
+django-compressor==2.2

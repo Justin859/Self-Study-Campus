@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% block link %}<link rel="canonical" href="/">{% endblock %}
 {% load features %}
 {% block title %}Self Study Campus{% endblock %}
 {% block styles %}
@@ -37,7 +38,22 @@
         {% endif %}
     {% endfor %}
 {% endif %}
+<br />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card reading-card">
+                <div class="card-block text-justify" style="padding: 5px !important;">
+                    <small>
+                        Learn new skills anywhere, anytime. We offer you, the ordinary person, learning opportunities at affordable prices through a learning platform that is easy and quick to master. Whether you are looking for something in your personal capacity or for your career, we have a course for you.
+                    </small>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--
 <img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="hidden-lg-up img-fluid" style="margin-top: 0px !important;">
 <div class="img-container hidden-md-down">
     <img src="{% static 'vendor/assets/images/laptop-2562325.jpg' %}" alt="man-studying" class="img-fluid" style="margin-top: 0px !important;">
@@ -67,6 +83,7 @@
         </div>
     </div>
 </div>
+-->
 <br />
 <div class="row">
     <div class="col-12">
