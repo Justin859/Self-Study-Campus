@@ -27,7 +27,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
+COMPRESS_OFFLINE = True
 # Application definition
 
 INSTALLED_APPS = (
