@@ -26,6 +26,7 @@ from django.contrib.auth.models import User, Group
 from django import forms
 from django.forms import formset_factory
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 
 from decimal import *
 
@@ -149,7 +150,7 @@ def user_logout(request):
 @ensure_csrf_cookie
 def course_library(request, course_id, course_title):
     user_admin = user_is_admin(request.user)
-    selected_course = CourseImages.objects.get(id=course_id, title=course_title)
+    selected_course = get_object_or_404(CourseImages, id=course_id, title=course_title)
 
     categories = CourseCategories.objects.all()
     category_selected = CourseCategories.objects.get(title=selected_course.category)
@@ -1209,7 +1210,7 @@ def terms(request):
 def courses_by_category(request, category_id, category_title):
     user_admin = user_is_admin(request.user)
     categories = CourseCategories.objects.all()
-    category_selected = CourseCategories.objects.get(id=category_id, title=category_title)
+    category_selected = get_object_or_404(CourseCategories, id=category_id, title=category_title)
     courses = CourseImages.objects.filter(category=category_title)[:10]
     user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
 

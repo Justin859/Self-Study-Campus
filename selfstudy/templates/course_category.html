@@ -74,23 +74,26 @@
             {% for course in courses %}
             <div class="grid-item page-view hide" style="padding: 5px;">
                 <img class="img-fluid" src="{% static course.course_image|safe %}" alt="Card image cap">
-                <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
-                <p class="card-text text-muted text-justify">{{course.description|truncatewords:20}}</p>
-                <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
-                    <a href="/course-library/{{course.id}}/{{course.title}}/detail/" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
-                    {% if user.is_authenticated %}
-                    {% if course.id in user_courses or course.id in user_cart_items %}
-                        {% if course.id in user_cart_items %}
-                        <button type="button" class="btn btn-primary" disabled>Added to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></button>
+                <div class="container">
+                    <p style="color: #1C4EC8"><b>{{course.title}}</b></p>
+                    <p class="card-text text-muted text-justify">{{course.description|truncatewords:15}}</p>
+                    <p class="float-right" style="color:black;"><b>course price</b> <span style="color: #EB944F">${{course.price}}</span></p>    
+                    <div class="btn-group" role="group" aria-label="Basic example" style="padding-top: 5px !important;">
+                        <a href="/course-library/{{course.id}}/{{course.title}}/detail/" class="btn btn-secondary">view <i class="fa fa-eye"></i></a>
+                        {% if user.is_authenticated %}
+                            {% if course.id in user_courses or course.id in user_cart_items %}
+                                {% if course.id in user_cart_items %}
+                                <button type="button" class="btn btn-primary" disabled>Added to cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i></button>
+                                {% else %}
+                                <button type="button" class="btn btn-primary" disabled>purchased&nbsp;&nbsp;<i class="fa fa-fw fa-list-alt"></i></button>       
+                                {% endif %}
+                            {% else %}
+                            <button type="button" data-price="{{course.price}}" onclick="AddToCart({{course.id}}, {{user.id}});" class="btn btn-secondary addToCart">add to cart <i class="fa fa-cart-plus"></i></button>                    
+                            {% endif %}
                         {% else %}
-                        <button type="button" class="btn btn-primary" disabled>Purchased&nbsp;&nbsp;<i class="fa fa-fw fa-list-alt"></i></button>       
+                        <button type="button" class="btn btn-primary float-right" disabled>login to add&nbsp;&nbsp;<i class="fa fa-cart-arrow-down"></i></button>
                         {% endif %}
-                    {% else %}
-                    <button type="button" data-price="{{course.price}}" onclick="AddToCart({{course.id}}, {{user.id}});" class="btn btn-secondary addToCart">add to cart <i class="fa fa-cart-plus"></i></button>                    
-                    {% endif %}
-                {% else %}
-                <button type="button" class="btn btn-primary float-right" disabled>login to add&nbsp;&nbsp;<i class="fa fa-cart-arrow-down"></i></button>
-                {% endif %}
+                    </div>
                 </div>
             </div>
             {% endfor %}
