@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Page not Found{% endblock %}
+
+{% block content %}
+
+<div class="container" style="padding-bottom: 500px;">
+    <div class="col-12">
+        <h1>Page Not Found. Error 404</h1>
+        <br />
+        <p>Could not find url path <b>{{request.get_full_path}}</b> on the server.</p>
+        <p>If the problem persists please contact <a href="mailto:support@selfstudycampus.com?Subject=Self%20Study%20Campus%20Query" target="_top">support@selfstudycampus.com</a> for assistance</p>
+    </div>
+</div>
+
+{% endblock %}

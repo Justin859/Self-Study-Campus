@@ -7,6 +7,7 @@ from .sitemaps import StaticViewSitemap
 import selfstudy.views
 
 from django.contrib.sitemaps.views import sitemap
+from django.conf.urls import handler404, handler500
 
 sitemaps = {
     'static': StaticViewSitemap,
@@ -46,3 +47,6 @@ urlpatterns = [
     url(r'^upload-vouchers/$', selfstudy.views.import_data, name='import data')
     
 ]
+
+handler404 = selfstudy.views.error_404
+handler500 = selfstudy.views.error_500

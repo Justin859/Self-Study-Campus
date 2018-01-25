@@ -1268,3 +1268,11 @@ def add_to_cart(request):
         return HttpResponse(status=400)
 
     return HttpResponse()
+
+# Error Pages
+
+def error_404(request):
+        return render(request,'errors/error_404.html', {})
+    
+def error_500(request):
+        return render(request,'errors/error_500.html', {})
