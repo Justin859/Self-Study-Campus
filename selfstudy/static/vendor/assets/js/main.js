@@ -56,6 +56,7 @@ $(".addToCart").click(function() {
     $(this).html('Added to Cart&nbsp;&nbsp;<i class="fa fa-shopping-cart"></i>');
     $(this).removeClass('btn-secondary');
     $(this).addClass('btn-primary');
+    $(".check-out").removeClass('disabled');
     var price = parseInt($(this).data("price"))
 
     var totalCost = parseInt($("#cart-total-cost").text()) + price

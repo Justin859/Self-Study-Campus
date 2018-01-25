@@ -50,9 +50,9 @@
                         <br />
                         <li>
                             {% if not cart_empty %}
-                            <a href="/checkout/" class="btn btn-primary btn-block">Check Out &nbsp;&nbsp;<i class="fa fa-credit-card"></i></a>
+                            <a href="/checkout/" class="btn btn-primary btn-block check-out">Check Out &nbsp;&nbsp;<i class="fa fa-credit-card"></i></a>
                             {% else %}
-                            <button class="btn btn-primary btn-block" disabled>Check Out &nbsp;&nbsp;<i class="fa fa-credit-card"></i></>
+                            <a href="/checkout/" class="btn btn-primary btn-block check-out disabled">Check Out &nbsp;&nbsp;<i class="fa fa-credit-card"></i></a>
                             {% endif %}
                         </li>
                     </ul>
