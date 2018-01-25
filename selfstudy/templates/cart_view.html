@@ -52,7 +52,7 @@
 
             <div class="col-12 col-md-6">
                 <br />
-                <form action="" method="POST">
+                <form action="" method="POST" id="shopping_cart">
                 {{ formset.management_form }}
                 {% csrf_token %}
                 <table class="table">
@@ -74,7 +74,7 @@
                             <td>{{item.title}}</td>
                             <td>${{item.price}}</td>
                             <td class="text-center">
-                                <input type="checkbox" name="form-{{forloop.counter0}}-item_checked">
+                                <input type="checkbox" class="item_checked" name="form-{{forloop.counter0}}-item_checked">
                                 <input type="number" class="d-none" name="form-{{forloop.counter0}}-item_id" value="{{item.id}}" readonly>
                                 <input type="decimal_local" class="d-none" name="form-{{forloop.counter0}}-item_price" value="{{item.price}}" readonly>
                             </td>
@@ -95,9 +95,9 @@
                 </div>
                 <div class="btn-group d-flex justify-content-center justify-content-md-end" role="group" aria-label="button grouping">
                     {% if not cart_empty %}
-                    <button type="submit" id="submit-form" class="btn btn-primary">Remove Selected&nbsp;&nbsp;<i class="fa fa-trash-o"></i></button>
+                    <button type="submit" id="submit-form" class="btn btn-primary remove-selected">Remove Selected&nbsp;&nbsp;<i class="fa fa-trash-o"></i></button>
                     {% else %}
-                    <button type="submit" id="submit-form" class="btn btn-primary" disabled>Remove Selected&nbsp;&nbsp;<i class="fa fa-trash-o"></i></button>
+                    <button type="submit" id="submit-form" class="btn btn-primary remove-selected" disabled>Remove Selected&nbsp;&nbsp;<i class="fa fa-trash-o"></i></button>
                     {% endif %}
                     {% if not cart_empty %}
                     <a href="/checkout/" class="btn btn-primary">Check Out&nbsp;&nbsp;<i class="fa fa-credit-card"></i></a>
@@ -117,4 +117,22 @@
 
 {% block scripts%}
 <script src="{% static 'vendor/add_ons/breadcrumbs-and-multistep-indicator/js/modernizr.js' %}"></script>
+<script>
+
+    if(!(jQuery('#shopping_cart input[type=checkbox]:checked').length)) { 
+        $(".remove-selected").attr('disabled', 'disabled');
+    } else {
+        $(".remove-selected").removeAttr('disabled');
+    }
+    $('.item_checked').change(function() {
+
+        if(!(jQuery('#shopping_cart input[type=checkbox]:checked').length)) {
+            $(".remove-selected").attr('disabled', 'disabled');
+        } else {
+            $(".remove-selected").removeAttr('disabled');
+        }
+
+    })
+
+</script>
 {% endblock %}
