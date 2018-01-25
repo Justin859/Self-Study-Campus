@@ -270,7 +270,7 @@ def cart_view(request):
         formset = CartEditFormSet(request.POST)
         if formset.is_valid():
             for item in formset.cleaned_data:
-                if item['item_checked']:
+                if item['item_checked'] and CartItems.objects.get(id=item['item_id'], user_id=request.user.id):
                     CartItems.objects.filter(id=item['item_id'], user_id=request.user.id).delete()
                     user_cart.items_total -= 1
                     user_cart.cart_total -= item['item_price']
@@ -1273,7 +1273,39 @@ def add_to_cart(request):
 # Error Pages
 
 def error_404(request):
-        return render(request,'errors/error_404.html', {})
+    user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
+    return render(request,'errors/error_404.html', {
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+    })
     
 def error_500(request):
-        return render(request,'errors/error_500.html', {})
+    user_admin = user_is_admin(request.user)
+
+    user_has_cart = UserCart.objects.filter(user_id=request.user.id).exists()
+
+    if user_has_cart:
+        user_cart = UserCart.objects.get(user_id=request.user.id)
+        cart_empty = user_cart.items_total < 1
+    else:
+        user_cart = False
+        cart_empty = True
+
+    return render(request,'errors/error_500.html', {
+        'user_has_cart': user_has_cart,
+        'user_cart': user_cart,
+        'cart_empty': cart_empty,
+        'user_admin': user_admin
+    })
