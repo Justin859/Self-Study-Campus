@@ -806,7 +806,7 @@ def my_courses(request):
                     current_user = ProtalPasswordResets.objects.get(user_id=user_id)
                     if (datetime.now() - parse(current_user.date_changed.strftime('%m/%d/%Y'))).days > 7:
                         current_user.date_changed = datetime.now()
-
+                        current_user.save()
                         password = ''
 
                         for i in range(10):
